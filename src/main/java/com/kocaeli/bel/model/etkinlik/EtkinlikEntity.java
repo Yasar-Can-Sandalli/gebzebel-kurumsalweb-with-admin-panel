@@ -11,8 +11,7 @@ import java.time.LocalDate;
 @Data
 public class EtkinlikEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "etkinlik_seq_gen")
-    @SequenceGenerator(name = "etkinlik_seq_gen", sequenceName = "etkinlik_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "baslik")

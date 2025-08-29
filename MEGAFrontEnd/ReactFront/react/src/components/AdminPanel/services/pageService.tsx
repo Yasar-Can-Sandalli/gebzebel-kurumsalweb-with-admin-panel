@@ -1,7 +1,6 @@
 // pageService.tsx ve diğerleri
 import {apiClient} from "./apiService";
-// src/sayfalar/services/pageService.tsx
-import { apiGet, apiPut } from "../services/apiService";
+
 // Base API configuration
 
 // Create axios instance with default config
@@ -74,17 +73,6 @@ export interface YonetimSemasiEntity {
     pozisyon: string;
     aktif: boolean;
     olusturmaTarihi: string;
-}
-// Tek kayıt getir
-export async function getYonetimById(id: number | string): Promise<YonetimRow> {
-    const res = await apiGet<YonetimRow>(`/api/kurumsal/yonetim/${id}`);
-    return res; // data değil
-}
-
-// Güncelle
-export async function updateYonetim(payload: YonetimRow): Promise<YonetimRow> {
-    const res = await apiPut<YonetimRow>(`/api/kurumsal/yonetim/${payload.id}`, payload);
-    return res; // yine data değil
 }
 
 export interface PageEntity {
