@@ -22,22 +22,4 @@ public class EtkinlikController {
     public ResponseEntity<List<EtkinlikEntity>> getAllEtkinlikler() {
         return ResponseEntity.ok(etkinlikService.getAllEtkinlikler());
     }
-    //Cacan_1453!
-    @PostMapping(path = "/create")//YCS
-    public ResponseEntity<EtkinlikEntity> createEtkinlik(@RequestBody EtkinlikEntity etkinlik) {
-        return ResponseEntity.ok(etkinlikService.createEtkinlik(etkinlik));
-    }
-
-    @PutMapping(path = "/update/{id}")
-    public boolean updateEtkinlikById(@PathVariable(name = "id") Long id , @RequestBody EtkinlikEntity etkinlik){
-        return etkinlikService.updateEtkinlikById(id,etkinlik);
-    }
-
-    @DeleteMapping(path = "/delete/{id}")
-    public boolean deleteEtkinlikById(@PathVariable(name = "id") Long id){
-        return etkinlikService.deleteEtkinlikById(id);
-    }
-
-
-
 }
