@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+<title>Kocaeli Büyükşehir Belediyesi</title>
+<meta name="description" content="Kocaeli Büyükşehir Belediyesi Resmi Web Sitesi" />
+
+<meta name="robots" content="max-image-preview:large" />
+<meta name="author" content="Kocaeli Büyükşehir Belediyesi">
+<meta itemprop="name" content="Kocaeli Büyükşehir Belediyesi" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta property="og:locale:alternate" content="tr_TR" />
+<base href="https://www.kocaeli.bel.tr/" />
+<link rel="shortcut icon" href="https://www.kocaeli.bel.tr/files/uploads/logo/45f68049f6.ico" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://www.kocaeli.bel.tr/rss.xml" />
+<link rel="stylesheet" href="https://www.kocaeli.bel.tr/theme/kbb/css/root.css?ver=1740642044">
+<link rel="stylesheet" href="https://www.kocaeli.bel.tr/theme/kbb/css/plugins.css">
+<link rel="stylesheet" href="https://www.kocaeli.bel.tr/theme/kbb/css/style.css">
+<link rel="stylesheet" href="https://www.kocaeli.bel.tr/theme/kbb/css/custom.css?ver=1740642044">
+<link rel="stylesheet" href="https://www.kocaeli.bel.tr/theme/kbb/css/fonts.css?ver=12">
+<link rel="stylesheet" href="https://www.kocaeli.bel.tr/theme/kbb/css/mobile.css?ver=1740642044">    
+        <link rel="dns-prefetch" href="//googleads.g.doubleclick.net" />
+        <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
+        <link rel="dns-prefetch" href="//www.google-analytics.com" />
+        <link rel="dns-prefetch" href="//ssl.google-analytics.com" />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//apis.google.com" />
+        <link rel="dns-prefetch" href="//gatr.hit.gemius.pl" />
+        <link rel="dns-prefetch" href="//cdn.onesignal.com" />
+        <link rel="dns-prefetch" href="//cdn.onesignal.com" />
+        <link rel="dns-prefetch" href="//cdn2.bildirt.com" />
+        <link rel="dns-prefetch" href="https://securepubads.g.doubleclick.net" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://securepubads.g.doubleclick.net" />
+        <link rel="dns-prefetch" href="https://mc.yandex.ru" />
+        <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+        <link rel="dns-prefetch" href="//ajax.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="//gstatic.com">
+        <link rel="dns-prefetch" href="//s.gravatar.com" />
+        <link rel="dns-prefetch" href="//connect.facebook.net">
+        <link rel="dns-prefetch" href="//graph.facebook.com">
+        <link rel="dns-prefetch" href="//linkedin.com">
+    <meta name="google-site-verification" content="9myro5-8vrivcv1hSEredPrdGo7PuKjJUXTvizc8s-Q" /></head>
+<body>
+
+
+
+
+
+
+<div class="content-wrapper">
+			<header class="wrapper bg-soft-primary">
+      <nav class="navbar navbar-expand-lg center-nav transparent position-absolute navbar-dark">
+        <div class="container flex-lg-row flex-nowrap align-items-center mt-kbb-30">
+           <div class="navbar-brand w-100">
+            <a href="https://www.kocaeli.bel.tr/" style="display:block; padding:5px 0px;">
+              <img class="logo-dark" style="width:180px;"  src="https://www.kocaeli.bel.tr/theme/kbb/images/logo.png" alt="" />
+              <img class="logo-light" style="width:180px;" src="https://www.kocaeli.bel.tr/theme/kbb/images/logo.png" alt="" />
+            </a>
+          </div>
+          
+          
+          <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start kbb-bg">
+            <div class="offcanvas-header d-lg-none">
+              <h3 class="text-white fs-30 mb-0"><img class="logo-light" style="width:180px;" src="https://www.kocaeli.bel.tr/theme/kbb/images/logo.png" alt="" /></h3>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body ms-lg-auto d-flex flex-column h-100">
+            
+            <ul class="navbar-nav">
+                <li class="nav-item d-lg-none"><a class="nav-link" href="https://www.kocaeli.bel.tr/">ANASAYFA</a></li>
+                           
+<li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">BAŞKAN</a>
+                  <ul class="dropdown-menu">
+                     
+                    <li class="nav-item"><a class="dropdown-item" href="/baskan/">ÖZGEÇMİŞ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="/baskana-mesaj/ ">BAŞKANA MESAJ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.tahirbuyukakin.com/">BAŞKANIN WEB SAYFASI</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/sosyal-medya-hesaplari.html">SOSYAL MEDYA HESAPLARI</a></li>
+                                                          </ul>
+                </li>                                    
+                       
+                 
+   
+           
+<li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">KURUMSAL</a>
+                  <ul class="dropdown-menu">
+                     
+                    <li class="nav-item"><a class="dropdown-item" href="teskilat/">ORGANİZASYON YAPISI</a></li>
+                                                                                           
+<li class="dropdown dropdown-submenu dropend"><a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">MECLİS</a>
+
+		
+                      <ul class="dropdown-menu">
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/meclis-baskani-ve-vekiller.html">MECLİS BAŞKANI VE VEKİLLER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/belediye-meclis-uyeleri.html">BELEDİYE MECLİS ÜYELERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/meclis-toplanti-ilani.html">MECLİS TOPLANTI İLANI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/meclis-gundemi.html">MECLİS GÜNDEMİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/meclis-karar-ozetleri.html">MECLİS  KARAR ÖZETLERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/ihtisas-komisyonlari.html">İHTİSAS KOMİSYONLARI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/belediye-birlikleri.html">BELEDİYE BİRLİKLERİ</a></li>
+                                            </ul>
+                     
+                    </li>
+                                                                                           
+<li class="dropdown dropdown-submenu dropend"><a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">PLAN ve RAPORLAR</a>
+
+		
+                      <ul class="dropdown-menu">
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/stratejik-planlar.html">STRATEJİK PLANLAR</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/performans-programlari.html">PERFORMANS PROGRAMLARI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/mali-yili-butceleri.html">MALİ YILI BÜTÇELERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kurumsal-mali-durum-ve-beklenti-raporu.html">KURUMSAL MALİ DURUM ve BEKLENTİ RAPORU</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kesin-hesap-dosyalari.html">KESİN HESAP DOSYALARI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/faaliyet-raporlari.html">FAALİYET RAPORLARI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://detsis.gov.tr/">DEVLET TEŞKİLATI MERKEZİ KAYIT SİSTEMİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/belediye-vergi-ve-ucret-tarifeleri.html">BELEDİYE VERGİ ve ÜCRET TARİFELERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/yatirim-ve-hizmet-programlari.html">YATIRIM ve HİZMET PROGRAMLARI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/webfiles/userfiles/files/birimler/cevre-koruma-ve-kontrol-dairesi-baskanligi/%C4%B0klim%20De%C4%9Fi%C5%9Fikli%C4%9Fi%20Eylem%20Plan%C4%B1.pdf">KOCAELİ İLİ İKLİM DEĞİŞİKLİĞİ EYLEM PLANI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/webfiles/userfiles/files/birimler/cevre-koruma-ve-kontrol-dairesi-baskanligi/Enerji%20Politikas%C4%B1_Ek_Enerji%20Politikas%C4%B1_Ek_ENERJ%C4%B0%20POL%C4%B0T%C4%B0KASI_pdf_page-0001.jpg.jpg">ENERJİ POLİTİKASI</a></li>
+                                            </ul>
+                     
+                    </li>
+                                                                                           
+<li class="dropdown dropdown-submenu dropend"><a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">MEVZUAT</a>
+
+		
+                      <ul class="dropdown-menu">
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.mevzuat.gov.tr/#kanunlar">KANUNLAR</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.mevzuat.gov.tr/#kanunHukmundeKararnameler">KANUN HÜKMÜNDE KARARNAME</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.mevzuat.gov.tr/#cumhurbaskanligiKararnameleri">CUMHURBAŞKANLIĞI KARARNAMELERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.mevzuat.gov.tr/#tuzukler">TÜZÜKLER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.mevzuat.gov.tr/#cumhurbaskaniKararlari">CUMHURBAŞKANI KARARLARI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.mevzuat.gov.tr/">E-MEVZUAT</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.mevzuat.gov.tr/#tebligler">TEBLİĞLER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.mevzuat.gov.tr/#cumhurbaskaniGenelgeleri">CUMHURBAŞKANI GENELGELERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/yonetmelikler.html">YÖNETMELİKLER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/baskanlik-tebligleri.html">BAŞKANLIK TEBLİĞLERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kamu-hizmetleri-standartlari-tablosu.html">KAMU HİZMETLERİ STANDARTLARI TABLOSU</a></li>
+                                            </ul>
+                     
+                    </li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/webfiles/userfiles/files/birimler/basin-yayin-ve-halkla-iliskiler-dairesi-baskanligi/KBB%20KURUMSAL%20K%C4%B0ML%C4%B0K.pdf">KURUMSAL KİMLİK KILAVUZU</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/etik-komisyonu.html">ETİK KOMİSYONU</a></li>
+                                                                                           
+<li class="dropdown dropdown-submenu dropend"><a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">DİJİTAL MEDYA</a>
+
+		
+                      <ul class="dropdown-menu">
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/mobil-uygulamalarimiz.html">MOBİL UYGULAMALARIMIZ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/sitelerimiz.html">SİTELERİMİZ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kurumsal-sosyal-medya.html">KURUMSAL SOSYAL MEDYA</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kurumsal-logo-seti.html">KURUMSAL LOGO SETİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/dijital-fotograf-platformu.html">DİJİTAL FOTOĞRAF PLATFORMU</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/dijital-kartpostal-platformu.html">DİJİTAL KARTPOSTAL PLATFORMU</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="/galeriler/">FOTO GALERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="/videolar/">VİDEOLAR</a></li>
+                                            </ul>
+                     
+                    </li>
+                                                          </ul>
+                </li>                                    
+                       
+                 
+   
+           
+<li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">KOCAELİ</a>
+                  <ul class="dropdown-menu">
+                     
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/tarihce.html">TARİHÇE</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/sosyo-ekonomik-yapi.html">SOSYO EKONOMİK YAPI</a></li>
+                                                                                           
+<li class="dropdown dropdown-submenu dropend"><a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">SAYILARLA KOCAELİ</a>
+
+		
+                      <ul class="dropdown-menu">
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kultur-spor-turizm-ve-egitim.html">KÜLTÜR, SPOR, TURİZM VE EĞİTİM</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/saglik-ve-sosyal-koruma.html">SAĞLIK VE SOSYAL KORUMA</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/tarim.html">TARIM</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/is-gucu-istihdam-ve-issizlik.html">İŞ GÜCÜ, İSTİHDAM VE İŞSİZLİK</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/nufus-ve-demografi.html">NÜFUS VE DEMOGRAFİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/sanayi-ticaret-ve-hizmetler.html">SANAYİ, TİCARET VE HİZMETLER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/ulastirma-ve-haberlesme.html">ULAŞTIRMA VE HABERLEŞME</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/adalet-ve-secim.html">ADALET VE SEÇİM</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/cevre-ve-enerji.html">ÇEVRE VE ENERJİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/yatirimlar.html">YATIRIMLAR</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/dis-ticaret.html">DIŞ TİCARET</a></li>
+                                            </ul>
+                     
+                    </li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://kocaeliyikesfet.com/">KOCAELİ'Yİ KEŞFET</a></li>
+                                                                                           
+<li class="dropdown dropdown-submenu dropend"><a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">İLÇE İLÇE KOCAELİ</a>
+
+		
+                      <ul class="dropdown-menu">
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/basiskele.html">BAŞİSKELE</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/cayirova.html">ÇAYIROVA</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/darica.html">DARICA</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/derince.html">DERİNCE</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/dilovasi.html">DİLOVASI</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/gebze.html">GEBZE</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/golcuk.html">GÖLCÜK</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/izmit.html">İZMİT</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kandira.html">KANDIRA</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/karamursel.html">KARAMÜRSEL</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kartepe.html">KARTEPE</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/korfez.html">KÖRFEZ</a></li>
+                                            </ul>
+                     
+                    </li>
+                                                                                           
+<li class="dropdown dropdown-submenu dropend"><a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">TURİZM REHBERİ</a>
+
+		
+                      <ul class="dropdown-menu">
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/webfiles/userfiles/files/birimler/kultur-ve-sosyal-isler-dairesi-baskanligi/Turizm%20Sube/TUR%C4%B0ZM%20REHBER%C4%B0%2013_2_23.pdf">KBB TURİZM REHBERİ</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/buyuleyici-guzellikler.html">BÜYÜLEYİCİ GÜZELLİKLER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/tarihi-ve-kulturel-miras.html">TARİHİ VE KÜLTÜREL MİRAS</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/camiiler-kulliyeler-turbeler.html">CAMİİLER, KÜLLİYELER, TÜRBELER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/yasayan-muzeler.html">YAŞAYAN MÜZELER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/yoresel-degerler.html">YÖRESEL DEĞERLER</a></li>
+                                              <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/kultur-ve-sanatin-merkezi.html">KÜLTÜR VE SANATIN MERKEZİ</a></li>
+                                            </ul>
+                     
+                    </li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://kocaeliyiseyret.com/">KOCAELİ'Yİ SEYRET</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://kocaelimarkalasiyor.com/">KOCAELİ MARKALAŞIYOR</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/hizmet/kocaeli-ansiklopedisi-222.html">KOCAELİ ANSİKLOPEDİSİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/havadan-kocaeli.html">HAVADAN KOCAELİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://veri.kocaeli.bel.tr/">VERİ KOCAELİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="/yayinlar/">YAYINLARIMIZ</a></li>
+                                                          </ul>
+                </li>                                    
+                       
+                 
+   
+     
+<li class="nav-item"><a class="nav-link" href="hizmetler/">HİZMETLER</a></li>
+   
+     
+<li class="nav-item"><a class="nav-link" href="projeler/">PROJELER</a></li>
+   
+           
+<li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">E-BELEDİYE</a>
+                  <ul class="dropdown-menu">
+                     
+                    <li class="nav-item"><a class="dropdown-item" href="https://ebelediye.kocaeli.bel.tr/">E-BELEDİYE GİRİŞ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.cimer.gov.tr/">BİLGİ EDİNME</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://ebelediye.kocaeli.bel.tr/Giris/Index/?returnURL=/Borc/Index">BORÇ ÖDEME VE SORGULAMA</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/ihale-odasi-canli-yayin.html">İHALE ODASI CANLI YAYIN</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="hal-fiyatlari/">HAL FİYATLARI</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="/imarplanlari.html">İMAR PLANI İLANLARI</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/sikca-sorulan-sorular.html">SIKÇA SORULAN SORULAR</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://ebelediye.kocaeli.bel.tr/CozumMasasi/">BÜYÜKŞEHİR 153</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://ebelediye.kocaeli.bel.tr/sosyalhizmetler/vefatlistesi">GÜNLÜK VEFAT LİSTESİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/encumen-odasi-canli-yayin.html">ENCÜMEN ODASI CANLI YAYIN</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/files/uploads/documents/1737612958_yol-rayic-listesi-2025_ustyazipdf.pdf">ŞEHİRLER ARASI YOLCU TAŞIMA FİYATLARI</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/files/uploads/documents/1739429286_2955817pdf.pdf">TOPLU TAŞIMA ÜCRET TARİFELERİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="/hatlar/">OTOBÜS SAATLERİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="/hatlar/T1/otogar-kurucesme-tramvay-sefer-saatleri-ve-duraklari">TRAMVAY SAATLERİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="/vapurlar/">VAPUR SAATLERİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://rehber.kocaeli.bel.tr/portal/">ŞEHİR REHBERİ</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://kobis.com.tr/">KOBİS</a></li>
+                                           
+                    <li class="nav-item"><a class="dropdown-item" href="https://www.kocaeli.bel.tr/yapi-malzemeleri-ve-zemin-mekanigi-laboratuvari.html">YAPI MALZEMELERİ VE ZEMİN MEKANİĞİ LABORATUVARI</a></li>
+                                                          </ul>
+                </li>                                    
+                       
+                 
+   
+     
+<li class="nav-item"><a class="nav-link" href="iletisim/">İLETİŞİM</a></li>
+   
+             
+              </ul>
+
+              <div class="offcanvas-footer d-lg-none" style="padding:0px; display:block;">
+              
+              <div class="widget">
+          
+          	   <div id="weather" class="header_slider_infos mb-5">
+               <div class="w_inner">
+               <div class="w_icon"><img src="https://api.gazisoft.com/services/img/weather/yeni12.png"></div>
+               <div><span class="w_temp"> ... </span>
+               <span class="w_title"> ... </span></div>
+               </div>
+               </div>
+  
+          
+          <div style="clear:both"></div>
+          
+              <h5 class="widget-title text-dark mb-3" style="
+   	background: #e6f2fa;
+    color: #005c99 !important;
+    padding: 6px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 18px;
+    border-radius:10px;
+">Takip Edin</h5>
+
+            
+            <div class="footer_social_share_area" style="    margin: 0px 0px 0px 0px;">
+<a class="social_button twitter" target="_blank" href="https://twitter.com/kocaelibld"><i class="icon-x"></i></a>
+<a class="social_button facebook" target="_blank" href="https://www.facebook.com/kocaelibld"><i class="fa-brands fa-facebook-f"></i></a>
+<a class="social_button instagram" target="_blank" href="https://www.instagram.com/kocaelibld/"><i class="fa-brands fa-instagram"></i></a>
+<a class="social_button youtube" target="_blank" href="https://www.youtube.com/user/kocaelibld"><i class="fa-brands fa-youtube"></i></a>
+<a class="social_button whatsapp" target="_blank" href="https://whatsapp.com/channel/0029VaAgBkdBlHpWlvArNH01"><i class="fa-brands fa-whatsapp"></i></a>
+</div> 
+ 
+          </div>
+              </div>
+            </div>
+          </div>
+          <div class="navbar-other w-100 d-flex ms-auto">
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+              <li class="nav-item d-lg-none">
+                <button class="hamburger offcanvas-nav-btn"><span></span></button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>			   
+	<div role="main" class="main">
+			<section class="wrapper bg-dark video-wrapper">
+  <div class="swiper-container swiper-hero dots-over" 
+       data-margin="0" 
+       data-autoplay="true" 
+       data-autoplaytime="20000" 
+       data-nav="false" 
+       data-dots="false" 
+       data-items="1">
+
+    <div class="swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide bg-image slider_overlay" 
+             data-image-src="">
+          <video poster="" src="movide_banner.mp4" autoplay loop playsinline muted></video>
+        </div>
+
+                  <div class="swiper-slide bg-image slider_overlay" 
+               data-image-src="https://www.kocaeli.bel.tr/files/uploads/slider/1712238336-5966-4e0d94c6b7a2381715b8.png">
+                      </div>
+                  <div class="swiper-slide bg-image slider_overlay" 
+               data-image-src="https://www.kocaeli.bel.tr/files/uploads/slider/1702331168-9040-dbdbfc1a9200fc85fa47.jpg">
+                      </div>
+                  <div class="swiper-slide bg-image slider_overlay" 
+               data-image-src="https://www.kocaeli.bel.tr/files/uploads/slider/1702331280-4234-a15f89dcfa00513885da.jpg">
+                      </div>
+                  <div class="swiper-slide bg-image slider_overlay" 
+               data-image-src="https://www.kocaeli.bel.tr/files/uploads/slider/1702330776-3273-fc012f2bc8bb5602b39c.jpg">
+                      </div>
+                  <div class="swiper-slide bg-image slider_overlay" 
+               data-image-src="https://www.kocaeli.bel.tr/files/uploads/slider/1702331613-7215-741df08fa0f3f80e08bb.jpg">
+                      </div>
+                
+      </div>
+    </div>
+
+    <div id="ss_search">
+      <div class="container">
+        <div class="row" style="">
+          <div class="col-md-2"></div>
+          <div class="col-md-8">
+            <div style="position:relative;">
+
+<div class="search_area">
+           <form id="KBBSearchForm" style="    z-index: 999;
+    position: relative;" action="search/~q=b50cfaddb2a87cff54f3cb6a4df8a621_&SB=8fd54ecff78126fba7af6a6552ed3111" method="post">
+            <input autocomplete="off" type="text" id="search" name="search" class="search_input" placeholder="Size nasıl yardımcı olabiliriz?" value="" />
+            <button type="button" class="search_button" /><i class="fas fa-search"></i></button>
+            </form>
+          
+            
+            <div id="search_row"></div></div>
+            
+            
+            </div>
+            
+              </div>
+          <div class="col-md-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:absolute; z-index:3; bottom:0px;" 
+         class="slider_bottom" 
+         data-appear-animation="fadeInUpShorter" 
+         data-appear-animation-delay="750">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-3">
+            <a href="/baskan/">
+              <img class="slider-president" alt="Başkan" src="https://www.kocaeli.bel.tr/theme/kbb/images/baskan_s.png">
+            </a>
+          </div>
+          <div class="col-md-3">
+            <a href="/baskan/">
+              <img class="slider-president-title" alt="Büyükşehir Belediye Başkanı" src="https://www.kocaeli.bel.tr/theme/kbb/images/baskan_title.png?ref=3">
+            </a>
+          </div>
+          <div class="col-md-3"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="position:relative">
+      <a data-hash="" 
+         data-hash-offset="0" 
+         data-hash-offset-lg="68" 
+         href="#easy_access1" 
+         class="saving slider_down">
+        <i class="uil uil-angle-down"></i>
+        <i class="uil uil-angle-down"></i>
+        <i class="uil uil-angle-down"></i>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+
+
+<section id="easy_access1" class="section_content_slider">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <h4 class="section_title">BÜYÜKŞEHİR'DEN <br><span style="font-weight:300; font-size:28px">HABERLER</span></h4>
+
+        <div id="headline" class="swiper-container dots-over" 
+             data-margin="0" 
+             data-autoplay="true" 
+             data-autoplaytime="5000" 
+             data-dots="true" 
+             data-nav="true" 
+             data-autoheight="false">
+          <div class="swiper">
+            <div class="swiper-wrapper">
+                               
+                <a href="https://www.kocaeli.bel.tr/haber/buyuksehirde-sifir-atik-hedefi-tam-yol-ilerliyor-47400.html" class="swiper-slide item">
+                  <img alt="" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250227-buyuksehirde-sifir-atik-hedefi-tam-yol-ilerliyor-762056-b9542f7f0bb8cef9fd8a.jpg">
+                  <div href="https://www.kocaeli.bel.tr/haber/buyuksehirde-sifir-atik-hedefi-tam-yol-ilerliyor-47400.html" class="title">Büyükşehir’de sıfır atık hedefi tam yol ilerliyor</div>
+                  <span class="cat" style="display:none;">HABERLER</span>
+                </a>
+                               
+                <a href="https://www.kocaeli.bel.tr/haber/baskan-buyukakin-ramazan-bereketiyle-gonlumuze-isik-olur-47399.html" class="swiper-slide item">
+                  <img alt="" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250227-baskan-buyukakin-ramazan-bereketiyle-gonlumuze-isik-olur-908414-a10a74eb5e37b8d55631.jpeg">
+                  <div href="https://www.kocaeli.bel.tr/haber/baskan-buyukakin-ramazan-bereketiyle-gonlumuze-isik-olur-47399.html" class="title">Başkan Büyükakın: “Ramazan bereketiyle gönlümüze ışık olur”</div>
+                  <span class="cat" style="display:none;">HABERLER</span>
+                </a>
+                               
+                <a href="https://www.kocaeli.bel.tr/haber/akca-camii-ramazanda-ibadete-acik-olacak-47398.html" class="swiper-slide item">
+                  <img alt="" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250226-akca-camii-ramazanda-ibadete-acik-olacak-258056-f552e07f1e5b844b5e2c.jpeg">
+                  <div href="https://www.kocaeli.bel.tr/haber/akca-camii-ramazanda-ibadete-acik-olacak-47398.html" class="title">Akça Camii Ramazan’da ibadete açık olacak</div>
+                  <span class="cat" style="display:none;">HABERLER</span>
+                </a>
+                               
+                <a href="https://www.kocaeli.bel.tr/haber/baris-manco-sarkilari-ile-anilacak-47396.html" class="swiper-slide item">
+                  <img alt="" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250226-baris-manco-sarkilari-ile-anilacak-791593-fedb6015aa9a37946eb0.jpeg">
+                  <div href="https://www.kocaeli.bel.tr/haber/baris-manco-sarkilari-ile-anilacak-47396.html" class="title"> Barış Manço şarkıları ile anılacak</div>
+                  <span class="cat" style="display:none;">HABERLER</span>
+                </a>
+                               
+                <a href="https://www.kocaeli.bel.tr/haber/gunes-enerjisinin-yol-haritasi-kocaelide-konusuldu-47395.html" class="swiper-slide item">
+                  <img alt="" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250226-gunes-enerjisinin-yol-haritasi-kocaelide-konusuldu-257551-7d719b0a7c833030568f.jpg">
+                  <div href="https://www.kocaeli.bel.tr/haber/gunes-enerjisinin-yol-haritasi-kocaelide-konusuldu-47395.html" class="title">Güneş enerjisinin yol haritası Kocaeli’de konuşuldu</div>
+                  <span class="cat" style="display:none;">HABERLER</span>
+                </a>
+                               
+                <a href="https://www.kocaeli.bel.tr/haber/buyuksehir-ile-ramazanda-iyilige-yolculuk-basliyor-47393.html" class="swiper-slide item">
+                  <img alt="" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250225-buyuksehir-ile-ramazanda-iyilige-yolculuk-basliyor-38809-1b47ce81f866a79d3f33.jpg">
+                  <div href="https://www.kocaeli.bel.tr/haber/buyuksehir-ile-ramazanda-iyilige-yolculuk-basliyor-47393.html" class="title">Büyükşehir ile Ramazan’da iyiliğe yolculuk başlıyor</div>
+                  <span class="cat" style="display:none;">HABERLER</span>
+                </a>
+                          </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <h4 class="section_title mobile-none">&nbsp;<br><span style="font-weight:300; font-size:28px">&nbsp;</span></h4>
+
+        <style>
+          .news_ico {
+            border-radius: 100%;
+            border: 0.5px solid #0ac1df;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        </style>
+
+        <div class="headline_aside" style="    display: flex;
+    flex-direction: column;
+    justify-content: space-around;">
+            <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/yudaka-gonullu-itfaiyecilik-egitimi-47394.html">
+              <i class="uil uil-angle-right-b"></i>
+              <div>YÜDAK’a gönüllü itfaiyecilik eğitimi</div>
+            </a>
+            <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/kar-dindi-buyuksehirin-calismasi-bitmedi-47384.html">
+              <i class="uil uil-angle-right-b"></i>
+              <div>Kar dindi, Büyükşehir’in çalışması bitmedi</div>
+            </a>
+            <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/buyuksehir-zabitasi-kayip-cuzdani-sahibine-ulastirdi-47373.html">
+              <i class="uil uil-angle-right-b"></i>
+              <div>Büyükşehir zabıtası kayıp cüzdanı sahibine ulaştırdı</div>
+            </a>
+            <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/buyuksehir-12-ilcede-tum-gucuyle-sahada-47383.html">
+              <i class="uil uil-angle-right-b"></i>
+              <div>Büyükşehir 12 ilçede, tüm gücüyle sahada</div>
+            </a>
+            <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/karla-mucadele-anbean-takip-ediliyor-47379.html">
+              <i class="uil uil-angle-right-b"></i>
+              <div>Karla mücadele anbean takip ediliyor</div>
+            </a>
+            <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/buyuksehirde-egitimler-hiz-kesmiyor-47368.html">
+              <i class="uil uil-angle-right-b"></i>
+              <div>Büyükşehir’de eğitimler hız kesmiyor</div>
+            </a>
+        </div>
+
+        <a class="more_button2 mt-1" href="haberler/"><span>TÜM HABERLER</span></a>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+<section class="easy_access" style="background:#dfdfdf40 !important;">
+   <div class="container">
+      <div class="row">
+         <div class="col-md-12">
+            <h4 class="section_title">KOLAY<br><span style="font-weight:300; font-size:28px">ERİŞİM</span></h4>
+         </div>
+         
+         <div class="col-md-2">
+            <div>
+               <a href="hizmetler/" class="item2 kbb_service">
+                  <div class="kbb-ico"></div>
+                  <p class="detail">
+                     <span class="title">HİZMETLER</span>
+                     <span class="desc">Kocaeli Büyükşehir Belediyesi hizmetlerini listelemek için tıklayınız.</span>
+                  </p>
+               </a>
+            </div>
+         </div>
+         
+         <div class="col-md-10">
+            <div class="swiper-container mb-0"
+                 data-margin="15" 
+                 data-autoplay="true" 
+                 data-autoplaytime="5000" 
+                 data-dots="false" 
+                 data-nav="false" 
+                 data-autoheight="false"
+                 data-items-xl="5" 
+                 data-items-md="2" 
+                 data-items-xs="1">
+               <div class="swiper">
+                  <div class="swiper-wrapper">
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/153-cagri-merkezi-2.html" class="swiper-slide item2">
+                           <i class="flaticon1-call-center"></i>                           
+                           <p class="detail">
+                              <span class="title">153 Çağrı Merkezi</span>
+                              <span class="desc">Büyükşehir Belediyesi yetki alanları çerçevesinde, vatandaşlardan gelen talep, öneri ve şikâyetlerin, tüm iletişim kanalları kullanılarak, 7/24 kesintisiz takip edilmesi hizmetidir.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-bebek-destek-programi-176.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Bebek Destek Programı</span>
+                              <span class="desc">Ekonomik durumu yeterli olmayan, 0-3 yaş arasında iki çocuğu veya ikiz bebekleri olan ailelerin bebeklerinin sağlıklı büyümesi için her ay düzenli olarak destek sağlayan programdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-gida-destek-programi-171.html" class="swiper-slide item2">
+                           <i class="flaticon-vegetables"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Gıda Destek Programı</span>
+                              <span class="desc">Kocaeli Büyükşehir Belediyesi Gıda Destek Programını 2011 yılından itibaren 41 Kart üzerinden uygulayarak; bireylerin, ihtiyaçları doğrultusunda özgür seçimle diledikleri gıdaya ulaşmalarını sağlayıp hayatlarını kolaylaştırmayı amaçlamaktadır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-giyim-destek-programi-172.html" class="swiper-slide item2">
+                           <i class="flaticon-family"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Giyim Destek Programı</span>
+                              <span class="desc">Kocaeli Büyükşehir Belediyesi Giyim Destek Programını 2013 yılından itibaren 41 Kart üzerinden uygulayarak; bireylerin ihtiyaçları olan kıyafetlere özgür seçimle ulaşmalarını sağlayıp hayatlarını kolaylaştırmayı amaçlamaktadır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-kirtasiye-destek-programi-188.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Kırtasiye Destek Programı</span>
+                              <span class="desc">Ekonomik durumu yeterli olmayan, 41 Kart destek programlarından yararlanabilen ailelerin öğrenim gören çocuklarına eğitim- öğretim yılı başında bir kereye mahsus destek sağlayan programdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-medikal-destek-programi-86.html" class="swiper-slide item2">
+                           <i class="flaticon-healthcare"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Medikal Destek Programı</span>
+                              <span class="desc">Ekonomik durumu yeterli olmayan bireylere her ay düzenli olarak medikal malzeme desteği sağlayan programdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-okul-giyim-destek-programi-189.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Okul Giyim Destek Programı</span>
+                              <span class="desc">Ekonomik durumu yeterli olmayan,41 Kart destek programlarından yararlanabilen ailelerin öğrenim gören çocuklarına eğitim- öğretim yılı başında bir kereye mahsus destek sağlayan programdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-saglik-destek-programi-180.html" class="swiper-slide item2">
+                           <i class="flaticon-healthcare"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Sağlık Destek Programı</span>
+                              <span class="desc">Ekonomik durumu yeterli olmayan bireylerin kamu hastanelerinde zaruri olan tedavilerde ortaya çıkan fark ücretleri ile kamu hastanelerinde yapılamadığı hekim raporu ile belirtilen zorunlu tedavilerinin karşılanmasını, hekim tarafından reçetelendirilen ilaç ya da tıbbi cihazların SGK tarafından karşılanamayan kısmının ödenmesini destekleyen programdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-sinav-ucreti-destek-programi-190.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Sınav Ücreti Destek Programı</span>
+                              <span class="desc">Ekonomik durumu yeterli olmayan, 41 Kart destek programlarından yararlanabilen ailelerin üniversite sınavına girecek çocuklarına destek sağlayan programdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-su-faturasi-destek-programi-173.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Su Faturası Destek Programı</span>
+                              <span class="desc">Kocaeli Büyükşehir Belediyesi Su Faturası Destek Programını 2021 yılından itibaren 41 Kart üzerinden uygulayarak; bireylerin su faturalarını rahat bir şekilde ödemelerine yardımcı olmak amacıyla faturalarının 350 TL'lik kısmı karşılanmaktadır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/41-kart-sut-destek-programi-175.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">41 Kart Süt Destek Programı</span>
+                              <span class="desc">Kocaeli genelinde hamile annelere, doğumdan önce 3 ay-doğumdan sonra 3 ay olmak üzere 6 aylık periyod içerisinde tek seferlik destek sağlanması programdır. Program kapsamında 6 aylık periyodda annelere toplam 1000 TL ‘Süt Desteği’ yapılmaktadır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/a-takimi-acil-bakim-onarim-hizmetleri-167.html" class="swiper-slide item2">
+                           <i class="flaticon-helmet"></i>                           
+                           <p class="detail">
+                              <span class="title">A Takımı Acil Bakım Onarım Hizmetleri</span>
+                              <span class="desc">Özellikle kırsal mahallelerde, cami, muhtarlık vb. kamu bina, sosyal tesis ve ortak kullanım alanlarında acil bakım onarım hizmetleri karşılanmaktadır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/abonman-indirimli-kart-uygulamasi-130.html" class="swiper-slide item2">
+                           <i class="flaticon-ticket-1"></i>                           
+                           <p class="detail">
+                              <span class="title">Abonman İndirimli Kart Uygulaması</span>
+                              <span class="desc">Abonman indirimli kart uygulaması ile vatandaşlara ekonomik anlamda katkı sunulmaktadır. Abonman indirimli karta geçenler yüzde 41’e varan indirimden faydalanabilmektedir.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/afet-destek-programi-184.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">Afet Destek Programı</span>
+                              <span class="desc">Yaşanılan afet olayları (yangın, sel, fırtına heyelan vb.) sonrasında bireylere gerekli maddi ve manevi desteklerin sağlandığı programdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/afet-eylem-plani-56.html" class="swiper-slide item2">
+                           <i class="flaticon-group"></i>                           
+                           <p class="detail">
+                              <span class="title">Afet Eylem Planı</span>
+                              <span class="desc">14 maddelik Afet Eylem Planımızı hayata geçirmek çalışmalara başladık. İnşaat Mühendisleri Odası ile protokol imzaladık. Kocaeli genelinde toplanma ve geçici barınma alanları belirledik, lojistik planlarımızı hazırladık.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/afete-hazir-anneler-projesi-218.html" class="swiper-slide item2">
+                           <i class="flaticon-community-1"></i>                           
+                           <p class="detail">
+                              <span class="title">Afete Hazır Anneler Projesi</span>
+                              <span class="desc">Afet farkındalığının arttırılması ve afet bilincine sahip aileler oluşturulması amacıyla başlatılan projede, annelere deprem eğitimleri verilmektedir.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/agaclandirma-94.html" class="swiper-slide item2">
+                           <i class="flaticon-trees"></i>                           
+                           <p class="detail">
+                              <span class="title">Ağaçlandırma</span>
+                              <span class="desc">Çevre dostu şehir vizyonumuzun gereği ağaçlandırma ve bitkilendirme çalışmalarımız aralıksız sürdürülmektedir.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/agir-engelli-nakdi-destek-programi-181.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">Ağır Engelli Nakdi Destek Programı</span>
+                              <span class="desc">Ekonomik durumu yeterli olmayan ağır engelli raporu bulunan bireylere her ay düzenli olarak destek sağlayan programdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/aile-kalkani-destek-programi-67.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">Aile Kalkanı Destek Programı</span>
+                              <span class="desc">Dezavantajlı grupta ( Dul/Boşanmış/Eşi Cezaevinde Bulunan Çocuklu Kadınlar) yer alan vatandaşların sosyo-ekonomik olarak gerekli tüm ihtiyaçlarını karşılayan ve buna ilave tamamlayıcı hizmetleri sağlayan destek programıdır.</span>
+                           </p>
+                        </a>
+                        
+                        <a href="https://www.kocaeli.bel.tr/hizmet/ailem-kocaeli-177.html" class="swiper-slide item2">
+                           <i class="flaticon-peace"></i>                           
+                           <p class="detail">
+                              <span class="title">Ailem Kocaeli</span>
+                              <span class="desc">Ailenin bütünlükçü bir yaklaşımla ele alındığı çalışmalarımızda, bireylerin psiko-sosyal, fiziksel ve ruhsal iyilik hallerini arttırmayı amaçlayan önleyici faaliyetler bütünüdür.</span>
+                           </p>
+                        </a>
+                                       </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+
+
+
+
+
+
+
+
+                    
+
+
+
+
+
+
+<section class="home_service_swiper">
+    <div class="liner_blue_kbb"></div>
+	<div class="container">
+    
+    
+    <div class="swiper-container mb-0"
+ data-margin="15" data-autoplay="true" data-autoplaytime="3500" data-dots="false" data-nav="false" data-autoheight="false"
+ data-items-xl="4" data-items-md="4" data-items-xs="1">
+  <div class="swiper">
+    <div class="swiper-wrapper">
+    
+    
+    <div id="weather" class="header_slider_infos mb-5 swiper-slide">
+               <div class="w_inner">
+               <div class="w_icon"><img src="https://api.gazisoft.com/services/img/weather/yeni12.png"></div>
+               <div><span class="w_temp"> ... </span>
+               <span class="w_title"> ... </span></div>
+               </div>
+               </div>
+               
+               
+  
+    
+    
+    
+    <a class="header_slider_infos m_widget m_blue_btn swiper-slide" href="https://www.kocaeli.bel.tr/hatlar/">
+    <i class="flaticon-bus-stop m_text_icon"></i> Otobüs Saatleri</a> 
+    
+     <a class="header_slider_infos m_widget m_blue_btn swiper-slide" href="https://www.kocaeli.bel.tr/hatlar/T1/otogar-kurucesme-tramvay-sefer-saatleri-ve-duraklari">
+    <i class="flaticon-tram m_text_icon"></i> Tramvay Saatleri</a>
+    
+    
+    <a class="header_slider_infos m_widget m_blue_btn swiper-slide" href="https://www.kocaeli.bel.tr/hizmet/teleferik-128.html">
+    <i class="flaticon-cable-car m_text_icon"></i> Teleferik </a>
+    
+    <a class="header_slider_infos m_widget m_blue_btn swiper-slide" href="https://www.kocaeli.bel.tr/vapurlar/">
+    <i class="flaticon-cruise m_text_icon"></i> Vapur Saatleri </a>
+    
+    <a class="header_slider_infos m_widget m_red_btn swiper-slide" href="https://www.kocaeli.bel.tr/nobetci-eczaneler.html">
+    <div><img src="https://www.kocaeli.bel.tr/theme/kbb/images/eczane_48x48.png" style="width:36px; background:#FFF; margin-right:10px;" />Nöbetçi Eczaneler</div></a>
+    
+    <a target="_blank" class="header_slider_infos m_widget m_blue_btn swiper-slide" href="https://rehber.kocaeli.bel.tr/portal/">
+    <i class="flaticon-location m_text_icon"></i> Şehir Rehberi</a>         
+
+<div class="header_slider_infos m_widget m_white_btn  swiper-slide">
+<div class="footer_social_share_area" style="    margin: 0px 0px 0px 0px;">
+<a class="social_button twitter" target="_blank" href="https://twitter.com/kocaelibld"><i class="icon-x"></i></a>
+<a class="social_button facebook" target="_blank" href="https://www.facebook.com/kocaelibld"><i class="fa-brands fa-facebook-f"></i></a>
+<a class="social_button instagram" target="_blank" href="https://www.instagram.com/kocaelibld/"><i class="fa-brands fa-instagram"></i></a>
+<a class="social_button youtube" target="_blank" href="https://www.youtube.com/user/kocaelibld"><i class="fa-brands fa-youtube"></i></a>
+</div></div>
+      
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+    		    	   
+               
+               
+
+    
+    </div>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+<section class="section_content_slider">
+  <div class="container">
+    <div class="row">
+      
+      <div class="col-md-4">
+      <h4 class="section_title">BÜYÜKŞEHİR'DEN <br><span style="font-weight:300; font-size:28px">DUYURULAR</span></h4>
+      
+   		<div style="height:370px; overflow:hidden;     display: flex;
+    flex-direction: column;
+    justify-content: space-around;">
+            <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/2025-yili-yol-yapim-bakim-ve-onarim-dairesi-baskanligi-muhtelif-islerinde-kullanilmak-uzere-genel-insaat-ve-nalbur-malzemeleri-alimi-47367.html">
+          	<i class="uil uil-volume-down"></i> <i class="uil uil-megaphone" style="display:none;"></i>
+          	<div style="font-size: 15px; overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;">2025 Yılı Yol Yapım Bakım ve Onarım Dairesi Başkanlığı Muhtelif İşlerinde Kullanılmak Üzere Genel İnşaat ve Nalbur Malzemeleri Alımı                <span style="display:none;">6 gün önce</span>
+          </div>
+      
+     </a>
+           <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/imar-uygulamasi-ilani-47366.html">
+          	<i class="uil uil-volume-down"></i> <i class="uil uil-megaphone" style="display:none;"></i>
+          	<div style="font-size: 15px; overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;">İmar Uygulaması İlanı                <span style="display:none;">6 gün önce</span>
+          </div>
+      
+     </a>
+           <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/2025-yili-insaat-malzemeleri-alimi-47355.html">
+          	<i class="uil uil-volume-down"></i> <i class="uil uil-megaphone" style="display:none;"></i>
+          	<div style="font-size: 15px; overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;">2025 Yılı İnşaat Malzemeleri Alımı                <span style="display:none;">1 hafta önce</span>
+          </div>
+      
+     </a>
+           <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/arac-satisi-ihalesi-47342.html">
+          	<i class="uil uil-volume-down"></i> <i class="uil uil-megaphone" style="display:none;"></i>
+          	<div style="font-size: 15px; overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;">ARAÇ SATIŞI İHALESİ                <span style="display:none;">1 hafta önce</span>
+          </div>
+      
+     </a>
+           <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/akademi-liseler-muhtelif-mobilya-alimi-47348.html">
+          	<i class="uil uil-volume-down"></i> <i class="uil uil-megaphone" style="display:none;"></i>
+          	<div style="font-size: 15px; overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;">Akademi Liseler Muhtelif Mobilya  alımı                <span style="display:none;">1 hafta önce</span>
+          </div>
+      
+     </a>
+           <a class="home_news_item" href="https://www.kocaeli.bel.tr/haber/2025-yili-park-ve-bahceler-daire-baskanliginda-kullanilmak-uzere-cim-tohumu-alimi-47338.html">
+          	<i class="uil uil-volume-down"></i> <i class="uil uil-megaphone" style="display:none;"></i>
+          	<div style="font-size: 15px; overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;">2025 Yılı Park ve Bahçeler Daire Başkanlığında Kullanılmak Üzere Çim Tohumu Alımı                <span style="display:none;">1 hafta önce</span>
+          </div>
+      
+     </a>
+          </div>
+     
+     
+     <div class="mobile-none"><a class="more_button2 mt-1" href="duyurular/">TÜM DUYURULAR</a></div>
+     </div>
+      
+      
+      
+      
+      <div class="col-md-8">
+      <h4 class="section_title mobile-none">&nbsp;<br><span style="font-weight:300; font-size:28px">&nbsp;</span></h4>
+
+      <div id="headline" class="headline_d swiper-container dots-over" data-margin="0" data-autoplay="true" data-autoplaytime="5000" data-dots="false" data-nav="true" data-autoheight="false">
+  <div class="swiper">
+    <div class="swiper-wrapper">
+  
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://www.kocaeli.bel.tr/haber/cik-disarya-oynayalim-47397.html"><img alt="Çık Dışarya Oynayalım" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250226-cik-disarya-oynayalim-358203-5b447641634046145196.jpg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://www.kocaeli.bel.tr/haber/8-mart-dunya-kadinlar-gunu-47392.html"><img alt="8 Mart Dünya Kadınlar Günü" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250225-8-mart-dunya-kadinlar-gunu-111479-e9f57c82f7267be74eda.jpg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://www.kocaeli.bel.tr/haber/kadin-aile-bulusmalari-47391.html"><img alt="Kadın Aile Buluşmaları" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250225-kadin-aile-bulusmalari-897271-d2717d0f15ff487b822d.jpg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://www.kocaeli.bel.tr/files/uploads/documents/1740484876_brosurramazanpdf.pdf"><img alt="Kocaeli Dini Yayınlar Fuarı" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250225-kocaeli-dini-yayinlar-fuari-495176-01eabb6de33751fbd8a9.jpeg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://www.kocaeli.bel.tr/haber/baris-manco-anma-konseri-47353.html"><img alt="Barış Manço Anma Konseri" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250219-baris-manco-anma-konseri-132997-0d0f16ffc69a800ce2a1.jpeg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://www.kocaeli.bel.tr/haber/ulasim-filomuz-daha-guclu-daha-konforlu-47314.html"><img alt="Ulaşım Filomuz Daha Güçlü, Daha Konforlu" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250215-ulasim-filomuz-daha-guclu-daha-konforlu-904320-88de67205b956d5245d3.jpg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://www.kocaeli.bel.tr/haber/tiyatronun-kalbi-kocaeli-de-atiyor-47223.html"><img alt="Tiyatronun Kalbi Kocaeli 'de Atıyor" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250225-tiyatronun-kalbi-kocaeli-de-atiyor-824495-38e2ebe69255a358c3ce.jpg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://www.komeksepeti.com/"><img alt="Komek Sepeti" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20250102-komek-sepeti-31320-f67ea3ea3ab3e23d03dd.jpg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="javascript:void(0)"><img alt="Doğalgaz Desteği" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20241125-dogalgaz-destegi-741081-a8d20fed9705dc270116.jpg">
+    	</a>
+    
+</div>
+                                           
+ 
+      
+<div class="swiper-slide headline_d_item item">
+   <a href="https://ebelediye.kocaeli.bel.tr/Camasirhane"><img alt="Üniversite Öğrencilerine Ücretsiz Çamaşırhane" src="https://www.kocaeli.bel.tr/files/uploads/news/default/20240920-universite-ogrencilerine-ucretsiz-camasirhane-431466-f88a2947f139c0b890bb.jpeg">
+    	</a>
+    
+</div>
+                                           
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+      
+        
+      </div>
+      
+      
+      
+      <div class="col-md-12">
+       <div class="mobile-block"><a class="more_button saving" style="float:none;" href="duyurular/">TÜM DUYURULAR <i class="fas fa-angle-right"></i><i class="fas fa-angle-right"></i><i class="fas fa-angle-right"></i></a></div>
+       </div>
+      
+      
+      
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="events-section">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/color-calendar@1.0.5/dist/css/theme-basic.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/color-calendar@1.0.5/dist/css/theme-glass.css" />
+
+  <style>
+    .color-calendar.glass .calendar__header {
+      padding: 10px 14px 10px 14px;
+    }
+
+    .color-calendar {
+      font-size: 0.9rem !important;
+    }
+
+    .color-calendar.glass {
+      background-color: #26848e !important;
+      border-radius: 10px;
+    }
+
+    .color-calendar.glass .calendar__body {
+      border-radius: 0px;
+    }
+
+    .color-calendar .calendar__monthyear {
+      font-size: 14px;
+    }
+
+    .color-calendar.glass .calendar__days .calendar__day-selected .calendar__day-box {
+      border-radius: 0px;
+      background-color: #26848e;
+      opacity: 1;
+      box-shadow: 0 3px 15px -5px var(--bs-gray-200);
+    }
+
+    .color-calendar.glass .calendar__weekdays .calendar__weekday {
+      font-weight: 600;
+      opacity: 0.5;
+      font-size: 11px;
+    }
+  </style>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9">
+        <h4 class="section_title">KOCAELİ'DE <br><span style="font-weight:300; font-size:28px">ETKİNLİKLER</span></h4>
+      </div>
+      <div class="col-md-3 mobile-none">
+        <a class="more_button2" href="etkinlikler/">TÜM ETKİNLİKLER</a>
+      </div>
+
+      <div class="col-md-3">
+        <div style="margin:20px 0px;" id="color-calendar"></div>
+      </div>
+      
+      <div class="col-md-9">
+        <div class="events-module" style="margin-top:20px;">
+          <div class="row events-display">
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 mobile-block">
+        <a class="more_button2" href="etkinlikler/">TÜM ETKİNLİKLER</a>
+      </div>
+      
+    </div>
+  </div>
+
+</section>
+
+
+
+<section class="section_style kbb_life" style="padding:60px 0px;">
+  <div class="container">
+    <div class="row">
+<div class="col-md-4"><h4 class="section_title">KOCAELİ'DE <br><span style="font-weight:300; font-size:28px">YAŞAM</span></h4></div>
+    <div class="col-md-8">
+        <div class="tabs tabs-bottom tabs-center tabs-simple">
+            <ul class="nav nav-tabs nav-tabs-basic flex-end hscroll-menu" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" href="#tabs1" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Turizm</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" href="#tabs2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Ulaşım</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" href="#tabs3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Kültür-Sanat</a>
+                </li>
+                <li class="nav-item active" role="presentation">
+                    <a class="nav-link" href="#tabs4" data-bs-toggle="tab" aria-selected="false" role="tab">Eğitim</a>
+                </li>
+                <li class="nav-item active" role="presentation">
+                    <a class="nav-link " href="#tabs5" data-bs-toggle="tab" aria-selected="false" role="tab">Gençlik ve Spor</a>
+                </li>
+                <li class="nav-item active" role="presentation">
+                    <a class="nav-link " href="#tabs6" data-bs-toggle="tab" aria-selected="false" role="tab">Sağlık ve Sosyal</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+      <div class="col-md-12">
+        <div class="tabs tabs-bottom tabs-center tabs-simple">
+        <div class="tab-content">                                
+	<div class="tab-pane active show" id="tabs1" role="tabpanel">
+    <div class="row kbb_life">
+        <div class="col-md-6">
+            <div class="live_1 thumb-info">
+                <a href="https://kocaeliyikesfet.com" target="_blank" title=""><img src="/files/uploads/advert/1713165398-fb59cf77deeb547d638b.jpg" width="" height="" alt="Advert" border="0" /></a>             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info" style="margin-bottom:20px;">
+                        <a href="https://gezgorkocaeli.com/" target="_blank" title=""><img src="/files/uploads/advert/1713165295-87eb49bf708aeb85d882.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info">
+                        <a href="https://kocaeliyikesfet.com/ne-yapmali-kategori/muzeler/" target="_blank" title=""><img src="/files/uploads/advert/1713165428-11c4ed599f8993006633.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_4 thumb-info">
+                        <a href="https://kocaeliyikesfet.com/onerilen-rotalar/" target="_blank" title=""><img src="/files/uploads/advert/1713165452-1cd0b7d1fd25af2bd42e.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_5 thumb-info">
+                        <a href="https://www.ormanya.com/" target="_blank" title=""><img src="/files/uploads/advert/1713165479-42b034a32febae14c492.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-pane" id="tabs2" role="tabpanel">
+    <div class="row kbb_life">
+        <div class="col-md-6">
+            <div class="live_1 thumb-info">
+                <a href="/hatlar/" target="_blank" title=""><img src="/files/uploads/advert/1713165545-111be8a394b1828627db.jpg" width="" height="" alt="Advert" border="0" /></a>             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info" style="margin-bottom:20px;">
+                        <a href="https://e-komobil.com/index.php" target="_blank" title=""><img src="/files/uploads/advert/1713165571-33f1789fd012013aa061.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info">
+                        <a href="/search/~query=metro" target="_blank" title=""><img src="/files/uploads/advert/1713165600-15ca851774d7fa3defb9.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_4 thumb-info">
+                        <a href="/hizmet/teleferik-128.html" target="_blank" title=""><img src="/files/uploads/advert/1713165627-b4a89e1826623bac6082.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_5 thumb-info">
+                        <a href="/hatlar/T1/otogar-kurucesme-tramvay-sefer-saatleri-ve-duraklari" target="_blank" title=""><img src="/files/uploads/advert/1713165647-08e206b0b12e893debb9.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+
+<div class="tab-pane" id="tabs3" role="tabpanel">
+    <div class="row kbb_life">
+        <div class="col-md-6">
+            <div class="live_1 thumb-info">
+                <a href="https://tiyatro.kocaeli.bel.tr/" target="_blank" title=""><img src="/files/uploads/advert/1713170234-ccc354fc94413630e1c9.jpg" width="" height="" alt="Advert" border="0" /></a>             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info" style="margin-bottom:20px;">
+                        <a href="/hizmet/kocaeli-yerel-kultur-muzesi-210.html" target="_blank" title=""><img src="/files/uploads/advert/1713169306-744ae1cd7f8d5a55d534.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info">
+                        <a href="https://kutuphane.kocaeli.bel.tr/yordam/" target="_blank" title=""><img src="/files/uploads/advert/1713169332-4e845333f80977d1016b.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_4 thumb-info">
+                        <a href="/hizmet/konservatuar-114.html" target="_blank" title=""><img src="/files/uploads/advert/1713169380-1b367525cc9fd91b8200.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_5 thumb-info">
+                        <a href="https://www.kocaeli.bel.tr/hizmet/kocaeli-ansiklopedisi-222.html" target="_blank" title=""><img src="/files/uploads/advert/1713169482-4ce613c3bbec652d21d4.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+
+
+<div class="tab-pane" id="tabs4" role="tabpanel">
+    <div class="row kbb_life">
+        <div class="col-md-6">
+            <div class="live_1 thumb-info">
+                <a href="https://ustamkocaeli.com" target="_blank" title=""><img src="/files/uploads/advert/1713169610-75887a135ae174972b13.jpg" width="" height="" alt="Advert" border="0" /></a>             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info" style="margin-bottom:20px;">
+                        <a href="https://www.komek.org/" target="_blank" title=""><img src="/files/uploads/advert/1713169630-0fd8829d87bef225a144.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info">
+                        <a href="/hizmet/bilgievleri-112.html" target="_blank" title=""><img src="/files/uploads/advert/1713169651-78d892f048b83ee413a7.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_4 thumb-info">
+                        <a href="/hizmet/moda-akademisi-236.html" target="_blank" title=""><img src="/files/uploads/advert/1725880431-9b249b902327919a68a5.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_5 thumb-info">
+                        <a href="/hizmet/akademi-lise-110.html" target="_blank" title=""><img src="/files/uploads/advert/1713169691-17c6f0ea44313d6abb6e.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+
+<div class="tab-pane" id="tabs5" role="tabpanel">
+    <div class="row kbb_life">
+        <div class="col-md-6">
+            <div class="live_1 thumb-info">
+                <a href="https://www.kocaeli.bel.tr/hizmet/dirilis-genclik-kamplari-69.html" target="_blank" title=""><img src="/files/uploads/advert/1715848309-bf15757874e90e5f887a.png" width="" height="" alt="Advert" border="0" /></a>             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info" style="margin-bottom:20px;">
+                        <a href="/hizmet/genclik-merkezleri-113.html" target="_blank" title=""><img src="/files/uploads/advert/1713169730-35c79392261b45a4c2a5.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info">
+                        <a href="https://www.annesehir.com/" target="_blank" title=""><img src="/files/uploads/advert/1713169713-5831b4deb1d57d023837.jpg" width="" height="" alt="Advert" border="0" /></a>                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_4 thumb-info">
+                        <a href="/hizmet/ucretsiz-spor-okullari-70.html" target="_blank" title=""><img src="/files/uploads/advert/1713169769-30a0fb29f81e19a00fe1.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_5 thumb-info">
+                        <a href="http://www.kbbkspor.com/" target="_blank" title=""><img src="/files/uploads/advert/1713169749-b630ab4ad462497d527b.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>                               
+                                    
+
+
+
+
+<div class="tab-pane" id="tabs6" role="tabpanel">
+    <div class="row kbb_life">
+        <div class="col-md-6">
+            <div class="live_1 thumb-info">
+                <a href="/search/~query=41+kart" target="_blank" title=""><img src="/files/uploads/advert/1713169802-9657bb2160a5ee7a21de.jpg" width="" height="" alt="Advert" border="0" /></a>             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info" style="margin-bottom:20px;">
+                        <a href="/search/~query=Destek+Programı" target="_blank" title=""><img src="/files/uploads/advert/1713169821-0c7bdafdaf7e16254a41.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_3 thumb-info">
+                        <a href="/search/~query=Engelli" target="_blank" title=""><img src="/files/uploads/advert/1713169928-8b5f80f88f26a70a89e0.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_4 thumb-info">
+                        <a href="/search/~query=Evde+Bakım" target="_blank" title=""><img src="/files/uploads/advert/1713169947-b441a52d0864b08a03e0.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="live_5 thumb-info">
+                        <a href="/search/~query=Yaşlı" target="_blank" title=""><img src="/files/uploads/advert/1713169966-625c962e4c2ca4b4c7c8.jpg" width="" height="" alt="Advert" border="0" /></a>                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>                                   
+
+                                    
+		  </div>
+		</div>
+      </div>
+    </div>
+  </div>
+</section>        
+
+
+
+
+<section class="py-5 home_tabs" style="background: #f1f1f1 !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Tabs nav -->
+                <ul class="nav nav-tabs nav-tabs-basic">
+                    <li class="nav-item"> 
+                        <a class="nav-link active shadow" data-bs-toggle="tab" href="#home_tab-1">
+                            <i class="uil uil-mobile-android"></i>
+                            <span class="font-weight-bold">Mobil Uygulamalarımız</span>
+                        </a>
+                    </li>
+                    <li class="nav-item"> 
+                        <a class="nav-link shadow" data-bs-toggle="tab" href="#home_tab-2">
+                            <i class="uil uil-desktop"></i>
+                            <span class="font-weight-bold">Sitelerimiz</span>
+                        </a>
+                    </li>
+                                        <li class="nav-item"> 
+                        <a class="nav-link shadow" data-bs-toggle="tab" href="#home_tab-4">
+                            <i class="uil uil-browser"></i>
+                            <span class="font-weight-bold">Online İşlemler</span>
+                        </a>
+                    </li>
+                                        <li class="nav-item"> 
+                        <a class="nav-link shadow" data-bs-toggle="tab" href="#home_tab-3">
+                            <i class="uil uil-share-alt"></i>
+                            <span class="font-weight-bold">Sosyal Medya</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-12">
+                <!-- Tabs content -->
+                <div class="tab-content m-0">
+                    <div class="tab-pane fade shadow rounded bg-white show active p-5" id="home_tab-1">
+                        <h4 class="font-italic mb-4">Mobil Uygulamalarımız</h4>
+                        <div class="row">
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/e-komobil.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/6808-6194a1ee187acd660698.png" /><span>e-komobil</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/kobis-akilli-bisiklet.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/29870-4d612ec00583838471ce.png" /><span>Kobis Akıllı Bisiklet</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/kocaeli-kart.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/85402-7aabe0f99d413f0aa5ca.png" /><span>Kocaeli Kart</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/kocaeli-otopark.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/30273-5ceda82de78ea91d4c01.png" /><span>Kocaeli Otopark</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/ormanya.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/85403-a5832bca21b4762568db.png" /><span>Ormanya</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/kocaeliyi-seyret-6.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/57189-7785dff2c633637da7cb.png" /><span>Kocaeli'yi Seyret</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/kocaeliyi-kesfet-2.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/56820-a959bb55a9f1757e3d19.png" /><span>Kocaeli'yi Keşfet</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/e-kocaeli.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/85886-17fd9cf204a358e5245f.png" /><span>e-Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/cek-ilet-kocaeli.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/90292-2ac85754594311a8e46b.png" /><span>Çek-İlet Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/sevdamiz-kocaeli.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/95655-8f8591be9100679f7183.png" /><span>Sevdamız Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/kocaeli-gonullusu.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/57135-6881da21977b5f15be45.png" /><span>Kocaeli Gönüllüsü</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/anne-sehir.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/55340-282f3a0cee1b0a724cca.png" /><span>Anne Şehir</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/engelsiz-ulasim.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/32162-72d7e3b85700ddfd5f3f.png" /><span>Engelsiz Ulaşım</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/sivil-dunya-kocaeli.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/22522-2e04639133a2b42aa8e6.png" /><span>Sivil Dünya Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/sekapark.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/29269-d77f939ce26039cc0a02.png" /><span>Sekapark</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/muhtar-aktif.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/muhtar-aktif-0e8fca8f883c6ec7b876.png" /><span>Muhtar Aktif</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaeli.bel.tr/trafiko.html">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/trafiko-70dfd76c6fc9f484ca0f.png" /><span>Trafiko</span>
+                                </a>
+                            </div>
+                                                    </div>
+                    </div>
+                    <div class="tab-pane fade shadow rounded bg-white p-5" id="home_tab-2">
+                        <h4 class="font-italic mb-4">Diğer Sitelerimiz</h4>
+                        <div class="row">
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.isu.gov.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/98404-30fe39681be0abba1a54.png" /><span>İSU</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.ulasimpark.com.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/3580-630b7d8dd49a0bab6674.png" /><span>UlaşımPark</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kentkonut.com.tr/Default">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/9006-831da40e5907987235eb.png" /><span>Kent Konut</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.izaydas.com.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/93165-80c9c421472b00b99d0e.png" /><span>İZAYDAŞ</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.sekapark.com.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/42511-8f77d77a3ccd2278ae57.png" /><span>Sekapark A.Ş.</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.antikkapi.com.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/37512-d1ced6defcf8c0b6faa9.png" /><span>Antikkapı</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.beldeas.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/65948-6d134e7a7a2c904f11f9.png" /><span>Belde A.Ş.</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.izmitsu.com.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/7011-970627414218ccff3497.png" /><span>İzmit Su A.Ş.</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://e-komobil.com/index.php">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/75709-fcd777faaf9267c5156a.png" /><span>e-komobil</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kocaelikart.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/15481-abe1f87b60e4b5d2798c.png" /><span>Kocaeli Kart</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.komek.org/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/547-c75b6f114c23a4d7ea11.png" /><span>KO-MEK</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://tiyatro.kocaeli.bel.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/5669-8a7129b8f3edd95b7d96.png" /><span>Şehir Tiyatroları</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://sekakagitmuzesi.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/35160-2fcb2666e77de32af114.png" /><span>SEKA Kağıt Müzesi</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.komeksepeti.com/tr_TR/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/16351-dcb8e02b8527b08dbd8a.png" /><span>KO-MEK Sepeti</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kocaeliyikesfet.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/42459-3d1bd5dbf69b7617038e.png" /><span>Kocaeli'yi Keşfet</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://istihdamakademileri.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/28480-3ec7b0f8bc5bf7eb2a73.png" /><span>İstihdam Akademileri</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="http://kutuphane.kocaeli.bel.tr/yordambt/yordam.php">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/78252-c0287eb51ba91e96f82f.png" /><span>Kütüphane</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kartpostal.net/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/60297-8faf4ffd1552f54dac0e.png" /><span>Kartpostal</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://sevdamizkocaeli.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/84384-a66712be217715c0411c.png" /><span>Sevdamız Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kodeli.com.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/4403-702cafa3bb4c9c86e4a3.png" /><span>KODELİ</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.ormanya.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/45009-40578fbf4c594ee242e5.png" /><span>Ormanya</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kocaelimarkalasiyor.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/24316-70a3e3e59bc61c8eb7ac.png" /><span>Kocaeli Markalaşıyor</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="http://www.kbbkspor.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/64524-fcfc14214442d9967528.png" /><span>Kocaeli B.Ş. Kağıtspor</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.havadankocaeli.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/61340-3d2c58b49ad56f76a00a.png" /><span>Havadan Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.ustamkocaeli.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/47908-9cce2801a113e00715ec.png" /><span>USTAM Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaelibilimmerkezi.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/57169-f3f250c853d76a841126.png" /><span>Kocaeli Bilim Merkezi</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kocaelikitapfuari.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/36942-785f9daa6aedd3afc9ef.png" /><span>Kocaeli Kitap Fuarı</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.kartepezirvesi.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/47846-f79a914cd32a325350dc.png" /><span>Kartepe Zirvesi</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.annesehir.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/59366-28117bc1a82f774fb1ba.png" /><span>Kocaeli Anne Şehir</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kocaeliyiseyret.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/91523-9a896925df0a7a8472e5.png" /><span>Kocaeli'yi Seyret</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kobis.com.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/20048-0d29d12b8c2169b35189.png" /><span>KOBİS</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.buyuksehir153.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/52811-9ceae8c670b29723b028.png" /><span>Büyükşehir 153</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://suraakademi.org.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/sra-akademi-33bd8aea8e17e56dfd7d.png" /><span>ŞÛRA Akademi</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kocaeligonullusu.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/72130-56de536d3a4d2dde30bc.png" /><span>Kocaeli Gönüllüsü</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.sivildunyakocaeli.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/62027-561cd0bc6f895df5df84.png" /><span>Sivil Dünya Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://kilavuzgenclik.kocaeli.bel.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/56439-c98831cde22c0529955a.png" /><span>Kılavuz Gençlik</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://www.surakocaeli.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/sra-kocaeli-0a2959b00140884a3a18.png" /><span>ŞÛRA Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://lokomotif.kocaeli.bel.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/lokomotif-cocuk-koyu-8f8afcc5024531550f09.png" /><span>Lokomotif Çocuk Köyü</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://akillisehirkocaeli.com/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/20333-b720817bd7b15afc1ae8.png" /><span>Akıllı Şehir Kocaeli</span>
+                                </a>
+                            </div>
+                                                        <div class="col-md-2 col-6">
+                                <a class="content_card" href="https://mezarlik.kocaeli.bel.tr/">
+                                    <img src="https://www.kocaeli.bel.tr/files/uploads/page/49797-fc78ca523076710b5fe6.png" /><span>Mezarlık Bilgilendirme Sistemi</span>
+                                </a>
+                            </div>
+                                                    </div>
+                    </div>
+                    <style>
+                    .tab_icon{
+						transition: all 200ms ease-in-out;
+						padding:20px 0px !important;
+						
+						}
+					.tab_icon span {
+    color: #21a8c3;
+    display: block;
+    padding: 10px 0px 0px 0px !important;
+}
+                    .tab_icon i{ margin-top: 10px;
+    font-size: 58px;
+    
+    border-radius: 100%;
+    background: #21a8c3;
+	color: #fff;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ }
+  .tab_icon:hover{
+	  background: #21a8c3;
+	  color:#fff;
+	  }
+ .tab_icon:hover span{ color : #fff;}
+ .tab_icon:hover i{
+	  background: #fff;
+	  color: #21a8c3;
+	  }
+                    .tab_icon span{ line-height: normal !important;}</style>
+                    
+                    
+                    
+                    <div class="tab-pane fade shadow rounded bg-white p-5" id="home_tab-4">
+                        <h4 class="font-italic mb-4">Online İşlemler</h4>
+                        <div class="row">
+                                                       <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/cozummasasi">
+                                      <i class="flaticon_kbb flaticon_kbb-customer-service"></i>                                    <span>153 Başvuru</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://kilavuzgenclik.kocaeli.bel.tr/AkademiUniversite/Online.aspx">
+                                          <i class="flaticon_kbb flaticon_kbb-graduation-diploma"></i>                                    <span>Akademi Üniversite</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://kilavuzgenclik.kocaeli.bel.tr/BilgiEvleri/Online.aspx">
+                                         <i class="flaticon_kbb flaticon_kbb-children"></i>                                    <span>Bilgievleri Başvuru</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://kilavuzgenclik.kocaeli.bel.tr/AkademiLise/Online.aspx">
+                                        <i class="flaticon_kbb flaticon_kbb-school"></i>                                    <span>Akademi Lise Başvuru</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://bilgisistemi.komek.org/WebBasvuruV2/Login/Index">
+                                         <i class="flaticon_kbb flaticon_kbb-application"></i>                                    <span>KO-MEK Başvuru</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://kilavuzgenclik.kocaeli.bel.tr/SporOkullari/Online.aspx">
+                                        <i class="flaticon_kbb flaticon_kbb-sport-mode"></i>                                    <span>Spor Okulları</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/SosyalHizmetler/KartBakiye">
+                                      <i class="flaticon_kbb flaticon_kbb-card"></i>                                    <span>41 Kart Bakiye</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/Itfaiye/EmniyetRaporu">
+                                         <i class="flaticon_kbb flaticon_kbb-exam"></i>                                    <span>Yangın Emniyet(İtfaiye) Raporu Başvurusu</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/SosyalHizmetler/HayatinIcinden">
+                                      <i class="flaticon_kbb flaticon_kbb-couple"></i>                                    <span>Hayatın İçindeyim Başvuru </span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://www.komeksepeti.com/magaza/magaza-kayitol">
+                                      <i class="flaticon_kbb flaticon_kbb-online-shop"></i>                                    <span>KOMEKSEPETİ Satış</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/Basin/GezGorKocaeli">
+                                       <i class="flaticon_kbb flaticon_kbb-destination"></i>                                    <span>Gez Gör Kocaeli</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/Zabita/Index/">
+                                       <i class="flaticon_kbb flaticon_kbb-vehicle"></i>                                    <span>Çekilen Araç Sorgulama</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://sube2.isu.gov.tr/fatura/sorgula.aspx">
+                                     <i class="flaticon_kbb flaticon_kbb-bill-invoice"></i>                                    <span>İSU Fatura Sorgulama</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://www.kocaeli.bel.tr/hatlar/">
+                                     <i class="flaticon_kbb flaticon_kbb-bus-schedule"></i>                                    <span>Otobüs Saatleri </span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://www.kocaeli.bel.tr/vapurlar/">
+                                     <i class="flaticon_kbb flaticon_kbb-cruise"></i>                                    <span>Vapur Saatleri</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://www.kocaeli.bel.tr/imarplanlari.html">
+                                        <i class="flaticon_kbb flaticon_kbb-map-marker"></i>                                    <span>İmar Planı İlanları</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://tiyatrobilet.kocaeli.bel.tr/uyetakvim">
+                                     <i class="flaticon_kbb-theatre flaticon_kbb-theatre"></i>                                    <span>Tiyatro Bileti</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/Borc">
+                                      <i class="flaticon_kbb flaticon_kbb-bill"></i>                                    <span>Borç Sorgulama</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://www.kocaeli.bel.tr/hal-fiyatlari/">
+                                     <i class="flaticon_kbb flaticon_kbb-vegetables"></i>                                    <span>Hal Fiyatları</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/InsanKaynaklari/StajIndex">
+                                       <i class="flaticon_kbb flaticon_kbb-best-employee"></i>                                    <span>Staj Başvuru </span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/Giris/Index?ReturnUrl=%2FImarIsleri%2FProjeMuellifBasvuru">
+                                       <i class="flaticon_kbb flaticon_kbb-briefing"></i>                                    <span>Proje Müellif Başvuru</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/Giris/Index?ReturnUrl=%2FSosyalHizmetler%2FMezbahaBasvuru">
+                                       <i class="flaticon_kbb flaticon_kbb-butcher"></i>                                    <span>Mezbaha Başvuru</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://ebelediye.kocaeli.bel.tr/Camasirhane">
+                                     <i class="flaticon_kbb flaticon_kbb-laundry-machine"></i>                                    <span>Çamaşırhane Başvuru</span></a>
+                                </div>
+                                                            <div class="col-md-2 col-6"> 
+                                    <a target="_blank" class="content_card tab_icon" href="https://www.ustamkocaeli.com/Login/Index">
+                                        <i class="flaticon_kbb flaticon_kbb-worker"></i>                                    <span>USTAM Başvuru</span></a>
+                                </div>
+                                                           
+                            
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="tab-pane fade shadow rounded bg-white p-5" id="home_tab-3">
+                        <h4 class="font-italic mb-4">Sosyal Medya</h4>
+                        <div class="social_share_area social_home">
+                            <div class="row">
+                                <div class="col-md-3 col-6"> 
+                                    <a target="_blank" class="social_button1 instagram"  href="https://www.instagram.com/kocaelibld/"><i class="fa-brands fa-instagram"></i><span>Instagram'da</span></a>
+                                </div>
+                                <div class="col-md-3 col-6"> 
+                                    <a target="_blank" class="social_button1 twitter" href="https://twitter.com/kocaelibld"><i class="icon-x"></i><span>Twitter'da</span></a>
+                                </div>
+                                <div class="col-md-3 col-6"> 
+                                    <a target="_blank" class="social_button1 facebook" href="https://www.facebook.com/kocaelibld"><i class="fa-brands fa-facebook-f"></i><span>Facebook'ta</span></a>
+                                </div>
+                                <div class="col-md-3 col-6"> 
+                                    <a target="_blank" class="social_button1 linkedin" href="https://www.linkedin.com/company/kocaelibld/"><i class="fa-brands fa-linkedin-in"></i><span>Linkedin'de</span></a>
+                                </div>
+                                <div class="col-md-3 col-6"> 
+                                    <a target="_blank" class="social_button1 youtube"  href="https://www.youtube.com/user/kocaelibld"><i class="fa-brands fa-youtube"></i><span>Youtube</span></a>
+                                </div>
+                                
+                                <div class="col-md-3 col-6"> 
+                                    <a target="_blank" class="social_button1 linkedin" href="https://www.tiktok.com/@kocaelibld"><i class="fa-brands fa-tiktok"></i><span>Tiktok'ta</span></a>
+                                </div>
+                                
+                                
+                                <div class="col-md-3 col-6"> 
+                                    <a target="_blank" class="social_button1 whatsapp" href="https://whatsapp.com/channel/0029VaAgBkdBlHpWlvArNH01"><i class="fa-brands fa-whatsapp"></i><span>Whatsapp'ta</span></a>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+ 
+<section class="section_style" style="background: #fff !important; padding-bottom:0px !important; padding:60px 0px;">
+    <div class="container">
+        <div class="row artefacts">
+            <div class="col-md-4">
+                <h4 class="section_title">KOCAELİ'DE <br><span style="font-weight:300; font-size:28px">ESER ve HİZMETLER</span></h4>
+            </div>
+            <div class="col-md-8">
+                <ul class="nav nav-tabs nav-tabs-basic flex-end">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#tab3-1">Tamamlanan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab3-2">Devam Eden</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab3-3">+100</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="projeler/">Tümü</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content mt-0 mt-md-0">
+                <div class="tab-pane fade show active" id="tab3-1">
+                    <div class="swiper-container mb-10" data-margin="15" data-autoplay="true" data-autoplaytime="5000" data-dots="false" data-nav="false" data-autoheight="false" data-items-xl="4" data-items-md="2" data-items-xs="1">
+                        <div class="swiper">
+                            <div class="swiper-wrapper">
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/gokceoren-koyu-ceribasi-topallar-arasi-yolda-asfaltlama-514.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240217-gokceoren-koyu-ceribasi-topallar-arasi-yolda-asfaltlama-980985-ee3feaf1b2a582abf18e.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">Gökçeören Köyü-Çeribaşı Topallar arası yolda asfaltlama</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/alikahya-yuvam-yuruyus-yolu-yapimi-515.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240217-alikahya-yuvam-yuruyus-yolu-yapimi-333986-94e5d2a170eab2edf55e.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">Alikahya-Yuvam Yürüyüş Yolu Yapımı</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/gebze-komurcuoglu-caddesi-asfaltlama-calismasi-517.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240218-gebze-komurcuoglu-caddesi-asfaltlama-calismasi-584460-66ce88b852fcfddf5adf.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">Gebze Kömürcüoğlu Caddesi Asfaltlama Çalışması</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/darica-dr-zeki-acar-caddesi-ustyapi-calismasi-518.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240218-darica-dr-zeki-acar-caddesi-ustyapi-calismasi-605188-74edbba877b16a30a409.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">Darıca Dr. Zeki Acar Caddesi Üstyapı Çalışması</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/izmit-mevlana-kavsagi-alt-gecidi-519.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240218-izmit-mevlana-kavsagi-alt-gecidi-87605-d20be190e7485cab8aa8.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">İzmit Mevlana Kavşağı Alt Geçidi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/d-100-kuzey-yan-yol-genisletme-projesi-520.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240218-d-100-kuzey-yan-yol-genisletme-projesi-238516-6d44e71b981271e01ca4.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">D-100 Kuzey Yan Yol Genişletme Projesi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/karamursel-kent-meydani-koprulu-kavsagi-cevre-duzenlemesi-521.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240218-karamursel-kent-meydani-koprulu-kavsagi-cevre-duzenlemesi-707857-22e023003dd63b216dbb.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title"> Karamürsel Kent Meydanı Köprülü Kavşağı Çevre Düzenlemesi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/korfez-yukari-hereke-meydan-duzenlemesi-522.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240219-korfez-yukari-hereke-meydan-duzenlemesi-985345-1e8cebd3ab58fc62c6f6.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">Körfez Yukarı Hereke Meydan Düzenlemesi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/golcuk-metin-uzuner-spor-tesisi-tadilati-523.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240219-golcuk-metin-uzuner-spor-tesisi-tadilati-983459-d60b523e63211b7e2a47.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">Gölcük Metin Uzuner Spor Tesisi Tadilatı</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/derince-belediyespor-tesisleri-yenileme-calismasi-524.html">
+                                            <span class="subtitle bluebg">TAMAMLANDI</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240219-derince-belediyespor-tesisleri-yenileme-calismasi-595778-661371f11de9b6d6221c.jpg" class="img-fluid img" alt="TAMAMLANDI"></span>
+                                            <div class="detail">
+                                                <span class="title">Derince Belediyespor Tesisleri Yenileme Çalışması</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab3-2">
+                    <div class="mb-10" data-dots="true" data-nav="false">
+                        <div class="testsp swiper">
+                            <div class="swiper-wrapper">
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/19-adet-tramvay-araci-alimi-516.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240218-19-adet-tramvay-araci-alimi-591509-515386b6399c7db7d307.jpg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">19 Adet Tramvay Aracı Alımı</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/kandira-akdurak-kentsel-donusum-projesi-526.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240219-kandira-akdurak-kentsel-donusum-projesi-364368-fbefea50d6ba4900274c.jpg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Kandıra Akdurak Kentsel Dönüşüm Projesi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/evde-bakim-destegi-527.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240221-evde-bakim-destegi-203199-3f2204ecebb0521fbc16.jpg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Evde Bakım Desteği</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/hasta-nakil-destegi-528.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240221-hasta-nakil-destegi-256285-604f89508ca0b595c260.jpg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Hasta Nakil Desteği</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/tarimsal-proje-destegi-529.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240221-tarimsal-proje-destegi-372397-b082be30c289886a9604.jpg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Tarımsal Proje Desteği</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/stadyum-tramvayi-539.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20241115-stadyum-tramvayi-304403-0558f694fbe66059da76.jpg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Stadyum Tramvayı</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/cayirova-bilim-ve-simulasyon-merkezi-564.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20241122-cayirova-bilim-ve-simulasyon-merkezi-748536-379de423441a5a20ec38.png" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Çayırova Bilim ve Simülasyon Merkezi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/derince-ertugrul-gazi-bulvari-ust-yapi-yenilemesi-636.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240523-derince-ertugrul-gazi-bulvari-ust-yapi-yenilemesi-825047-d4b364beefbf3f6be773.jpeg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Derince Ertuğrul Gazi Bulvarı Üst Yapı Yenilemesi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/basiskele-su-sporlari-merkezi-637.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240523-basiskele-su-sporlari-merkezi-934629-cf75c4d2a40eeda695c5.jpg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Başiskele Su Sporları Merkezi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/golcuk-skate-park-yapimi-639.html">
+                                            <span class="subtitle greenbg">DEVAM EDİYOR</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240523-golcuk-skate-park-yapimi-935999-c4fb1dc71f2cfd9ca1d9.jpg" class="img-fluid img" alt="DEVAM EDİYOR"></span>
+                                            <div class="detail">
+                                                <span class="title">Gölcük Skate Park Yapımı </span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab3-3">
+                    <div class="mb-10" data-dots="true" data-nav="false">
+                        <div class="testsp swiper">
+                            <div class="swiper-wrapper">
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/kocaeli-lojistik-koyu-537.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-kocaeli-lojistik-koyu-562937-7f1d5454a5e20232e8d7.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">Kocaeli Lojistik Köyü</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/korfez-kartepe-metrosu-538.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-korfez-kartepe-metrosu-334015-c2c75df51a76aefa9104.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">Körfez-Kartepe Metrosu</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/akcaray-kapasite-artirimi-540.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-akcaray-kapasite-artirimi-319859-12e4de957d68ed4abf05.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">Akçaray Kapasite Artırımı</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/izmit-yalova-otoyolu-541.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-izmit-yalova-otoyolu-781568-018a1590286b67868594.jpeg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">İzmit-Yalova Otoyolu</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/izmit-d-100-kent-gecisi-542.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-izmit-d-100-kent-gecisi-174055-b5893fc69592cfbd38af.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">İzmit D-100 Kent Geçişi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/basiskele-giris-kavsaklari-543.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-basiskele-giris-kavsaklari-758145-b52e04ff123bb82d59c0.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">Başiskele Giriş Kavşakları</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/d-100-koridor-revizyonu-544.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-d-100-koridor-revizyonu-705913-e844cf949201ceae86da.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">D-100 Koridor Revizyonu</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/golcuk-kent-gecisi-545.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-golcuk-kent-gecisi-311618-4fa6caa42de8881d4a48.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">Gölcük Kent Geçişi</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/korfez-limanlar-kavsagi-546.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-korfez-limanlar-kavsagi-715517-d1425c4bd1efef517816.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">Körfez Limanlar Kavşağı</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                                    <div class="item swiper-slide">
+                                        <a href="https://www.kocaeli.bel.tr/proje/gebze-darica-tuzla-sahil-yolu-547.html">
+                                            <span class="subtitle plus_100">+100</span>
+                                            <span class="thumb-info"><div class="linear"></div><img src="https://www.tahirbuyukakin.com/files/uploads/news/default/20240306-gebze-darica-tuzla-sahil-yolu-149322-bd5e7be76ff7efcda45f.jpg" class="img-fluid img" alt="+100"></span>
+                                            <div class="detail">
+                                                <span class="title">Gebze-Darıca-Tuzla Sahil Yolu</span>
+                                            </div>
+                                            <i class="text-5 icon-arrow-right-circle icons" style="color:#888B8E"></i>
+                                        </a>
+                                    </div>
+                                                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+             
+            </div>
+        </div>
+    </div>
+</section>
+ 	</div>
+</div>
+		<footer style="background:#064169">
+    <div class="footer_overlay112">
+        <div style="position: relative; z-index: 9; border-top: 0px solid #061f55; padding: 30px 0px 80px 0px;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4 footer_links">
+                                <span>KURUMSAL</span>
+                                <a target="_blank" class="hover-22 link-body" href="teskilat/">&raquo; ORGANİZASYON YAPISI</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/meclis.html">&raquo; MECLİS</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/plan-ve-raporlar.html">&raquo; PLAN ve RAPORLAR</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/mevzuat.html">&raquo; MEVZUAT</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/webfiles/userfiles/files/birimler/basin-yayin-ve-halkla-iliskiler-dairesi-baskanligi/KBB%20KURUMSAL%20K%C4%B0ML%C4%B0K.pdf">&raquo; KURUMSAL KİMLİK KILAVUZU</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/etik-komisyonu.html">&raquo; ETİK KOMİSYONU</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/dijital-medya.html">&raquo; DİJİTAL MEDYA</a>
+                                                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/bilgi/kvkk-bilgilendirme.html">&raquo; KVKK BİLGİLENDİRME</a>
+                                
+                            </div>
+                            <div class="col-md-4 footer_links">
+                                <span>KOCAELİ</span>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/tarihce.html">&raquo; TARİHÇE</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/sosyo-ekonomik-yapi.html">&raquo; SOSYO EKONOMİK YAPI</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/sayilarla-kocaeli.html">&raquo; SAYILARLA KOCAELİ</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://kocaeliyikesfet.com/">&raquo; KOCAELİ'Yİ KEŞFET</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/ilce-ilce-kocaeli.html">&raquo; İLÇE İLÇE KOCAELİ</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/turizm-rehberi.html">&raquo; TURİZM REHBERİ</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://kocaeliyiseyret.com/">&raquo; KOCAELİ'Yİ SEYRET</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://kocaelimarkalasiyor.com/">&raquo; KOCAELİ MARKALAŞIYOR</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/hizmet/kocaeli-ansiklopedisi-222.html">&raquo; KOCAELİ ANSİKLOPEDİSİ</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/havadan-kocaeli.html">&raquo; HAVADAN KOCAELİ</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://veri.kocaeli.bel.tr/">&raquo; VERİ KOCAELİ</a>
+                                <a target="_blank" class="hover-22 link-body" href="/yayinlar/">&raquo; YAYINLARIMIZ</a>
+                                                            </div>
+                            <div class="col-md-4 footer_links">
+                                <span>E-BELEDİYE</span>
+                                <a target="_blank" class="hover-22 link-body" href="https://ebelediye.kocaeli.bel.tr/">&raquo; E-BELEDİYE GİRİŞ</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.cimer.gov.tr/">&raquo; BİLGİ EDİNME</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://ebelediye.kocaeli.bel.tr/Giris/Index/?returnURL=/Borc/Index">&raquo; BORÇ ÖDEME VE SORGULAMA</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/ihale-odasi-canli-yayin.html">&raquo; İHALE ODASI CANLI YAYIN</a>
+                                <a target="_blank" class="hover-22 link-body" href="hal-fiyatlari/">&raquo; HAL FİYATLARI</a>
+                                <a target="_blank" class="hover-22 link-body" href="/imarplanlari.html">&raquo; İMAR PLANI İLANLARI</a>
+                                <a target="_blank" class="hover-22 link-body" href="https://www.kocaeli.bel.tr/sikca-sorulan-sorular.html">&raquo; SIKÇA SORULAN SORULAR</a>
+                                                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <span style="text-align:right; display:block;">
+                            <img alt="Kocaeli Büyükşehir Belediyesi" style="margin: -10px auto 20px auto; display: block;" src="https://www.kocaeli.bel.tr/theme/kbb/images/footer_logo.png" />
+                            <section id="social_share">      
+                                <div class="footer_social_share_area" style="margin:10px 0px;">
+                                    <a class="social_button twitter" target="_blank" href="https://twitter.com/kocaelibld"><i class="icon-x"></i></a>
+                                    <a class="social_button facebook" target="_blank" href="https://www.facebook.com/kocaelibld"><i class="fa-brands fa-facebook-f"></i></a>
+                                    <a class="social_button instagram" target="_blank" href="https://www.instagram.com/kocaelibld/"><i class="fa-brands fa-instagram"></i></a>
+                                    <a class="social_button youtube" target="_blank" href="https://www.youtube.com/user/kocaelibld"><i class="fa-brands fa-youtube"></i></a>
+                                    <a class="social_button whatsapp" target="_blank" href="https://whatsapp.com/channel/0029VaAgBkdBlHpWlvArNH01"><i class="fa-brands fa-whatsapp"></i></a>

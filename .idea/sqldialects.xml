@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V1__Create_Kurumsal_Etik_Arabuluculuk_Table.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V2__Create_SikayetIletisim_Table.sql" dialect="Oracle" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V2__Insert_Kurumsal_Etik_Arabuluculuk.sql" dialect="GenericSQL" />
+  </component>
+</project>
