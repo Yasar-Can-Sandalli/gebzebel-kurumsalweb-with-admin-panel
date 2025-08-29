@@ -1,0 +1,70 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: black; /* Beyaz alanı engellemek için */
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.login-page10 {
+
+    --login-color: #c4c3ca;
+    --login-inner-height: 460px;
+    --login-inner-bg: #2a2b38;
+    --login-input: #c4c3ca;
+    --login-input-bg: #1f2029;
+    --login-input-placeholder: #49475d;
+    --login-input-placeholder-active: #53e3a6;
+    --login-input-bg-hover: #191821;
+    --login-input-bg-focus: #23222e;
+    --login-input-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+    --login-btn: #fff;
+    --login-btn-bg: #a7e245;
+    --login-btn-focus: white;
+    --login-btn-hover: #53e3a6;
+    --login-btn-active: #1aa97d;
+    --login-footer: #ffffff99;
+    --login-icon-color: #ffeba7;
+    --login-icon-toggle-color: #102770;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+}
+
+.login-page10 section button:focus {
+    box-shadow: 0 0 0 2px rgba(0, 142, 240, 0.26);
+}
+
+.login-page10 section button:hover {
+    background-color: #0070bd;
+}
+
+.login-page10 section button:active {
+    background-color: #00528a;
+}
+
+[data-color-mode*='dark'] .login-page10,
+[data-color-mode*='light'] .login-page10 {
+
+    --login-color: #c4c3ca;
+    --login-inner-height: 460px;
+    --login-inner-bg: #2a2b38;
+    --login-input: #c4c3ca;
+    --login-input-bg: #1f2029;
+    --login-input-placeholder: #49475d;
+    --login-input-placeholder-active: #53e3a6;
+    --login-input-bg-hover: #191821;
+    --login-input-bg-focus: #23222e;
+    --login-input-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+    --login-btn: #fff;
+    --login-btn-bg: #a7e245;
+    --login-btn-focus: white;
+    --login-btn-hover: #53e3a6;
+    --login-btn-active: #1aa97d;
+    --login-footer: #ffffff99;
+    --login-icon-color: #ffeba7;
+    --login-icon-toggle-color: #102770;
+}

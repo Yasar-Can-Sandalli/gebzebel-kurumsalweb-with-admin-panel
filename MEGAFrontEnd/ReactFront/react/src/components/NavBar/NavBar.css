@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+#logo{
+    height:50px;
+    margin-left:10px;
+}
+nav {
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 20px;
+    border-radius: 30px; /* Apply border-radius for rounded corners */
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol Sayfası</title>
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="images/signuplogo.png" width alt="Logo" class="logo">
+        </div>
+
+        <h2>Kayıt Ol</h2>
+        <form>
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="first-name">Adınız</label>
+                    <input type="text" id="first-name" name="first-name" placeholder="Adınızı giriniz" required>
+                </div>
+
+                <div class="input-item">
+                    <label for="last-name">Soyadınız</label>
+                    <input type="text" id="last-name" name="last-name" placeholder="Soyadınızı giriniz" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="TC">TC Kimlik Numarası</label>
+                    <input type="text" id="TC" name="TC" placeholder="TC Kimlik Numaranızı giriniz" required>
+                </div>
+
+                <div class="input-item">
+                    <label for="phone">Telefon</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Telefon numaranızı giriniz" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="password">Şifre</label>
+                    <input type="password" id="password" name="password" placeholder="Şifrenizi giriniz" required>
+                </div>
+
+                <div class="input-item">
+                    <label for="confirm-password">Şifre Doğrulama</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Şifrenizi doğrulayınız" required>
+                </div>
+            </div>
+
+            <button type="submit">Kayıt Ol</button>
+        </form>
+    </div>
+
+</body>
+</html>

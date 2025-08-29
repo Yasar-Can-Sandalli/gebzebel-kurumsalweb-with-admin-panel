@@ -1,0 +1,1 @@
+impdp system/123456@localhost/XE DIRECTORY=export_dir DUMPFILE=export_file.dmp LOGFILE=import_log.log FULL=Y
