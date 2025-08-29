@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
 
     React.useEffect(() => {
         if (isAuthenticated && user) {
-            navigate('/panel/mainPage');
+            navigate('/panel/dashboard');
         }
     }, [isAuthenticated, user, navigate]);
 
@@ -130,7 +130,7 @@ const LoginPage: React.FC = () => {
 
             if (success) {
                 setMessage('Giriş başarılı! Yönlendiriliyorsunuz...');
-                navigate('/panel/mainPage');
+                navigate('/panel/dashboard');
             } else {
                 setError('Giriş başarısız. Kullanıcı adı veya şifre hatalı.');
             }
