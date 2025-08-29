@@ -58,7 +58,7 @@ public class EtkinlikService {
         }else{
             System.err.println("Etkinlik Bulunamadı !!!");
             return false;
-        } 
+        }
 
     }
 

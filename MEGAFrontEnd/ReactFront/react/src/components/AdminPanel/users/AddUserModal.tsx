@@ -1,11 +1,15 @@
+// src/components/AddUserModal.tsx
 import React, {useEffect, useState} from 'react';
 import { User } from '../services/userService.tsx';
 import { X } from 'lucide-react';
 import {createUser} from '../services/userService.tsx';
 import { PermissionService } from '../services/YetkiServis.tsx';
 
-// Düzenlenebilir statüler
+
+// Düzenlenebilir statüler (Filtrelerdeki "All Status" hariç)
 const assignableStatusOptions = ['Active', 'Inactive', 'Pending'];
+
+// Spring Boot API endpoint
 
 interface AddUserModalProps {
     isOpen: boolean;
@@ -13,44 +17,38 @@ interface AddUserModalProps {
     onAdd: (newUser: User) => void;
 }
 
-/** Form için ayrı tip: password burada, User modelinde olmak zorunda değil */
-type AddUserForm = {
-    tcno: string;
-    isim: string;
-    password: string;
-    status: string;
-    yetkilerJson: string;
-};
+
 
 export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalProps) {
-    const [formData, setFormData] = useState<AddUserForm>({
+    const [formData, setFormData] = useState<Partial<User>>({
         tcno: '',
         isim: '',
         password: '',
         status: assignableStatusOptions[0],
-        yetkilerJson: '{}',
-    });
+        yetkilerJson: '{}', // Başlangıçta boş bir JSON
 
+    });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    // Yetkiler servisinden gelen nesne (senin eski mantık)
     const [yetkiler, setYetkiler] = useState(PermissionService.getDefaultPermissions());
-
-    // Yetkiler değişince formData.yetkilerJson güncelle
+    // Yetkiler değiştiğinde formData'yı güncelle
     useEffect(() => {
-        setFormData(prev => ({ ...prev, yetkilerJson: JSON.stringify(yetkiler) }));
+        setFormData(prev => ({
+            ...prev,
+            yetkilerJson: JSON.stringify(yetkiler)
+        }));
     }, [yetkiler]);
-
-    if (!isOpen) return null;
+    // Modal kapalıysa hiçbir şey render etme
+    if (!isOpen) {
+        return null;
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
-
     const handleYetkiChange = (alan: string, yetki: string, value: boolean) => {
-        setYetkiler((prev: any) => {
+        setYetkiler(prev => {
             const updated = {
                 ...prev,
                 [alan]: {
@@ -68,31 +66,35 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalPro
         setErrorMessage(null);
 
         try {
-            const { tcno, isim, password, status } = formData;
-            if (tcno && isim && password && status) {
+            if (formData.tcno && formData.isim && formData.password && formData.status) {
                 const newUserData = {
-                    tcno,
-                    isim,
-                    password,
-                    status,
-                    yetkilerJson: JSON.stringify(yetkiler),
+                    tcno: formData.tcno,
+                    isim: formData.isim,
+                    password: formData.password,
+                    yetkilerJson: JSON.stringify(yetkiler), // Güncel yetkileri kullan
+                    status: formData.status,
                 };
 
+                // Use the createUser service function instead of direct axios call
                 const createdUser = await createUser(newUserData);
+
                 onAdd(createdUser);
-                handleClose();
+                onClose(); // Close the modal
             } else {
-                throw new Error('Lütfen tüm zorunlu alanları doldurun.');
+                throw new Error('Please fill in all required fields');
             }
         } catch (error: any) {
             console.error('Failed to add user:', error);
-            setErrorMessage(error?.message || 'User creation failed');
+            // Use the error message from the service function
+            setErrorMessage(error.message || 'User creation failed');
         } finally {
             setIsSubmitting(false);
         }
     };
 
+    // İptal butonu veya X butonu ile modal'ı kapat
     const handleClose = () => {
+        console.log('Closing modal'); // Debugging için
         setFormData({
             tcno: '',
             isim: '',
@@ -104,10 +106,12 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalPro
         setErrorMessage(null);
         onClose();
     };
+    if (!isOpen) {
+        return null;
+    }
 
     return (
-        // 🔹 Şeffaf + blur arkaplan
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-semibold text-gray-800">Kullanıcı Ekle</h3>
@@ -131,7 +135,7 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalPro
                             type="text"
                             id="tcno"
                             name="tcno"
-                            value={formData.tcno}
+                            value={formData.tcno || ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             required
@@ -146,7 +150,7 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalPro
                             type="password"
                             id="password"
                             name="password"
-                            value={formData.password}
+                            value={formData.password || ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             required
@@ -161,7 +165,7 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalPro
                             type="text"
                             id="isim"
                             name="isim"
-                            value={formData.isim}
+                            value={formData.isim || ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             required
@@ -186,9 +190,11 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalPro
                         </select>
                     </div>
 
-                    {/* Yetkiler */}
+                    {/* Yetkiler Bölümü */}
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Yetkiler</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Yetkiler
+                        </label>
                         <div className="space-y-4">
                             {Object.entries(yetkiler).map(([alan, yetkiGrubu]: [string, any]) => (
                                 <div key={alan} className="border p-3 rounded">
@@ -203,8 +209,8 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalPro
                                                     className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                                                 />
                                                 <span className="ml-2 text-sm text-gray-700 capitalize">
-                          {yetki}
-                        </span>
+                                                    {yetki}
+                                                </span>
                                             </label>
                                         ))}
                                     </div>
