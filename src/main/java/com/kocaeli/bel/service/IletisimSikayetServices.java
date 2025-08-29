@@ -93,7 +93,9 @@ public class IletisimSikayetServices {
         s.getEtiketler().clear();
         s.getEtiketler().addAll(found);
         return iletisimSikayetRepository.save(s);
+        //
     }
+    //iletisım
 
     // (Opsiyonel) Etiket CRUD
     public Etiket createEtiket(Etiket etiket) {
