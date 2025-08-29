@@ -1,0 +1,56 @@
+;;; 
+Export: Release 23.0.0.0.0 - Production on Tue Jun 17 11:18:11 2025
+Version 23.6.0.24.10
+
+Copyright (c) 1982, 2024, Oracle and/or its affiliates.  All rights reserved.
+;;; 
+Connected to: Oracle Database 23ai Free Release 23.0.0.0.0 - Develop, Learn, and Run for Free
+Starting "C##MUSA"."SYS_EXPORT_SCHEMA_01":  C##MUSA/********@MUSAPC:1521/FREE schemas=C##MUSA directory=export_dir dumpfile=export_file.dmp logfile=export_log.log 
+Processing object type SCHEMA_EXPORT/TABLE/TABLE_DATA
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/STATISTICS/INDEX_STATISTICS
+Processing object type SCHEMA_EXPORT/TABLE/STATISTICS/TABLE_STATISTICS
+Processing object type SCHEMA_EXPORT/USER
+Processing object type SCHEMA_EXPORT/SYSTEM_GRANT
+Processing object type SCHEMA_EXPORT/ROLE_GRANT
+Processing object type SCHEMA_EXPORT/DEFAULT_ROLE
+Processing object type SCHEMA_EXPORT/TABLESPACE_QUOTA
+Processing object type SCHEMA_EXPORT/PRE_SCHEMA/PROCACT_SCHEMA/LOGREP
+Processing object type SCHEMA_EXPORT/SEQUENCE/SEQUENCE
+Processing object type SCHEMA_EXPORT/TABLE/TABLE
+Processing object type SCHEMA_EXPORT/TABLE/GRANT/OWNER_GRANT/OBJECT_GRANT
+Processing object type SCHEMA_EXPORT/TABLE/COMMENT
+Processing object type SCHEMA_EXPORT/TABLE/IDENTITY_COLUMN
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/INDEX
+Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/CONSTRAINT
+Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/REF_CONSTRAINT
+. . exported "C##MUSA"."MUDURLUKLER"                         2 MB      29 rows
+. . exported "C##MUSA"."GERI_DONUSUM_DETAY"               46.4 KB       9 rows
+. . exported "C##MUSA"."KURUMSAL_BASKAN_MISYON_VIZYON_ILKELERIMIZ"   19.1 KB       4 rows
+. . exported "C##MUSA"."HIZMETLER_DETAYLI_BILGI"          65.8 KB      30 rows
+. . exported "C##MUSA"."GEBZE_TARIHCE_BUGUNKUGEBZE"       68.4 KB       2 rows
+. . exported "C##MUSA"."GEBZE_TARIHI_YERLER"              33.2 KB      12 rows
+. . exported "C##MUSA"."HIZMETLER_TUMU"                   29.7 KB      30 rows
+. . exported "C##MUSA"."KURUMSAL_YONETIM_SEMASI"          24.7 KB      11 rows
+. . exported "C##MUSA"."HABERLER"                         17.2 KB      56 rows
+. . exported "C##MUSA"."GEBZE_FOTOĞRAF_SANAL_TUR"         15.8 KB      44 rows
+. . exported "C##MUSA"."HİZMETLER_GERİ_DONUSUM"             15 KB       9 rows
+. . exported "C##MUSA"."DUYURULAR"                         8.3 KB       6 rows
+. . exported "C##MUSA"."KULLANICILAR"                      8.8 KB       4 rows
+. . exported "C##MUSA"."GEBZE_TARIHIYERLER_AKTIVITELER"   17.6 KB      40 rows
+. . exported "C##MUSA"."GEBZE_MAHALLEMUHTARLARI"          15.2 KB      40 rows
+. . exported "C##MUSA"."KURUMSAL_MECLIS_ESKIBASKANLAR"    14.8 KB      68 rows
+. . exported "C##MUSA"."MECLIS_KARARLARI_KURUMSAL_KIMLIK_KURUMSAL_RAPORLAR_KURUMSAL_DÖKÜMANLAR"   14.2 KB      70 rows
+. . exported "C##MUSA"."GEBZE_TARIHIYERLER_GALERI"          11 KB      39 rows
+. . exported "C##MUSA"."KURUMSAL_ETIK_ARABULUCULUK"       10.4 KB      28 rows
+. . exported "C##MUSA"."ETKINLIKLER"                       9.5 KB      18 rows
+. . exported "C##MUSA"."GEBZE_KARDESSEHIRLER"              8.6 KB      14 rows
+. . exported "C##MUSA"."HIZMETLER_DETAY"                   8.7 KB       1 rows
+. . exported "C##MUSA"."GEBZE_UYE_OLDUGUMUZ_BIRLIKLER"     7.5 KB       9 rows
+. . exported "C##MUSA"."KATEGORILER"                       5.6 KB       5 rows
+. . exported "C##MUSA"."GEBZE_TARİHİ_YERLER"                 0 KB       0 rows
+. . exported "C##MUSA"."PROJELER"                          7.2 KB       4 rows
+Master table "C##MUSA"."SYS_EXPORT_SCHEMA_01" successfully loaded/unloaded
+******************************************************************************
+Dump file set for C##MUSA.SYS_EXPORT_SCHEMA_01 is:
+  D:\JAVAKOCAELI\KOCAELIBELPROJE\EXPORT\EXPORT_FILE.DMP
+Job "C##MUSA"."SYS_EXPORT_SCHEMA_01" successfully completed at Tue Jun 17 11:20:00 2025 elapsed 0 00:01:47

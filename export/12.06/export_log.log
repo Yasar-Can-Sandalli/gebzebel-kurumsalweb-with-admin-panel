@@ -1,0 +1,11 @@
+;;; 
+Export: Release 23.0.0.0.0 - Production on Tue Jun 17 11:17:19 2025
+Version 23.6.0.24.10
+
+Copyright (c) 1982, 2024, Oracle and/or its affiliates.  All rights reserved.
+;;; 
+Connected to: Oracle Database 23ai Free Release 23.0.0.0.0 - Develop, Learn, and Run for Free
+ORA-39000: bad dump file specification
+ORA-31641: unable to create dump file "D:\JavaKocaeli\KocaeliBelProje\export\export_file.dmp"
+ORA-27038: created file already exists
+OSD-04010: <create> option specified, file already exists

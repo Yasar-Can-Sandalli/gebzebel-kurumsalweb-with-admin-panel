@@ -1,0 +1,12 @@
+-- Oracle sequence for IMAR_RUHSAT table ID column
+BEGIN
+  EXECUTE IMMEDIATE 'CREATE SEQUENCE IMAR_RUHSAT_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE';
+EXCEPTION
+  WHEN OTHERS THEN
+    IF SQLCODE != -955 THEN -- ORA-00955: name is already used by an existing object
+      RAISE;
+    END IF;
+END;
+/
+
+
