@@ -40,13 +40,10 @@ public class User {
     }
 
     // Constructor with ID
-    public User(Long id, String TCNo, String isim, String password, String status, String yetkilerJson) {
+    public User(Long id, String TCNo, String password) {
         this.id = id;
         this.TCNo = TCNo;
-        this.isim = isim;
         this.password = password;
-        this.status = status;
-        this.yetkilerJson = yetkilerJson;
     }
 
     // Copy constructor - FIXED
