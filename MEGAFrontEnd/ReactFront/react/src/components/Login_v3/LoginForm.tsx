@@ -28,6 +28,8 @@ const authService = {
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
     // Login Mutation
@@ -50,11 +52,27 @@ const LoginPage: React.FC = () => {
         e.preventDefault();
         setError(null);
 
+        // Eğer "Beni Hatırla" seçeneği işaretlenmişse, kullanıcı adını localStorage'a kaydet
+        if (rememberMe) {
+            localStorage.setItem('rememberedUser', username);
+        } else {
+            localStorage.removeItem('rememberedUser');
+        }
+
         loginMutation.mutate({
             username,
             password
         });
     };
+    
+    // Sayfa yüklendiğinde localStorage'dan kaydedilmiş kullanıcı adını kontrol et
+    React.useEffect(() => {
+        const rememberedUser = localStorage.getItem('rememberedUser');
+        if (rememberedUser) {
+            setUsername(rememberedUser);
+            setRememberMe(true);
+        }
+    }, []);
 
     return (
         <section className="h-screen bg-[url('white.jpg')] bg-cover bg-center flex items-center justify-center">
@@ -98,15 +116,41 @@ const LoginPage: React.FC = () => {
                                                 required
                                             />
                                         </div>
-                                        <div className="mb-3">
+                                        <div className="mb-3 relative">
+                                            <div className="flex items-center">
+                                                <input
+                                                    type={showPassword ? "text" : "password"}
+                                                    placeholder="Parola"
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                    className="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-blue-500 transition-colors duration-300"
+                                                    required
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="absolute right-2 text-gray-500"
+                                                >
+                                                    {showPassword ? (
+                                                        <span role="img" aria-label="hide">👁️‍🗨️</span>
+                                                    ) : (
+                                                        <span role="img" aria-label="show">👁️</span>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="mb-3 flex items-center">
                                             <input
-                                                type="password"
-                                                placeholder="Parola"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                className="w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:border-blue-500 transition-colors duration-300"
-                                                required
+                                                type="checkbox"
+                                                id="rememberMe"
+                                                checked={rememberMe}
+                                                onChange={(e) => setRememberMe(e.target.checked)}
+                                                className="mr-2"
                                             />
+                                            <label htmlFor="rememberMe" className="text-sm text-gray-600">
+                                                Beni Hatırla
+                                            </label>
                                         </div>
                                         <div className="text-center mb-4">
                                             <TERipple rippleColor="light" className="w-full">
@@ -121,9 +165,24 @@ const LoginPage: React.FC = () => {
                                                     {loginMutation.isPending ? 'Giriş Yapılıyor...' : 'GİRİŞ YAP'}
                                                 </button>
                                             </TERipple>
-                                            <a href="#" className="block mt-2 text-sm">
+                                            <button 
+                                                type="button" 
+                                                onClick={() => {
+                                                    const tcNo = prompt("Şifre sıfırlama için TC Kimlik Numaranızı giriniz:");
+                                                    if (tcNo) {
+                                                        axios.post('http://localhost:8080/api/auth/forgot-password', { tcNo })
+                                                            .then(response => {
+                                                                alert(response.data.message);
+                                                            })
+                                                            .catch(error => {
+                                                                alert(error.response?.data?.message || "Şifre sıfırlama işlemi başarısız oldu.");
+                                                            });
+                                                    }
+                                                }}
+                                                className="block mt-2 text-sm text-blue-600 hover:underline"
+                                            >
                                                 Parolanızı Mı Unuttunuz?
-                                            </a>
+                                            </button>
                                         </div>
                                         <div className="text-center mt-6">
                                             <p className="mb-4 text-sm">Hesabınız Yok Mu?</p>
