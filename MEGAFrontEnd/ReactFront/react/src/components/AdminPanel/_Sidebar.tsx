@@ -87,10 +87,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             <nav className="p-4 flex-1 overflow-y-auto">
                 <ul className="space-y-1">
                     <Item
-                        to="/panel/dashboard"
+                        to="/panel/mainPage"
                         label="Anasayfa"
                         icon={<Home size={16} />}
-                        active={pathname.startsWith("/panel/dashboard")}
+                        active={pathname.startsWith("/panel/mainPage")}
                     />
 
                     {/* Kurumsal */}
