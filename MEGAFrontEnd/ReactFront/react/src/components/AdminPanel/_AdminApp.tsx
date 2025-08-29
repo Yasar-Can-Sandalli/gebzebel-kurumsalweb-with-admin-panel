@@ -33,9 +33,9 @@ export default function AdminPanelApp() {
         <SearchProvider>
         <AdminLayout>
             <Routes>
-                {/* /panel → /panel/dashboard */}
-                <Route index element={<Navigate to="panel" replace />} />
-                <Route path="panel" element={<HomePanel />} />
+                {/* /panel → /panel/mainPage */}
+                <Route index element={<Navigate to="mainPage" replace />} />
+                <Route path="mainPage" element={<HomePanel />} />
 
                 {/* Kullanıcılar */}
                 <Route path="/panel/users" element={<UsersPage />} />
