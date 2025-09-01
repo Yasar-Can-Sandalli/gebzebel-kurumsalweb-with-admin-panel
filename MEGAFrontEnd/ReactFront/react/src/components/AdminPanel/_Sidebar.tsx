@@ -103,6 +103,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                             </summary>
                             <ul className="ml-7 mt-1 space-y-1 text-sm">
                                 {[
+                                    {to:"/panel/kurumsal/baskan" ,label:"Başkan"},
                                     { to: "/panel/kurumsal/yonetim", label: "Yönetim" },
                                     { to: "/panel/kurumsal/vizyon", label: "Vizyon-Misyon-İlke" },
                                     { to: "/panel/kurumsal/raporlar", label: "Raporlar" },
