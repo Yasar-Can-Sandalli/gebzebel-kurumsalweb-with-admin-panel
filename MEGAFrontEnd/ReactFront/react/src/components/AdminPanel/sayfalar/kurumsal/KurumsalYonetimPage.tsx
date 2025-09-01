@@ -1,4 +1,6 @@
+// src/sayfalar/kurumsal/KurumsalYonetimPage.tsx
 import { useEffect, useState, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Loader from "../../../loader.tsx";
 import { fetchYonetimRows, YonetimRow } from "../../services/pageService.tsx";
 import { MoreHorizontal, Search } from "lucide-react";
@@ -12,6 +14,7 @@ export default function KurumsalYonetimPage() {
     const [openAction, setOpenAction] = useState<number | null>(null);
 
     const actionRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
     useClickOutside(actionRef, () => setOpenAction(null));
 
     const inputCls =
@@ -34,7 +37,9 @@ export default function KurumsalYonetimPage() {
         const q = search.toLowerCase().trim();
         if (!q) return rows;
         return rows.filter(
-            (r) => r.isimSoyisim.toLowerCase().includes(q) || String(r.id).includes(q)
+            (r) =>
+                r.isimSoyisim.toLowerCase().includes(q) ||
+                String(r.id).includes(q)
         );
     }, [rows, search]);
 
@@ -91,16 +96,22 @@ export default function KurumsalYonetimPage() {
                                         src={r.resimUrl}
                                         alt={r.isimSoyisim}
                                         className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200"
-                                        onError={(e) => (e.currentTarget.style.visibility = "hidden")}
+                                        onError={(e) =>
+                                            (e.currentTarget.style.visibility = "hidden")
+                                        }
                                     />
-                                    <code className="text-xs text-slate-600 break-all">{r.resimUrl}</code>
+                                    <code className="text-xs text-slate-600 break-all">
+                                        {r.resimUrl}
+                                    </code>
                                 </div>
                             </td>
                             <td className="px-4 py-3">{r.pozisyon}</td>
                             <td className="px-4 py-3 text-right relative">
                                 <button
                                     className="p-2 rounded-md hover:bg-slate-100 text-slate-600"
-                                    onClick={() => setOpenAction(openAction === r.id ? null : r.id)}
+                                    onClick={() =>
+                                        setOpenAction(openAction === r.id ? null : r.id)
+                                    }
                                 >
                                     <MoreHorizontal size={16} />
                                 </button>
@@ -111,11 +122,20 @@ export default function KurumsalYonetimPage() {
                                         ref={actionRef}
                                         className="absolute right-4 top-full mt-2 w-44 bg-white rounded-xl shadow-lg shadow-blue-500/10 ring-1 ring-slate-200/60 z-20 overflow-hidden"
                                     >
-                                        <button className="block w-full text-left px-3 py-2 hover:bg-slate-50">
-                                            Detay
+                                        <button
+                                            className="block w-full text-left px-3 py-2 hover:bg-slate-50"
+                                            onClick={() => {
+                                                setOpenAction(null);
+                                                navigate(`/panel/kurumsal/yonetim/${r.id}/edit`, {
+                                                    // İstersen formu hızla doldurmak için state ile ön veri de gönderebilirsin
+                                                    state: r,
+                                                });
+                                            }}
+                                        >
+                                            Düzenle
                                         </button>
                                         <button className="block w-full text-left px-3 py-2 hover:bg-slate-50">
-                                            Düzenle
+                                            Detay
                                         </button>
                                         <button className="block w-full text-left px-3 py-2 text-red-600 hover:bg-slate-50">
                                             Sil
