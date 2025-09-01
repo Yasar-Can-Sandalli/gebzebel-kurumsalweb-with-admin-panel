@@ -4,9 +4,11 @@ import Sidebar from "./_Sidebar";
 
 interface AdminLayoutProps {
     children: React.ReactNode;
+    /** Edit vb. sayfalarda üst header'ı gizlemek için */
+    hideHeader?: boolean;
 }
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
+export default function AdminLayout({ children, hideHeader = false }: AdminLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     return (
@@ -28,7 +30,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     sidebarOpen ? "md:ml-72" : "md:ml-0"
                 }`}
             >
-                <Header onToggleSidebar={() => setSidebarOpen((v) => !v)} />
+                {!hideHeader && <Header onToggleSidebar={() => setSidebarOpen((v) => !v)} />}
 
                 {/* içerik alanı: merkezli + card'lar için uniform padding */}
                 <main className="flex-1 overflow-y-auto">
