@@ -81,12 +81,22 @@ const SignUP: React.FC = () => {
         // 11 haneli olmalı ve sadece rakam içermeli
         const regex = /^\d{11}$/;
         if (!regex.test(tcno)) {
+            if (tcno.length === 0) {
+                setTcNoError("TC Kimlik No boş olamaz");
+            } else if (tcno.length < 11) {
+                setTcNoError("TC Kimlik No 11 haneli olmalıdır (eksik hane)");
+            } else if (tcno.length > 11) {
+                setTcNoError("TC Kimlik No 11 haneli olmalıdır (fazla hane)");
+            } else {
+                setTcNoError("TC Kimlik No sadece rakam içermelidir");
+            }
             return false;
         }
         
         // TC Kimlik algoritması kontrolü
         // 1) İlk hane 0 olamaz
-        if (tcno[0] === '0') {
+        if (tcno.startsWith('0')) {
+            setTcNoError("TC Kimlik No 0 ile başlayamaz");
             return false;
         }
         
@@ -105,6 +115,7 @@ const SignUP: React.FC = () => {
         
         const digit10 = (oddSum * 7 - evenSum) % 10;
         if (digit10 !== parseInt(tcno[9])) {
+            setTcNoError("Geçersiz TC Kimlik No (10. hane kontrolü başarısız)");
             return false;
         }
         
@@ -116,21 +127,45 @@ const SignUP: React.FC = () => {
         
         const digit11 = sum % 10;
         if (digit11 !== parseInt(tcno[10])) {
+            setTcNoError("Geçersiz TC Kimlik No (11. hane kontrolü başarısız)");
             return false;
         }
         
+        setTcNoError(null);
         return true;
     };
 
     // İsim doğrulama
     const validateIsim = (name: string): boolean => {
+        if (name.length === 0) {
+            setIsimError("İsim boş olamaz");
+            return false;
+        }
+        
         // Sadece harfler ve boşluk içermeli
         const regex = /^[a-zA-ZğüşıöçĞÜŞİÖÇ ]+$/;
-        return regex.test(name);
+        if (!regex.test(name)) {
+            setIsimError("İsim sadece harflerden oluşmalıdır (sayı ve özel karakter kullanılamaz)");
+            return false;
+        }
+        
+        if (name.length < 2) {
+            setIsimError("İsim en az 2 karakter olmalıdır");
+            return false;
+        }
+        
+        setIsimError(null);
+        return true;
     };
 
     // Parola doğrulama ve güçlülük hesaplama
     const validatePassword = (pass: string): boolean => {
+        if (pass.length === 0) {
+            setPasswordError("Parola boş olamaz");
+            setPasswordStrength(0);
+            return false;
+        }
+        
         // Şifre güçlülüğünü hesapla
         let strength = 0;
         
@@ -141,18 +176,40 @@ const SignUP: React.FC = () => {
         // Karakter çeşitliliği kontrolleri
         if (/[A-Z]/.test(pass)) strength += 1; // büyük harf kontrolü
         if (/[a-z]/.test(pass)) strength += 1; // küçük harf kontrolü
-        if (/[0-9]/.test(pass)) strength += 1; // rakam kontrolü
-        if (/[?@!#%+\-*%]/.test(pass)) strength += 1; // özel karakter kontrolü
+        if (/\d/.test(pass)) strength += 1; // rakam kontrolü
+        if (/[?@!#%+\-*]/.test(pass)) strength += 1; // özel karakter kontrolü
         
         // Güçlülük seviyesini güncelle (0-5 arası)
         setPasswordStrength(strength);
         
-        // Doğrulama sonucu
-        return pass.length >= 8 && 
-               /[A-Z]/.test(pass) && 
-               /[a-z]/.test(pass) && 
-               /[0-9]/.test(pass) && 
-               /[?@!#%+\-*%]/.test(pass);
+        // Detaylı hata mesajları
+        if (pass.length < 8) {
+            setPasswordError("Parola en az 8 karakter olmalıdır");
+            return false;
+        }
+        
+        if (!/[A-Z]/.test(pass)) {
+            setPasswordError("Parola en az bir büyük harf içermelidir");
+            return false;
+        }
+        
+        if (!/[a-z]/.test(pass)) {
+            setPasswordError("Parola en az bir küçük harf içermelidir");
+            return false;
+        }
+        
+        if (!/\d/.test(pass)) {
+            setPasswordError("Parola en az bir rakam içermelidir");
+            return false;
+        }
+        
+        if (!/[?@!#%+\-*]/.test(pass)) {
+            setPasswordError("Parola en az bir özel karakter (?@!#%+-*) içermelidir");
+            return false;
+        }
+        
+        setPasswordError(null);
+        return true;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -168,19 +225,16 @@ const SignUP: React.FC = () => {
         
         // TC Kimlik No doğrulama
         if (!validateTCNo(TCNo)) {
-            setTcNoError("Geçerli bir TC Kimlik Numarası giriniz");
             hasError = true;
         }
         
         // İsim doğrulama
         if (!validateIsim(isim)) {
-            setIsimError("İsim sadece harflerden oluşmalıdır");
             hasError = true;
         }
         
         // Parola doğrulama
         if (!validatePassword(password)) {
-            setPasswordError("Parola en az 8 karakter uzunluğunda olmalı ve büyük harf, küçük harf, rakam ve özel karakter içermelidir");
             hasError = true;
         }
         
@@ -241,7 +295,10 @@ const SignUP: React.FC = () => {
                                             value={TCNo}
                                             placeholder="TC Kimlik No"
                                             type="text" /* number yerine text kullanıyoruz, çünkü doğrulamayı kendimiz yapacağız */
-                                            onChange={(e) => setTCNo(e.target.value)}
+                                            onChange={(e) => {
+                                                setTCNo(e.target.value);
+                                                validateTCNo(e.target.value);
+                                            }}
                                             required
                                             className={`w-full px-3 py-2 border-b ${tcNoError ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:border-blue-500 transition-colors duration-300`}
                                         />
@@ -256,7 +313,10 @@ const SignUP: React.FC = () => {
                                             value={isim}
                                             placeholder="İsim"
                                             type="text"
-                                            onChange={(e) => setIsim(e.target.value)}
+                                            onChange={(e) => {
+                                                setIsim(e.target.value);
+                                                validateIsim(e.target.value);
+                                            }}
                                             required
                                             className={`w-full px-3 py-2 border-b ${isimError ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:border-blue-500 transition-colors duration-300`}
                                         />
@@ -285,9 +345,9 @@ const SignUP: React.FC = () => {
                                                 className="absolute right-2 text-gray-500"
                                             >
                                                 {showPassword ? (
-                                                    <span role="img" aria-label="hide">👁️‍🗨️</span>
+                                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E" alt="hide password" />
                                                 ) : (
-                                                    <span role="img" aria-label="show">👁️</span>
+                                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/%3E%3Cline x1='1' y1='1' x2='23' y2='23'/%3E%3C/svg%3E" alt="show password" />
                                                 )}
                                             </button>
                                         </div>
@@ -329,12 +389,12 @@ const SignUP: React.FC = () => {
                                             {registermutation.isPending ? 'Kayıt Yapılıyor...' : 
                                              redirectCountdown !== null ? 'Kayıt Başarılı' : 'Kayıt Ol'}
                                         </button>
-                                        <a
-                                            href="#"
-                                            className="block mt-2 text-sm text-blue-600"
+                                        <button
+                                            type="button"
+                                            className="block mt-2 text-sm text-blue-600 hover:text-blue-800"
                                         >
                                             Parolanızı Mı Unuttunuz?
-                                        </a>
+                                        </button>
                                     </div>
                                     <div className="flex flex-col items-center justify-center mt-4">
                                         <p className="mb-2 text-sm text-gray-700">

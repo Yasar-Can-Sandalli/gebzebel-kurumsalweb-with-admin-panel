@@ -32,6 +32,7 @@ import IletisimPage from "./sayfalar/IletisimPage";
 // O yüzden import'ı buna göre düzeltelim:
 import UsersPage from "./sayfalar/UsersPage";
 import EditUserPage from "./users/EditUserPage";
+import AddUserPage from "./users/AddUserPage";
 
 export default function AdminPanelApp() {
     return (
@@ -44,6 +45,7 @@ export default function AdminPanelApp() {
 
                     {/* Kullanıcılar (relative path) */}
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="users/yeni" element={<AddUserPage />} />
                     <Route path="users/:id/edit" element={<EditUserPage />} />
 
                     {/* Kurumsal (nested) */}

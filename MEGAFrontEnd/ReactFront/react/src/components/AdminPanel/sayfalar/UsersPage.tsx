@@ -6,7 +6,6 @@ import { fetchUsers, User, updateUser, deleteUser } from "../services/userServic
 import { useClickOutside } from "../../useClickOutside";
 import Loader from "../../loader";
 import EditUserModal from "../users/EditUserModal";
-import AddUserModal from "../users/AddUserModal";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
@@ -29,7 +28,6 @@ export default function UsersPage() {
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentUserToEdit, setCurrentUserToEdit] = useState<User | null>(null);
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const { hasPermission } = useAuthStore();
     const canView = hasPermission("kullanıcılar", "goruntuleme");
@@ -144,10 +142,10 @@ export default function UsersPage() {
                         <p className="text-gray-500">Kullanıcıları listele ve yönet</p>
                     </div>
                     {canAdd && (
-                        <button onClick={() => setIsAddModalOpen(true)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
+                        <Link to="/panel/users/yeni" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
                             <Plus size={20} className="mr-2" />
                             Kullanıcı Ekle
-                        </button>
+                        </Link>
                     )}
                 </div>
 
@@ -380,7 +378,6 @@ export default function UsersPage() {
 
                 {/* Modals */}
                 <EditUserModal isOpen={isEditModalOpen} onClose={() => { setIsEditModalOpen(false); setCurrentUserToEdit(null); }} user={currentUserToEdit} onSave={handleSaveUser} />
-                <AddUserModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onAdd={(u) => { setUsers((p) => [...p, u]); setIsAddModalOpen(false); }} />
             </main>
     );
 }
