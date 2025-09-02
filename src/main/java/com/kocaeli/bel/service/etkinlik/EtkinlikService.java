@@ -3,7 +3,6 @@ package com.kocaeli.bel.service.etkinlik;
 import com.kocaeli.bel.model.etkinlik.EtkinlikEntity;
 import com.kocaeli.bel.repository.etkinlik.EtkinlikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
