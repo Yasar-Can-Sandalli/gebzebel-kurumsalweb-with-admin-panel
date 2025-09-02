@@ -2,8 +2,6 @@
 /target
 /target/**
 /target/*
-/target/
-
 src/main/resources/application.properties
 src/main/java/com/kocaeli/bel/config/HibernateConfig.java
 /MEGAFrontEnd/ReactFront/react/src/output.css
