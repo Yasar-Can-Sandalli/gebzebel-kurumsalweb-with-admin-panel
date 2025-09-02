@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { MapPin, ChevronRight, ChevronLeft, X, Loader, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import _TarihiYerlerService, { TarihiYerler, GaleriResmi } from "./_TarihiYerlerService";
+import _TarihiYerlerService, { TarihiYerler } from "./_TarihiYerlerService";
 
 const TarihiYerDetay: React.FC = () => {
     const { id } = useParams<{ id: string }>();
