@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiGet, apiDelete, apiPut } from "../services/apiService";
-import type { Haber } from "../types/Haber";
+//import type { Haber } from "../types/Haber";
+import { Haber } from "../services/pageService.tsx";
 
 export default function HaberlerPage() {
     const [items, setItems] = useState<Haber[]>([]);
