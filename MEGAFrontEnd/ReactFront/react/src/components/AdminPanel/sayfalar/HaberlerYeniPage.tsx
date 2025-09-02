@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiPost } from "../services/apiService";
-import type { Haber, Kategori } from "../types/Haber";
+import type { Haber, Kategori } from "../services/pageService.tsx";
 
 export default function HaberYeniPage() {
     const navigate = useNavigate();
