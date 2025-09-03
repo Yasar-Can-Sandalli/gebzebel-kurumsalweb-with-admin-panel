@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/haberler")
+@CrossOrigin(origins = "*")
 public class HaberlerController {
 
     @Autowired
@@ -35,12 +36,12 @@ public class HaberlerController {
         return haberler.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping(path = "/create")
     public Haberler createHaberler(@RequestBody Haberler haberler) {
         return haberlerService.createHaberler(haberler);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/update/{id}")
     public ResponseEntity<Haberler> updateHaberler(@PathVariable Long id, @RequestBody Haberler haberlerDetails) {
         Haberler updatedHaberler = haberlerService.updateHaberler(id, haberlerDetails);
         if (updatedHaberler != null) {
@@ -50,7 +51,7 @@ public class HaberlerController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<HttpStatus> deleteHaberler(@PathVariable Long id) {
         boolean isDeleted = haberlerService.deleteHaberler(id);
         if (isDeleted) {

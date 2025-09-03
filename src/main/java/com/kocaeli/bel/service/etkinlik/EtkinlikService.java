@@ -11,6 +11,7 @@ import java.util.Optional;
 @Service
 public class EtkinlikService {
 
+    @Autowired
     private final EtkinlikRepository etkinlikRepository;
 
     @Autowired
