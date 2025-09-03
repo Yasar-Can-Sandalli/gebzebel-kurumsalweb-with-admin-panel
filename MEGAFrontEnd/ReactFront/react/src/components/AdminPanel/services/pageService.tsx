@@ -33,6 +33,8 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+//----------------------- haber için-----------------------
+
 
 // Types for different entities
 export interface BaskanEntity {
