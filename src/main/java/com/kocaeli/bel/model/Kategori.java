@@ -14,9 +14,10 @@ import java.util.List;
 @Entity
 @Table(name = "KATEGORILER")
 public class Kategori {
+
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", updatable = false, nullable = false)
     private Long id;
 
     @Column(name = "AD", length = 255)

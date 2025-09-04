@@ -1,5 +1,6 @@
 package com.kocaeli.bel.controller;
 
+import com.kocaeli.bel.DTO.gebze.HaberlerDto;
 import com.kocaeli.bel.model.Haberler;
 import com.kocaeli.bel.service.HaberlerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RequestMapping("/api/haberler")
 @CrossOrigin(origins = "*")
 public class HaberlerController {
+
 
     @Autowired
     private HaberlerService haberlerService;
@@ -37,8 +39,8 @@ public class HaberlerController {
     }
 
     @PostMapping(path = "/create")
-    public Haberler createHaberler(@RequestBody Haberler haberler) {
-        return haberlerService.createHaberler(haberler);
+    public Haberler createHaberler(@RequestBody HaberlerDto haberlerDto) {
+        return haberlerService.createHaberler(haberlerDto);
     }
 
     @PutMapping(path = "/update/{id}")
@@ -51,7 +53,7 @@ public class HaberlerController {
         }
     }
 
-    @DeleteMapping(path = "/delete/{id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<HttpStatus> deleteHaberler(@PathVariable Long id) {
         boolean isDeleted = haberlerService.deleteHaberler(id);
         if (isDeleted) {

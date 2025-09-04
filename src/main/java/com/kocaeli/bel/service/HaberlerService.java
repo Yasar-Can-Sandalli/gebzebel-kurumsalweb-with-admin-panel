@@ -1,5 +1,6 @@
 package com.kocaeli.bel.service;
 
+import com.kocaeli.bel.DTO.gebze.HaberlerDto;
 import com.kocaeli.bel.model.Haberler;
 import com.kocaeli.bel.model.Kategori;
 import com.kocaeli.bel.repository.HaberlerRepository;
@@ -13,29 +14,54 @@ import java.util.Optional;
 @Service
 public class HaberlerService {
 
+    // Haberler ve Kategoriler için repository'ler otomatik olarak enjekte ediliyor.
     @Autowired
     private HaberlerRepository haberlerRepository;
 
     @Autowired
     private KategoriRepository kategoriRepository;
 
+    /**
+     * Tüm haberleri kategori bilgileriyle birlikte çeker.
+     * HaberlerRepository içinde tanımlı özel bir metot kullanır (varsayılan olarak).
+     */
     public List<Haberler> getAllHaberler() {
-        return haberlerRepository.findAllWithKategori();
+        return haberlerRepository.findAllWithKategori(); // HaberlerRepository'de bu metot tanımlı olmalıdır.
     }
 
+    /**
+     * Tüm haberleri tarihe göre en yeniden en eskiye doğru sıralayarak çeker.
+     */
     public List<Haberler> getAllHaberlerByTarihDesc() {
         return haberlerRepository.findAllWithKategoriOrderByTarihDesc();
     }
 
+    /**
+     * Verilen ID'ye sahip haberi bulur ve döndürür.
+     * Eğer haber bulunamazsa boş bir Optional döner.
+     */
     public Optional<Haberler> getHaberlerById(Long id) {
         return haberlerRepository.findById(id);
     }
 
-    public Haberler createHaberler(Haberler haberler) {
-        if (haberler.getKategori() != null && haberler.getKategori().getId() != null) {
-            Optional<Kategori> kategori = kategoriRepository.findById(haberler.getKategori().getId());
-            kategori.ifPresent(haberler::setKategori);
+
+    // HaberlerDto'yu parametre olarak alan ve onu Haberler nesnesine dönüştüren metot
+    public Haberler createHaberler(HaberlerDto haberlerDto) {
+        Haberler haberler = new Haberler();
+        haberler.setBaslik(haberlerDto.getBaslik());
+        haberler.setTarih(haberlerDto.getTarih());
+        haberler.setAciklama(haberlerDto.getAciklama());
+        haberler.setResim1(haberlerDto.getResim1());
+        haberler.setResim2(haberlerDto.getResim2());
+
+
+        if (haberlerDto.getKategoriId() != null) {
+            // Güvenli atama: kategori bulunamazsa null bırak
+            kategoriRepository
+                    .findById(haberlerDto.getKategoriId())
+                    .ifPresent(haberler::setKategori);
         }
+
         return haberlerRepository.save(haberler);
     }
 

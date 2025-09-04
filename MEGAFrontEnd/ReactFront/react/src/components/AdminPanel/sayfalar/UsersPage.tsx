@@ -1,7 +1,6 @@
 // src/sayfalar/kurumsal/UsersPage.tsx
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Users, Filter, ChevronDown, ChevronUp, MoreHorizontal, Plus, Trash, Edit, Eye } from "lucide-react";
-//import AdminLayout from "../_LayoutAdminPanel";
 import { useSearch } from "../context/SearchContext";
 import { fetchUsers, User, updateUser, deleteUser } from "../services/userService";
 import { useClickOutside } from "../../useClickOutside";

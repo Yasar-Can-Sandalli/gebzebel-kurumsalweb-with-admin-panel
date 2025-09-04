@@ -33,15 +33,18 @@ export default function HaberYeniPage() {
         setError(null);
         setSaving(true);
         try {
-            // id göndermiyoruz → sadece gerekli alanları gönderiyoruz
-            await apiPost<Haber>("/api/haberler/create", {
+            // Backend'in beklediği DTO formatında bir nesne oluşturuyoruz.
+            // `id` ve `kategori` nesnesi yerine sadece `kategoriId` gönderiyoruz.
+            const haberDto = {
                 baslik: form.baslik,
                 tarih: (form.tarih || "").trim(),
                 aciklama: form.aciklama,
                 resim1: form.resim1,
                 resim2: form.resim2,
-                kategori: form.kategori ? { id: form.kategori.id } : null,
-            });
+                kategoriId: form.kategori?.id || null, // Sadece kategori ID'sini gönder
+            };
+
+            await apiPost<Haber>("/api/haberler/create", haberDto);
             navigate("..", { replace: true, relative: "path" });
         } catch (err: any) {
             const msg =
@@ -137,6 +140,7 @@ export default function HaberYeniPage() {
                         value={form.aciklama}
                         onChange={(e) => setForm({ ...form, aciklama: e.target.value })}
                     />
+
                 </div>
 
                 <div className="flex gap-3 mt-4">

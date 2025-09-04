@@ -45,10 +45,10 @@ public class AuthController {
 
     @Autowired
     private PermissionService permissionService;
-    
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -95,66 +95,66 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody RegisterHandler registerRequest) {
         try {
             // Debug log
-            System.out.println("Register request received: TCNo=" + registerRequest.getTCNo() 
-                + ", isim=" + registerRequest.getIsim() 
-                + ", password length=" + (registerRequest.getPassword() != null ? registerRequest.getPassword().length() : "null"));
-            
+            System.out.println("Register request received: TCNo=" + registerRequest.getTCNo()
+                    + ", isim=" + registerRequest.getIsim()
+                    + ", password length=" + (registerRequest.getPassword() != null ? registerRequest.getPassword().length() : "null"));
+
             // TC Kimlik No doğrulama (11 haneli olmalı)
             if (registerRequest.getTCNo() == null || !registerRequest.getTCNo().matches("^\\d{11}$")) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(Map.of("status", "error", "message", "TC Kimlik Numarası 11 haneli olmalıdır"));
             }
-            
+
             // İsim doğrulama (sadece harfler ve boşluk içermeli)
             if (registerRequest.getIsim() == null || !registerRequest.getIsim().matches("^[a-zA-ZğüşıöçĞÜŞİÖÇ ]+$")) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(Map.of("status", "error", "message", "İsim sadece harflerden oluşmalıdır"));
             }
-            
+
             // Parola doğrulama (en az 8 karakter, büyük-küçük harf, rakam ve özel karakter içermeli)
             String password = registerRequest.getPassword();
-            if (password == null || password.length() < 8 || 
-                !password.matches(".*[A-Z].*") || // en az bir büyük harf
-                !password.matches(".*[a-z].*") || // en az bir küçük harf
-                !password.matches(".*[0-9].*") || // en az bir rakam
-                !password.matches(".*[?@!#%+\\-*%].*")) { // en az bir özel karakter
+            if (password == null || password.length() < 8 ||
+                    !password.matches(".*[A-Z].*") || // en az bir büyük harf
+                    !password.matches(".*[a-z].*") || // en az bir küçük harf
+                    !password.matches(".*[0-9].*") || // en az bir rakam
+                    !password.matches(".*[?@!#%+\\-*%].*")) { // en az bir özel karakter
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(Map.of("status", "error", "message", 
-                            "Parola en az 8 karakter uzunluğunda olmalı ve büyük harf, küçük harf, rakam ve özel karakter içermelidir"));
+                        .body(Map.of("status", "error", "message",
+                                "Parola en az 8 karakter uzunluğunda olmalı ve büyük harf, küçük harf, rakam ve özel karakter içermelidir"));
             }
-            
+
             // TC Kimlik No kontrolü
             if (userRepository.findByTCNo(registerRequest.getTCNo()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Map.of("status", "error", "message", "Bu TC No ile kayıtlı kullanıcı zaten var"));
             }
-    
+
             try {
                 // Şifreyi hashle
                 String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
-                
+
                 // Varsayılan yetkileri oluştur
                 String defaultPermissionsJson = getDefaultPermissionsJson();
-                
+
                 // Doğrudan JDBC kullanarak SQL sorgusu çalıştır
                 String sql = "INSERT INTO KULLANICILAR (TCNO, ISIM, PASSWORD, STATUS, YETKILERJSON, PROFIL_FOTO) VALUES (?, ?, ?, ?, ?, ?)";
-                jdbcTemplate.update(sql, 
-                    registerRequest.getTCNo(), 
-                    registerRequest.getIsim(), 
-                    hashedPassword, 
-                    "Aktif",
-                    defaultPermissionsJson,
-                    registerRequest.getProfilFoto() != null ? registerRequest.getProfilFoto() : ""
+                jdbcTemplate.update(sql,
+                        registerRequest.getTCNo(),
+                        registerRequest.getIsim(),
+                        hashedPassword,
+                        "Aktif",
+                        defaultPermissionsJson,
+                        registerRequest.getProfilFoto() != null ? registerRequest.getProfilFoto() : ""
                 );
-                
+
                 return ResponseEntity.ok()
                         .body(Map.of(
-                            "status", "success", 
-                            "message", "Kullanıcı başarıyla kaydedildi",
-                            "data", Map.of(
-                                "TCNo", registerRequest.getTCNo(),
-                                "isim", registerRequest.getIsim()
-                            )
+                                "status", "success",
+                                "message", "Kullanıcı başarıyla kaydedildi",
+                                "data", Map.of(
+                                        "TCNo", registerRequest.getTCNo(),
+                                        "isim", registerRequest.getIsim()
+                                )
                         ));
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -167,7 +167,7 @@ public class AuthController {
                     .body(Map.of("status", "error", "message", "Kayıt işlemi sırasında bir hata oluştu: " + e.getMessage()));
         }
     }
-    
+
     /**
      * Varsayılan yetkileri JSON formatına dönüştürür
      */
@@ -179,35 +179,35 @@ public class AuthController {
             return "{}"; // Boş JSON objesi
         }
     }
-    
+
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
         String tcNo = request.get("tcNo");
-        
+
         if (tcNo == null || tcNo.isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(Map.of("status", "error", "message", "TC Kimlik Numarası gereklidir"));
         }
-        
+
         // TC Kimlik doğrulama
         if (!tcNo.matches("^\\d{11}$")) {
             return ResponseEntity.badRequest()
                     .body(Map.of("status", "error", "message", "Geçerli bir TC Kimlik Numarası giriniz"));
         }
-        
+
         // Kullanıcıyı kontrol et
         Optional<User> userOptional = userRepository.findByTCNo(tcNo);
         if (userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("status", "error", "message", "Bu TC Kimlik Numarası ile kayıtlı kullanıcı bulunamadı"));
         }
-        
+
         // Gerçek bir uygulamada burada şifre sıfırlama e-postası gönderilir
         // Şimdilik sadece başarılı yanıt döndürelim
         return ResponseEntity.ok()
                 .body(Map.of(
-                    "status", "success", 
-                    "message", "Şifre sıfırlama talimatları gönderildi. Lütfen e-postanızı kontrol edin."
+                        "status", "success",
+                        "message", "Şifre sıfırlama talimatları gönderildi. Lütfen e-postanızı kontrol edin."
                 ));
     }
 
@@ -222,7 +222,7 @@ public class AuthController {
 
             String currentTCNo = authentication.getName();
             User currentUser = userService.findByTCNo(currentTCNo);
-            
+
             if (currentUser == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("status", "error", "message", "Kullanıcı bulunamadı"));

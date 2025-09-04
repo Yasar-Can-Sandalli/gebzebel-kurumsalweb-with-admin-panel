@@ -39,12 +39,12 @@ const SignUP: React.FC = () => {
     const [regismessage, setregisMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
-    
+
     // Doğrulama hataları için state'ler
     const [tcNoError, setTcNoError] = useState<string | null>(null);
     const [isimError, setIsimError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
-    
+
     // Şifre güçlülük seviyesi için state
     const [passwordStrength, setPasswordStrength] = useState<number>(0);
 
@@ -57,7 +57,7 @@ const SignUP: React.FC = () => {
                 setError('Dosya boyutu 2MB\'dan küçük olmalıdır.');
                 return;
             }
-            
+
             // Dosya tipi kontrolü
             if (!file.type.startsWith('image/')) {
                 setError('Lütfen sadece resim dosyası seçin.');
@@ -73,7 +73,7 @@ const SignUP: React.FC = () => {
             reader.readAsDataURL(file);
         }
     };
-    
+
     const registermutation = useMutation({
         mutationFn: authService.register,
         onSuccess: () => {
@@ -91,7 +91,7 @@ const SignUP: React.FC = () => {
             }
         }
     });
-    
+
     // Başarılı kayıt sonrası geri sayım ve yönlendirme
     useEffect(() => {
         if (redirectCountdown !== null && redirectCountdown > 0) {
@@ -120,45 +120,45 @@ const SignUP: React.FC = () => {
             }
             return false;
         }
-        
+
         // TC Kimlik algoritması kontrolü
         // 1) İlk hane 0 olamaz
         if (tcno.startsWith('0')) {
             setTcNoError("TC Kimlik No 0 ile başlayamaz");
             return false;
         }
-        
+
         // 2) 1, 3, 5, 7, 9. hanelerin toplamının 7 katı ile 2, 4, 6, 8. hanelerin toplamı çıkartılır
         // ve sonucun 10'a bölümünden kalan 10. haneyi vermelidir
         let oddSum = 0;
         let evenSum = 0;
-        
+
         for (let i = 0; i < 9; i += 2) {
             oddSum += parseInt(tcno[i]);
         }
-        
+
         for (let i = 1; i < 8; i += 2) {
             evenSum += parseInt(tcno[i]);
         }
-        
+
         const digit10 = (oddSum * 7 - evenSum) % 10;
         if (digit10 !== parseInt(tcno[9])) {
             setTcNoError("Geçersiz TC Kimlik No (10. hane kontrolü başarısız)");
             return false;
         }
-        
+
         // 3) İlk 10 hanenin toplamının 10'a bölümünden kalan 11. haneyi vermelidir
         let sum = 0;
         for (let i = 0; i < 10; i++) {
             sum += parseInt(tcno[i]);
         }
-        
+
         const digit11 = sum % 10;
         if (digit11 !== parseInt(tcno[10])) {
             setTcNoError("Geçersiz TC Kimlik No (11. hane kontrolü başarısız)");
             return false;
         }
-        
+
         setTcNoError(null);
         return true;
     };
@@ -169,19 +169,19 @@ const SignUP: React.FC = () => {
             setIsimError("İsim boş olamaz");
             return false;
         }
-        
+
         // Sadece harfler ve boşluk içermeli
         const regex = /^[a-zA-ZğüşıöçĞÜŞİÖÇ ]+$/;
         if (!regex.test(name)) {
             setIsimError("İsim sadece harflerden oluşmalıdır (sayı ve özel karakter kullanılamaz)");
             return false;
         }
-        
+
         if (name.length < 2) {
             setIsimError("İsim en az 2 karakter olmalıdır");
             return false;
         }
-        
+
         setIsimError(null);
         return true;
     };
@@ -193,79 +193,79 @@ const SignUP: React.FC = () => {
             setPasswordStrength(0);
             return false;
         }
-        
+
         // Şifre güçlülüğünü hesapla
         let strength = 0;
-        
+
         // Uzunluk kontrolü
         if (pass.length >= 8) strength += 1;
         if (pass.length >= 12) strength += 1;
-        
+
         // Karakter çeşitliliği kontrolleri
         if (/[A-Z]/.test(pass)) strength += 1; // büyük harf kontrolü
         if (/[a-z]/.test(pass)) strength += 1; // küçük harf kontrolü
         if (/\d/.test(pass)) strength += 1; // rakam kontrolü
         if (/[?@!#%+\-*]/.test(pass)) strength += 1; // özel karakter kontrolü
-        
+
         // Güçlülük seviyesini güncelle (0-5 arası)
         setPasswordStrength(strength);
-        
+
         // Detaylı hata mesajları
         if (pass.length < 8) {
             setPasswordError("Parola en az 8 karakter olmalıdır");
             return false;
         }
-        
+
         if (!/[A-Z]/.test(pass)) {
             setPasswordError("Parola en az bir büyük harf içermelidir");
             return false;
         }
-        
+
         if (!/[a-z]/.test(pass)) {
             setPasswordError("Parola en az bir küçük harf içermelidir");
             return false;
         }
-        
+
         if (!/\d/.test(pass)) {
             setPasswordError("Parola en az bir rakam içermelidir");
             return false;
         }
-        
+
         if (!/[?@!#%+\-*]/.test(pass)) {
             setPasswordError("Parola en az bir özel karakter (?@!#%+-*) içermelidir");
             return false;
         }
-        
+
         setPasswordError(null);
         return true;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Form gönderilmeden önce tüm hata mesajlarını temizle
         setError(null);
         setTcNoError(null);
         setIsimError(null);
         setPasswordError(null);
-        
+
         let hasError = false;
-        
+
         // TC Kimlik No doğrulama
         if (!validateTCNo(TCNo)) {
             hasError = true;
         }
-        
+
         // İsim doğrulama
         if (!validateIsim(isim)) {
             hasError = true;
         }
-        
+
         // Parola doğrulama
         if (!validatePassword(password)) {
             hasError = true;
         }
-        
+
         // Eğer herhangi bir doğrulama hatası yoksa formu gönder
         if (!hasError) {
             // Büyük P ile Password kullanarak gönderelim (backend'in beklediği format)
@@ -335,7 +335,7 @@ const SignUP: React.FC = () => {
                                             <div className="text-red-500 text-xs mt-1">{tcNoError}</div>
                                         )}
                                     </div>
-                                    
+
                                     {/* İsim */}
                                     <div className="mb-3">
                                         <input
@@ -353,7 +353,7 @@ const SignUP: React.FC = () => {
                                             <div className="text-red-500 text-xs mt-1">{isimError}</div>
                                         )}
                                     </div>
-                                    
+
                                     {/* Parola */}
                                     <div className="mb-3 relative">
                                         <div className="flex items-center">
@@ -380,12 +380,12 @@ const SignUP: React.FC = () => {
                                                 )}
                                             </button>
                                         </div>
-                                        
+
                                         {/* Şifre güçlülük göstergesi */}
                                         {password.length > 0 && (
                                             <div className="mt-2">
                                                 <div className="flex w-full h-1 bg-gray-200 rounded-full overflow-hidden">
-                                                    <div 
+                                                    <div
                                                         className={`h-full ${
                                                             (() => {
                                                                 if (passwordStrength < 2) return 'bg-red-500';
@@ -405,7 +405,7 @@ const SignUP: React.FC = () => {
                                                 </p>
                                             </div>
                                         )}
-                                        
+
                                         {passwordError && (
                                             <div className="text-red-500 text-xs mt-1">{passwordError}</div>
                                         )}
@@ -419,9 +419,9 @@ const SignUP: React.FC = () => {
                                         <div className="flex items-center space-x-4">
                                             <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
                                                 {profilFoto ? (
-                                                    <img 
-                                                        src={profilFoto} 
-                                                        alt="Profil Önizleme" 
+                                                    <img
+                                                        src={profilFoto}
+                                                        alt="Profil Önizleme"
                                                         className="w-full h-full object-cover"
                                                     />
                                                 ) : (

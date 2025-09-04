@@ -12,15 +12,13 @@ import java.time.LocalDate;
 @Table(name = "HABERLER")
 public class Haberler {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "BASLIK", length = 300)
+    @Column(name = "BASLIK", length = 300, nullable = false)
     private String baslik;
 
-    @Column(name= "TARIH")
-    @Temporal(TemporalType.DATE)
+    @Column(name= "TARIH", nullable = false)
     private LocalDate tarih;
 
     @Lob
@@ -33,9 +31,9 @@ public class Haberler {
     @Column(name = "RESIM2")
     private String resim2;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "KATEGORI_ID")
+    @JoinColumn(name = "KATEGORI_ID", nullable = true)
     private Kategori kategori;
+
 
 }

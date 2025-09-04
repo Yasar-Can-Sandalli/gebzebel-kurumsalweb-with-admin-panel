@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiGet, apiDelete } from "../services/apiService";
-//import type { Haber } from "../types/Haber";
+
 
 export interface Kategori {
     id: number;
