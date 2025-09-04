@@ -5,7 +5,7 @@ import Loader from './components/loader';
 import LoginForm from './components/Login_v3/LoginForm2.tsx';
 import Footer from './components/Footer/Footer';
 import CoolNavbar from './components/NavBar/CoolNavbar';
-import SignUp from './components/SignUp/SignUp';
+import SignUp from './components/SignUp/SignUp.tsx';
 import HomePage from "./components/HomePage/HomePage.tsx";
 import TEST from "./components/sablon/testsablon.tsx"
 import Kurumsal from "./KurumsalApp.tsx";

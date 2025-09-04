@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import ParticleBackground from "../backgroundAnim/particle.tsx";
@@ -23,11 +23,13 @@ const authService = {
 };
 
 const SignUP: React.FC = () => {
+    const navigate = useNavigate();
     const [TCNo, setTCNo] = useState('');
+    const [isim, setIsim] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [profilFoto, setProfilFoto] = useState<string>('');
-    const [regismessage, setregisMessage] = useState<string | null>(null);
+    const [regisMessage, setRegisMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
     
@@ -84,7 +86,7 @@ const SignUP: React.FC = () => {
     const registermutation = useMutation({
         mutationFn: authService.register,
         onSuccess: (data) => {
-            setregisMessage(data.response?.data?.message || 'Kaydolma başarılı');
+            setRegisMessage(data.response?.data?.message || 'Kaydolma başarılı');
         },
         onError: (error: any) => {
             if (error.response?.status === 409) {
@@ -252,9 +254,9 @@ const SignUP: React.FC = () => {
                                         {error}
                                     </div>
                                 )}
-                                {regismessage && (
+                                {regisMessage && (
                                     <div className="text-blue-500 text-center mb-4">
-                                        {regismessage}
+                                        {regisMessage}
                                     </div>
                                 )}
                                 <form onSubmit={handleSubmit}>
@@ -402,12 +404,12 @@ const SignUP: React.FC = () => {
                                                 return 'Kayıt Ol';
                                             })()}
                                         </button>
-                                        <a
-                                            href="#"
-                                            className="block mt-2 text-sm text-blue-600 "
+                                        <button
+                                            type="button"
+                                            className="block mt-2 text-sm text-blue-600 hover:text-blue-800"
                                         >
                                             Parolanızı Mı Unuttunuz?
-                                        </a>
+                                        </button>
                                     </div>
                                     <div className="flex flex-col items-center justify-center mt-4">
                                         <p className="mb-2 text-sm text-gray-700 ">
