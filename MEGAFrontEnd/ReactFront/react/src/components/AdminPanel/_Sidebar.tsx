@@ -132,8 +132,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             </div>
 
             {/* Menü */}
-            <nav className="p-4 flex-1 overflow-y-auto">
-                <ul className="space-y-1">
+                <div className="flex-1 overflow-y-auto pl-2">
+                <ul className="space-y-0.5">
                     <Item
                         to="/panel/mainPage"
                         label="Anasayfa"
@@ -240,7 +240,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         active={pathname.startsWith("/panel/users")}
                     />
                 </ul>
-            </nav>
+                </div>
 
             {/* Mobil kapatma */}
             <button

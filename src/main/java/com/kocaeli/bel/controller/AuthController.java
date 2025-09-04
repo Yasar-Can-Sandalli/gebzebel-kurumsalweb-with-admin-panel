@@ -1,7 +1,5 @@
 package com.kocaeli.bel.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kocaeli.bel.DTO.LoginResponse;
 import com.kocaeli.bel.repository.UserRepository;
 import com.kocaeli.bel.service.UserService;
@@ -11,7 +9,6 @@ import com.kocaeli.bel.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import com.kocaeli.bel.security.JwtTokenProvider;
 import com.kocaeli.bel.service.PermissionService;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -45,12 +41,6 @@ public class AuthController {
 
     @Autowired
     private PermissionService permissionService;
-    
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -158,7 +148,6 @@ public class AuthController {
                         .body(Map.of("status", "error", "message", "Veritabanı hatası: " + ex.getMessage()));
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("status", "error", "message", "Kayıt işlemi sırasında bir hata oluştu: " + e.getMessage()));
         }

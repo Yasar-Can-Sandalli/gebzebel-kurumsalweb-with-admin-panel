@@ -46,7 +46,6 @@ public class User {
     public User(Long id, String TCNo, String isim, String password, String status, String yetkilerJson, String profilFoto) {
         this.id = id;
         this.TCNo = TCNo;
-        this.isim = isim;
         this.password = password;
         this.status = status;
         this.yetkilerJson = yetkilerJson;

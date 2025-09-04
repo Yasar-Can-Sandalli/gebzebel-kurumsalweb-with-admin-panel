@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import ParticleBackground from "../backgroundAnim/particle.tsx";
@@ -15,24 +15,15 @@ interface RegisterCredentials {
 // Authentication Service
 const authService = {
     register: async (credentials: RegisterCredentials) => {
-        console.log('Gönderilen kayıt bilgileri:', credentials);
-        try {
-            const response = await axios.post('http://localhost:8080/api/auth/register', credentials, {
-                withCredentials: true
-            });
-            console.log('Kayıt başarılı, sunucu yanıtı:', response.data);
-            return response.data;
-        } catch (error) {
-            console.error('Kayıt hatası:', error);
-            throw error;
-        }
+        const { data } = await axios.post('http://localhost:8080/api/auth/register', credentials, {
+            withCredentials: true
+        });
+        return data;
     }
 };
 
 const SignUP: React.FC = () => {
-    const navigate = useNavigate();
     const [TCNo, setTCNo] = useState('');
-    const [isim, setIsim] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [profilFoto, setProfilFoto] = useState<string>('');
@@ -92,9 +83,8 @@ const SignUP: React.FC = () => {
     
     const registermutation = useMutation({
         mutationFn: authService.register,
-        onSuccess: () => {
-            setregisMessage('Kayıt işlemi başarılı! Giriş sayfasına yönlendiriliyorsunuz...');
-            setRedirectCountdown(3); // 3 saniye sonra yönlendir
+        onSuccess: (data) => {
+            setregisMessage(data.response?.data?.message || 'Kaydolma başarılı');
         },
         onError: (error: any) => {
             if (error.response?.status === 409) {
@@ -199,8 +189,6 @@ const SignUP: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
-        // Form gönderilmeden önce tüm hata mesajlarını temizle
         setError(null);
         setTcNoError(null);
         setIsimError(null);
@@ -265,13 +253,8 @@ const SignUP: React.FC = () => {
                                     </div>
                                 )}
                                 {regismessage && (
-                                    <div className="text-green-600 text-center mb-4 font-medium">
+                                    <div className="text-blue-500 text-center mb-4">
                                         {regismessage}
-                                        {redirectCountdown !== null && (
-                                            <div className="mt-1 text-sm">
-                                                {redirectCountdown} saniye içinde yönlendirileceksiniz...
-                                            </div>
-                                        )}
                                     </div>
                                 )}
                                 <form onSubmit={handleSubmit}>
@@ -411,7 +394,7 @@ const SignUP: React.FC = () => {
                                                 background: "linear-gradient(to right, #022842, #222222)",
                                             }}
                                             type="submit"
-                                            disabled={registermutation.isPending || redirectCountdown !== null}
+                                            disabled={registermutation.isPending}
                                         >
                                             {(() => {
                                                 if (registermutation.isPending) return 'Kayıt Yapılıyor...';
@@ -419,15 +402,15 @@ const SignUP: React.FC = () => {
                                                 return 'Kayıt Ol';
                                             })()}
                                         </button>
-                                        <button
-                                            type="button"
-                                            className="block mt-2 text-sm text-blue-600 hover:text-blue-800"
+                                        <a
+                                            href="#"
+                                            className="block mt-2 text-sm text-blue-600 "
                                         >
                                             Parolanızı Mı Unuttunuz?
-                                        </button>
+                                        </a>
                                     </div>
                                     <div className="flex flex-col items-center justify-center mt-4">
-                                        <p className="mb-2 text-sm text-gray-700">
+                                        <p className="mb-2 text-sm text-gray-700 ">
                                             Hesabınız Var mı?
                                         </p>
                                         <Link to="/login">
@@ -436,8 +419,7 @@ const SignUP: React.FC = () => {
                                                 className="w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
                                                 style={{
                                                     backgroundColor: "#f7a600",
-                                                }}
-                                            >
+                                                }}>
                                                 Giriş Yap
                                             </button>
                                         </Link>
