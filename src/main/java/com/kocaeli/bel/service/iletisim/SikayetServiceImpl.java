@@ -3,6 +3,7 @@ package com.kocaeli.bel.service.iletisim;
 import com.kocaeli.bel.model.iletisim.SikayetEntity;
 import com.kocaeli.bel.repository.iletisim.SikayetRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class SikayetServiceImpl implements ISikayetService {
@@ -41,6 +42,17 @@ public class SikayetServiceImpl implements ISikayetService {
                 .orElseThrow(() -> new RuntimeException("Sikayet bulunamadı: " + id));
         sikayetRepository.delete(existing);
         return existing;
+    }
+
+    @Override
+    public List<SikayetEntity> getAllSikayetler() {
+        return sikayetRepository.findAll();
+    }
+
+    @Override
+    public SikayetEntity getSikayetById(Long id) {
+        return sikayetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Şikayet bulunamadı. ID: " + id));
     }
 
 }
