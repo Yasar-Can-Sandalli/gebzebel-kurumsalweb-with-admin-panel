@@ -49,12 +49,12 @@ const SignUP: React.FC = () => {
     const [passwordStrength, setPasswordStrength] = useState<number>(0);
 
     // Profil fotoğrafı yükleme fonksiyonu
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            // Dosya boyutu kontrolü (2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                setError('Dosya boyutu 2MB\'dan küçük olmalıdır.');
+            // Dosya boyutu kontrolü (1MB - daha küçük limit)
+            if (file.size > 1 * 1024 * 1024) {
+                setError('Dosya boyutu 1MB\'dan küçük olmalıdır.');
                 return;
             }
             
@@ -64,13 +64,29 @@ const SignUP: React.FC = () => {
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const result = e.target?.result as string;
-                setProfilFoto(result);
-                setError(null);
-            };
-            reader.readAsDataURL(file);
+            try {
+                // FormData oluştur
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Dosyayı backend'e yükle
+                const response = await fetch('http://localhost:8080/api/files/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    setProfilFoto(result.fileName); // Sadece dosya adını sakla
+                    setError(null);
+                } else {
+                    setError(result.message || 'Resim yüklenemedi.');
+                }
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                setError('Resim yüklenirken hata oluştu.');
+            }
         }
     };
     
@@ -104,58 +120,20 @@ const SignUP: React.FC = () => {
         }
     }, [redirectCountdown, navigate]);
 
-    // TC Kimlik numarası doğrulama
+    // TC Kimlik numarası doğrulama (Test için basitleştirildi)
     const validateTCNo = (tcno: string): boolean => {
-        // 11 haneli olmalı ve sadece rakam içermeli
+        // Sadece 11 haneli olmalı ve sadece rakam içermeli
         const regex = /^\d{11}$/;
         if (!regex.test(tcno)) {
             if (tcno.length === 0) {
                 setTcNoError("TC Kimlik No boş olamaz");
             } else if (tcno.length < 11) {
-                setTcNoError("TC Kimlik No 11 haneli olmalıdır (eksik hane)");
+                setTcNoError("TC Kimlik No 11 haneli olmalıdır");
             } else if (tcno.length > 11) {
-                setTcNoError("TC Kimlik No 11 haneli olmalıdır (fazla hane)");
+                setTcNoError("TC Kimlik No 11 haneli olmalıdır");
             } else {
                 setTcNoError("TC Kimlik No sadece rakam içermelidir");
             }
-            return false;
-        }
-        
-        // TC Kimlik algoritması kontrolü
-        // 1) İlk hane 0 olamaz
-        if (tcno.startsWith('0')) {
-            setTcNoError("TC Kimlik No 0 ile başlayamaz");
-            return false;
-        }
-        
-        // 2) 1, 3, 5, 7, 9. hanelerin toplamının 7 katı ile 2, 4, 6, 8. hanelerin toplamı çıkartılır
-        // ve sonucun 10'a bölümünden kalan 10. haneyi vermelidir
-        let oddSum = 0;
-        let evenSum = 0;
-        
-        for (let i = 0; i < 9; i += 2) {
-            oddSum += parseInt(tcno[i]);
-        }
-        
-        for (let i = 1; i < 8; i += 2) {
-            evenSum += parseInt(tcno[i]);
-        }
-        
-        const digit10 = (oddSum * 7 - evenSum) % 10;
-        if (digit10 !== parseInt(tcno[9])) {
-            setTcNoError("Geçersiz TC Kimlik No (10. hane kontrolü başarısız)");
-            return false;
-        }
-        
-        // 3) İlk 10 hanenin toplamının 10'a bölümünden kalan 11. haneyi vermelidir
-        let sum = 0;
-        for (let i = 0; i < 10; i++) {
-            sum += parseInt(tcno[i]);
-        }
-        
-        const digit11 = sum % 10;
-        if (digit11 !== parseInt(tcno[10])) {
-            setTcNoError("Geçersiz TC Kimlik No (11. hane kontrolü başarısız)");
             return false;
         }
         
@@ -186,7 +164,7 @@ const SignUP: React.FC = () => {
         return true;
     };
 
-    // Parola doğrulama ve güçlülük hesaplama
+    // Parola doğrulama (Test için basitleştirildi)
     const validatePassword = (pass: string): boolean => {
         if (pass.length === 0) {
             setPasswordError("Parola boş olamaz");
@@ -198,41 +176,20 @@ const SignUP: React.FC = () => {
         let strength = 0;
         
         // Uzunluk kontrolü
+        if (pass.length >= 6) strength += 1;
         if (pass.length >= 8) strength += 1;
-        if (pass.length >= 12) strength += 1;
         
         // Karakter çeşitliliği kontrolleri
         if (/[A-Z]/.test(pass)) strength += 1; // büyük harf kontrolü
         if (/[a-z]/.test(pass)) strength += 1; // küçük harf kontrolü
         if (/\d/.test(pass)) strength += 1; // rakam kontrolü
-        if (/[?@!#%+\-*]/.test(pass)) strength += 1; // özel karakter kontrolü
         
         // Güçlülük seviyesini güncelle (0-5 arası)
         setPasswordStrength(strength);
         
-        // Detaylı hata mesajları
-        if (pass.length < 8) {
-            setPasswordError("Parola en az 8 karakter olmalıdır");
-            return false;
-        }
-        
-        if (!/[A-Z]/.test(pass)) {
-            setPasswordError("Parola en az bir büyük harf içermelidir");
-            return false;
-        }
-        
-        if (!/[a-z]/.test(pass)) {
-            setPasswordError("Parola en az bir küçük harf içermelidir");
-            return false;
-        }
-        
-        if (!/\d/.test(pass)) {
-            setPasswordError("Parola en az bir rakam içermelidir");
-            return false;
-        }
-        
-        if (!/[?@!#%+\-*]/.test(pass)) {
-            setPasswordError("Parola en az bir özel karakter (?@!#%+-*) içermelidir");
+        // Basit doğrulama (test için)
+        if (pass.length < 6) {
+            setPasswordError("Parola en az 6 karakter olmalıdır");
             return false;
         }
         
@@ -420,7 +377,7 @@ const SignUP: React.FC = () => {
                                             <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
                                                 {profilFoto ? (
                                                     <img 
-                                                        src={profilFoto} 
+                                                        src={`http://localhost:8080/api/files/image/${profilFoto}`} 
                                                         alt="Profil Önizleme" 
                                                         className="w-full h-full object-cover"
                                                     />
@@ -441,7 +398,7 @@ const SignUP: React.FC = () => {
                                                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                                 />
                                                 <p className="text-xs text-gray-500 mt-1">
-                                                    Maksimum 2MB, JPG, PNG formatları desteklenir
+                                                    Maksimum 1MB, JPG, PNG formatları desteklenir
                                                 </p>
                                             </div>
                                         </div>

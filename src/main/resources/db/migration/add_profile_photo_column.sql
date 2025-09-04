@@ -1,5 +1,5 @@
 -- Add profile photo column to KULLANICILAR table
-ALTER TABLE KULLANICILAR ADD PROFIL_FOTO VARCHAR2(4000);
+ALTER TABLE KULLANICILAR ADD PROFIL_FOTO VARCHAR2(500);
 
 -- Add comment to the column
-COMMENT ON COLUMN KULLANICILAR.PROFIL_FOTO IS 'Base64 encoded profile photo or URL to profile image';
+COMMENT ON COLUMN KULLANICILAR.PROFIL_FOTO IS 'File path to profile image stored in assets/user_images';

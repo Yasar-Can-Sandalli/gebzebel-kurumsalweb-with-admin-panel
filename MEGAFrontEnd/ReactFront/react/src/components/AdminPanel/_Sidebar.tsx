@@ -84,20 +84,20 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                             if (loading) {
                                 return <div className="w-full h-full bg-slate-200 animate-pulse"></div>;
                             }
-                            if (currentUser?.profilFoto) {
-                                return (
-                                    <img 
-                                        src={currentUser.profilFoto} 
-                                        alt="Profil Fotoğrafı" 
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                            const target = e.target as HTMLImageElement;
-                                            target.style.display = 'none';
-                                            target.nextElementSibling?.classList.remove('hidden');
-                                        }}
-                                    />
-                                );
-                            }
+                                           if (currentUser?.profilFoto) {
+                   return (
+                       <img
+                           src={`http://localhost:8080/api/files/image/${currentUser.profilFoto}`}
+                           alt="Profil Fotoğrafı"
+                           className="w-full h-full object-cover"
+                           onError={(e) => {
+                               const target = e.target as HTMLImageElement;
+                               target.style.display = 'none';
+                               target.nextElementSibling?.classList.remove('hidden');
+                           }}
+                       />
+                   );
+               }
                             return null;
                         })()}
                         <div className={`w-full h-full bg-slate-200 flex items-center justify-center ${currentUser?.profilFoto ? 'hidden' : ''}`}>
