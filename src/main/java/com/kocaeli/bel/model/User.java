@@ -29,6 +29,9 @@ public class User {
     @Column(columnDefinition = "json")
     private String yetkilerJson;
 
+    @Column(name = "PROFIL_FOTO")
+    private String profilFoto;
+
     // Default constructor
     public User() {
     }
@@ -40,10 +43,14 @@ public class User {
     }
 
     // Constructor with ID
-    public User(Long id, String TCNo, String password) {
+    public User(Long id, String TCNo, String isim, String password, String status, String yetkilerJson, String profilFoto) {
         this.id = id;
         this.TCNo = TCNo;
+        this.isim = isim;
         this.password = password;
+        this.status = status;
+        this.yetkilerJson = yetkilerJson;
+        this.profilFoto = profilFoto;
     }
 
     // Copy constructor - FIXED
@@ -55,6 +62,7 @@ public class User {
             this.password = user.password;
             this.status = user.status;
             this.yetkilerJson = user.yetkilerJson;
+            this.profilFoto = user.profilFoto;
         }
     }
 }

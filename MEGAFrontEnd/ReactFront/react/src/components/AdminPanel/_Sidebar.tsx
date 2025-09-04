@@ -12,10 +12,11 @@ import {
     Users,
     ChevronRight,
 } from "lucide-react";
+import { useCurrentUser } from "./hooks/useCurrentUser";
 
 type SidebarProps = {
-    open: boolean;
-    onClose: () => void;
+    readonly open: boolean;
+    readonly onClose: () => void;
 };
 
 const Item = ({
@@ -52,6 +53,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
     const { pathname } = useLocation();
     const isKurumsal = pathname.startsWith("/panel/kurumsal");
     const isGebze = pathname.startsWith("/panel/gebze");
+    const { currentUser, loading } = useCurrentUser();
 
     return (
         <aside
@@ -77,9 +79,55 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                 </div>
 
                 <div className="mt-4 rounded-xl p-4 text-center bg-white shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-slate-200" />
-                    <div className="mt-2 font-semibold text-slate-800">İSİM SOYİSİM</div>
-                    <div className="text-xs text-slate-500">KADEME</div>
+                    <div className="w-16 h-16 mx-auto rounded-full bg-slate-200 overflow-hidden">
+                        {(() => {
+                            if (loading) {
+                                return <div className="w-full h-full bg-slate-200 animate-pulse"></div>;
+                            }
+                            if (currentUser?.profilFoto) {
+                                return (
+                                    <img 
+                                        src={currentUser.profilFoto} 
+                                        alt="Profil Fotoğrafı" 
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.style.display = 'none';
+                                            target.nextElementSibling?.classList.remove('hidden');
+                                        }}
+                                    />
+                                );
+                            }
+                            return null;
+                        })()}
+                        <div className={`w-full h-full bg-slate-200 flex items-center justify-center ${currentUser?.profilFoto ? 'hidden' : ''}`}>
+                            <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div className="mt-2 font-semibold text-slate-800">
+                        {(() => {
+                            if (loading) {
+                                return <div className="animate-pulse bg-slate-200 h-4 w-32 mx-auto rounded"></div>;
+                            }
+                            if (currentUser?.isim) {
+                                return currentUser.isim;
+                            }
+                            return "Kullanıcı";
+                        })()}
+                    </div>
+                    <div className="text-xs text-slate-500">
+                        {(() => {
+                            if (loading) {
+                                return <div className="animate-pulse bg-slate-200 h-3 w-20 mx-auto rounded mt-1"></div>;
+                            }
+                            if (currentUser?.status) {
+                                return currentUser.status;
+                            }
+                            return "Durum";
+                        })()}
+                    </div>
                 </div>
             </div>
 

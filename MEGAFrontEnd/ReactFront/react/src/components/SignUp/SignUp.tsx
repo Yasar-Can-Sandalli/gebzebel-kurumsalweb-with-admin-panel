@@ -9,6 +9,7 @@ interface RegisterCredentials {
     TCNo: string;
     isim: string;
     Password: string; // Backend büyük P ile bekliyor
+    profilFoto?: string;
 }
 
 // Authentication Service
@@ -34,6 +35,7 @@ const SignUP: React.FC = () => {
     const [isim, setIsim] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [profilFoto, setProfilFoto] = useState<string>('');
     const [regismessage, setregisMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
@@ -45,6 +47,32 @@ const SignUP: React.FC = () => {
     
     // Şifre güçlülük seviyesi için state
     const [passwordStrength, setPasswordStrength] = useState<number>(0);
+
+    // Profil fotoğrafı yükleme fonksiyonu
+    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            // Dosya boyutu kontrolü (2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                setError('Dosya boyutu 2MB\'dan küçük olmalıdır.');
+                return;
+            }
+            
+            // Dosya tipi kontrolü
+            if (!file.type.startsWith('image/')) {
+                setError('Lütfen sadece resim dosyası seçin.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target?.result as string;
+                setProfilFoto(result);
+                setError(null);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     
     const registermutation = useMutation({
         mutationFn: authService.register,
@@ -244,7 +272,8 @@ const SignUP: React.FC = () => {
             registermutation.mutate({
                 TCNo: TCNo,
                 isim: isim,
-                Password: password // Büyük P ile Password olarak gönder
+                Password: password, // Büyük P ile Password olarak gönder
+                profilFoto: profilFoto
             });
         }
     };
@@ -358,17 +387,21 @@ const SignUP: React.FC = () => {
                                                 <div className="flex w-full h-1 bg-gray-200 rounded-full overflow-hidden">
                                                     <div 
                                                         className={`h-full ${
-                                                            passwordStrength < 2 ? 'bg-red-500' : 
-                                                            passwordStrength < 4 ? 'bg-yellow-500' : 
-                                                            'bg-green-500'
+                                                            (() => {
+                                                                if (passwordStrength < 2) return 'bg-red-500';
+                                                                if (passwordStrength < 4) return 'bg-yellow-500';
+                                                                return 'bg-green-500';
+                                                            })()
                                                         }`}
                                                         style={{ width: `${(passwordStrength / 6) * 100}%` }}
                                                     ></div>
                                                 </div>
                                                 <p className="text-xs mt-1 text-gray-500">
-                                                    {passwordStrength < 2 ? 'Zayıf şifre' : 
-                                                     passwordStrength < 4 ? 'Orta şifre' : 
-                                                     'Güçlü şifre'}
+                                                    {(() => {
+                                                        if (passwordStrength < 2) return 'Zayıf şifre';
+                                                        if (passwordStrength < 4) return 'Orta şifre';
+                                                        return 'Güçlü şifre';
+                                                    })()}
                                                 </p>
                                             </div>
                                         )}
@@ -377,6 +410,43 @@ const SignUP: React.FC = () => {
                                             <div className="text-red-500 text-xs mt-1">{passwordError}</div>
                                         )}
                                     </div>
+
+                                    {/* Profil Fotoğrafı */}
+                                    <div className="mb-3">
+                                        <label htmlFor="profile-photo" className="block text-sm font-medium text-gray-700 mb-2">
+                                            Profil Fotoğrafı (İsteğe Bağlı)
+                                        </label>
+                                        <div className="flex items-center space-x-4">
+                                            <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+                                                {profilFoto ? (
+                                                    <img 
+                                                        src={profilFoto} 
+                                                        alt="Profil Önizleme" 
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                                        <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex-1">
+                                                <input
+                                                    id="profile-photo"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={handleFileUpload}
+                                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                />
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    Maksimum 2MB, JPG, PNG formatları desteklenir
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="text-center mb-4">
                                         <button
                                             className="w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
@@ -386,8 +456,11 @@ const SignUP: React.FC = () => {
                                             type="submit"
                                             disabled={registermutation.isPending || redirectCountdown !== null}
                                         >
-                                            {registermutation.isPending ? 'Kayıt Yapılıyor...' : 
-                                             redirectCountdown !== null ? 'Kayıt Başarılı' : 'Kayıt Ol'}
+                                            {(() => {
+                                                if (registermutation.isPending) return 'Kayıt Yapılıyor...';
+                                                if (redirectCountdown !== null) return 'Kayıt Başarılı';
+                                                return 'Kayıt Ol';
+                                            })()}
                                         </button>
                                         <button
                                             type="button"

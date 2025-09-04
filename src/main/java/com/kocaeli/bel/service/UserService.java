@@ -41,7 +41,8 @@ public class UserService {
                         user.getTCNo(),
                         user.getIsim(),
                         user.getStatus(),
-                        user.getYetkilerJson()))
+                        user.getYetkilerJson(),
+                        user.getProfilFoto()))
                 .toList();
     }
     public User findByTCNo(String tcno) {
