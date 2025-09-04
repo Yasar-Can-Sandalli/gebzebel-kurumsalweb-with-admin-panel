@@ -1,5 +1,6 @@
 package com.kocaeli.bel.controller;
 
+import com.kocaeli.bel.DTO.hizmetler.HaberlerDTO;
 import com.kocaeli.bel.model.Haberler;
 import com.kocaeli.bel.service.HaberlerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,9 @@ public class HaberlerController {
         return haberler.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping(path = "/create")
-    public Haberler createHaberler(@RequestBody Haberler haberler) {
-        return haberlerService.createHaberler(haberler);
+    @PostMapping("/create")
+    public Haberler createHaberler(@RequestBody HaberlerDTO dto) {
+        return haberlerService.createHaberler(dto);
     }
 
     @PutMapping(path = "/update/{id}")

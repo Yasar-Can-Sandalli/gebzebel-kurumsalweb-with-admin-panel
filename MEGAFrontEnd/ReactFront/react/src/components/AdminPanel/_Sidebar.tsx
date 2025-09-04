@@ -84,13 +84,13 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             </div>
 
             {/* Menü */}
-            <nav className="p-4 flex-1 overflow-y-auto">
-                <ul className="space-y-1">
+                <div className="flex-1 overflow-y-auto pl-2">
+                <ul className="space-y-0.5">
                     <Item
-                        to="/panel/dashboard"
+                        to="/panel/mainPage"
                         label="Anasayfa"
                         icon={<Home size={16} />}
-                        active={pathname.startsWith("/panel/dashboard")}
+                        active={pathname.startsWith("/panel/mainPage")}
                     />
 
                     {/* Kurumsal */}
@@ -192,7 +192,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         active={pathname.startsWith("/panel/users")}
                     />
                 </ul>
-            </nav>
+                </div>
 
             {/* Mobil kapatma */}
             <button
