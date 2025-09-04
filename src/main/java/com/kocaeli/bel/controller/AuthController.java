@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -136,13 +137,14 @@ public class AuthController {
                 String defaultPermissionsJson = getDefaultPermissionsJson();
                 
                 // Doğrudan JDBC kullanarak SQL sorgusu çalıştır
-                String sql = "INSERT INTO KULLANICILAR (TCNO, ISIM, PASSWORD, STATUS, YETKILERJSON) VALUES (?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO KULLANICILAR (TCNO, ISIM, PASSWORD, STATUS, YETKILERJSON, PROFIL_FOTO) VALUES (?, ?, ?, ?, ?, ?)";
                 jdbcTemplate.update(sql, 
                     registerRequest.getTCNo(), 
                     registerRequest.getIsim(), 
                     hashedPassword, 
                     "Aktif",
-                    defaultPermissionsJson
+                    defaultPermissionsJson,
+                    registerRequest.getProfilFoto() != null ? registerRequest.getProfilFoto() : ""
                 );
                 
                 return ResponseEntity.ok()
@@ -207,5 +209,47 @@ public class AuthController {
                     "status", "success", 
                     "message", "Şifre sıfırlama talimatları gönderildi. Lütfen e-postanızı kontrol edin."
                 ));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("status", "error", "message", "Kullanıcı kimlik doğrulaması yapılmamış"));
+            }
+
+            String currentTCNo = authentication.getName();
+            User currentUser = userService.findByTCNo(currentTCNo);
+            
+            if (currentUser == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("status", "error", "message", "Kullanıcı bulunamadı"));
+            }
+
+            // Parse permissions from JSON string
+            Map<String, Map<String, Boolean>> permissions =
+                    permissionService.mergeWithDefaults(currentUser.getYetkilerJson());
+
+            // Create response with user data
+            Map<String, Object> userData = Map.of(
+                    "id", currentUser.getId(),
+                    "tcno", currentUser.getTCNo(),
+                    "isim", currentUser.getIsim() != null ? currentUser.getIsim() : "",
+                    "status", currentUser.getStatus() != null ? currentUser.getStatus() : "",
+                    "profilFoto", currentUser.getProfilFoto() != null ? currentUser.getProfilFoto() : "",
+                    "permissions", permissions
+            );
+
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "status", "success",
+                            "data", userData
+                    ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "error", "message", "Sunucu hatası: " + e.getMessage()));
+        }
     }
 }

@@ -12,6 +12,8 @@ public class RegisterHandler {
     @JsonProperty(value = "password", required = true)
     public String password;
     
+    public String profilFoto;
+    
     // Eski adı için ek destek
     @JsonProperty("Password")
     public void setPasswordFromOldField(String password) {

@@ -33,7 +33,7 @@ export const login = async (username: string, password: string) => {
             };
 
             // Call store login with user data and permissions
-            await useAuthStore.getState().login(userData, data.data.token);
+            useAuthStore.getState().login(userData, data.data.token);
 
             console.log('Permissions after login:', userData.permissions);
             console.log('Store state after login:', useAuthStore.getState());
@@ -110,3 +110,37 @@ export const getAuthHeader = () => {
 export const hasPermission = (area: string, action: string) => {
     return useAuthStore.getState().hasPermission(area, action);
 }
+
+// Get current user data from API
+export const getCurrentUser = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('No token found');
+        }
+
+        const response = await fetch(`${API_URL}/me`, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log('Current user response:', data);
+
+        if (data.status === 'success' && data.data) {
+            return data.data;
+        }
+
+        throw new Error('Invalid response format');
+    } catch (error) {
+        console.error('Get current user error:', error);
+        throw error;
+    }
+};

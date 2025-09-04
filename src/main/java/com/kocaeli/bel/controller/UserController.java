@@ -44,6 +44,7 @@ public class UserController {
         dto.setIsim(user.getIsim()); // User modelinizde getIsim() olmalı
         dto.setYetkilerJson(user.getYetkilerJson());
         dto.setStatus(user.getStatus()); // User modelinizde getStatus() olmalı
+        dto.setProfilFoto(user.getProfilFoto()); // User modelinizde getProfilFoto() olmalı
         return dto;
     }
     private boolean hasPermission(User user, String area, String permission) {
@@ -111,13 +112,14 @@ public class UserController {
             String defaultPermissionsJson = getDefaultPermissionsJson();
             
             // Doğrudan JDBC kullanarak SQL sorgusu çalıştır
-            String sql = "INSERT INTO KULLANICILAR (TCNO, ISIM, PASSWORD, STATUS, YETKILERJSON) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO KULLANICILAR (TCNO, ISIM, PASSWORD, STATUS, YETKILERJSON, PROFIL_FOTO) VALUES (?, ?, ?, ?, ?, ?)";
             jdbcTemplate.update(sql, 
                 userDTO.getTcno(), 
                 userDTO.getIsim(), 
                 hashedPassword, 
                 userDTO.getStatus(),
-                defaultPermissionsJson
+                defaultPermissionsJson,
+                userDTO.getProfilFoto() != null ? userDTO.getProfilFoto() : ""
             );
             
             // Oluşturulan kullanıcıyı getir
@@ -174,6 +176,7 @@ public class UserController {
         existingUser.setIsim(userDetailsDTO.getIsim() != null ? userDetailsDTO.getIsim() : existingUser.getIsim());
         existingUser.setYetkilerJson(userDetailsDTO.getYetkilerJson() != null ? userDetailsDTO.getYetkilerJson() : existingUser.getYetkilerJson());
         existingUser.setStatus(userDetailsDTO.getStatus() != null ? userDetailsDTO.getStatus() : existingUser.getStatus());
+        existingUser.setProfilFoto(userDetailsDTO.getProfilFoto() != null ? userDetailsDTO.getProfilFoto() : existingUser.getProfilFoto());
 
         User updatedUser = userService.saveUser(existingUser);
         return ResponseEntity.ok(convertToDTO(updatedUser));
