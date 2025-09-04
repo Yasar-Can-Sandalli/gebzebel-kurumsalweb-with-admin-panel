@@ -20,6 +20,7 @@ interface AuthState {
     hasPermission: (area: string, action: string) => boolean;
     updatePermissions: (permissions: Permission) => void;
     setToken: (token: string) => void;
+    updateUser: (userData: any) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -71,6 +72,13 @@ export const useAuthStore = create<AuthState>()(
 
             setToken: (token: string) => {
                 set({ token });
+            },
+
+            updateUser: (userData: any) => {
+                const currentState = get();
+                set({
+                    user: { ...currentState.user, ...userData }
+                });
             },
         }),
         {

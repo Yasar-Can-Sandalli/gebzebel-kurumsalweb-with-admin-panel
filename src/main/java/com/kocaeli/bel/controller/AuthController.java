@@ -18,7 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.kocaeli.bel.security.JwtTokenProvider;
 import com.kocaeli.bel.service.PermissionService;
+import org.springframework.jdbc.core.JdbcTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,6 +45,12 @@ public class AuthController {
 
     @Autowired
     private PermissionService permissionService;
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -235,6 +245,72 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("status", "error", "message", "Sunucu hatası: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/update-profile")
+    public ResponseEntity<?> updateProfile(@RequestBody Map<String, Object> updateRequest) {
+        try {
+            // Mevcut kullanıcıyı al
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String tcno = authentication.getName();
+            
+            Optional<User> userOpt = userRepository.findByTCNo(tcno);
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("status", "error", "message", "Kullanıcı bulunamadı"));
+            }
+            
+            User user = userOpt.get();
+            
+            // İsim güncelleme
+            if (updateRequest.containsKey("isim")) {
+                String newIsim = (String) updateRequest.get("isim");
+                if (newIsim != null && !newIsim.trim().isEmpty()) {
+                    user.setIsim(newIsim.trim());
+                }
+            }
+            
+            // Profil fotoğrafı güncelleme
+            if (updateRequest.containsKey("profilFoto")) {
+                String newProfilFoto = (String) updateRequest.get("profilFoto");
+                user.setProfilFoto(newProfilFoto != null ? newProfilFoto : "");
+            }
+            
+            // Şifre güncelleme
+            if (updateRequest.containsKey("newPassword") && updateRequest.get("newPassword") != null) {
+                String currentPassword = (String) updateRequest.get("password");
+                String newPassword = (String) updateRequest.get("newPassword");
+                
+                // Mevcut şifreyi kontrol et
+                if (currentPassword == null || !passwordEncoder.matches(currentPassword, user.getPassword())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Map.of("status", "error", "message", "Mevcut şifre hatalı"));
+                }
+                
+                // Yeni şifre validasyonu
+                if (newPassword.length() < 6) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Map.of("status", "error", "message", "Yeni şifre en az 6 karakter olmalıdır"));
+                }
+                
+                // Şifreyi hashle ve güncelle
+                user.setPassword(passwordEncoder.encode(newPassword));
+            }
+            
+            // Kullanıcıyı kaydet
+            userRepository.save(user);
+            
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "status", "success",
+                            "message", "Profil başarıyla güncellendi"
+                    ));
+                    
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "error", "message", "Güncelleme hatası: " + e.getMessage()));
         }
     }
 }

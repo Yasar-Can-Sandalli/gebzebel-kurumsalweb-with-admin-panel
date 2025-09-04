@@ -35,6 +35,9 @@ import UsersPage from "./sayfalar/UsersPage";
 import EditUserPage from "./users/EditUserPage";
 import AddUserPage from "./users/AddUserPage";
 
+// --- Ayarlar sayfası
+import SettingsPage from "./settings/SettingsPage";
+
 export default function AdminPanelApp() {
     return (
         <SearchProvider>
@@ -48,6 +51,9 @@ export default function AdminPanelApp() {
                     <Route path="users" element={<UsersPage />} />
                     <Route path="users/yeni" element={<AddUserPage />} />
                     <Route path="users/:id/edit" element={<EditUserPage />} />
+
+                    {/* Ayarlar */}
+                    <Route path="settings" element={<SettingsPage />} />
 
                     {/* Kurumsal (nested) */}
                     <Route path="kurumsal" element={<KurumsalLayout />}>

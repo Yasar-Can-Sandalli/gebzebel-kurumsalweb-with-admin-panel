@@ -10,9 +10,11 @@ import {
     BookOpen,
     Mail,
     Users,
+    Settings,
     ChevronRight,
 } from "lucide-react";
 import { useCurrentUser } from "./hooks/useCurrentUser";
+import { useAuthStore } from "./store/authStore";
 
 type SidebarProps = {
     readonly open: boolean;
@@ -54,6 +56,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
     const isKurumsal = pathname.startsWith("/panel/kurumsal");
     const isGebze = pathname.startsWith("/panel/gebze");
     const { currentUser, loading } = useCurrentUser();
+    const { user: authUser } = useAuthStore();
 
     return (
         <aside
@@ -84,23 +87,25 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                             if (loading) {
                                 return <div className="w-full h-full bg-slate-200 animate-pulse"></div>;
                             }
-                                           if (currentUser?.profilFoto) {
-                   return (
-                       <img
-                           src={`http://localhost:8080/api/files/image/${currentUser.profilFoto}`}
-                           alt="Profil Fotoğrafı"
-                           className="w-full h-full object-cover"
-                           onError={(e) => {
-                               const target = e.target as HTMLImageElement;
-                               target.style.display = 'none';
-                               target.nextElementSibling?.classList.remove('hidden');
-                           }}
-                       />
-                   );
-               }
+                            // Auth store'dan güncel veriyi al, yoksa currentUser'dan al
+                            const profilFoto = authUser?.profilFoto || currentUser?.profilFoto;
+                            if (profilFoto) {
+                                return (
+                                    <img
+                                        src={`http://localhost:8080/api/files/image/${profilFoto}`}
+                                        alt="Profil Fotoğrafı"
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.style.display = 'none';
+                                            target.nextElementSibling?.classList.remove('hidden');
+                                        }}
+                                    />
+                                );
+                            }
                             return null;
                         })()}
-                        <div className={`w-full h-full bg-slate-200 flex items-center justify-center ${currentUser?.profilFoto ? 'hidden' : ''}`}>
+                        <div className={`w-full h-full bg-slate-200 flex items-center justify-center ${(authUser?.profilFoto || currentUser?.profilFoto) ? 'hidden' : ''}`}>
                             <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                             </svg>
@@ -111,8 +116,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                             if (loading) {
                                 return <div className="animate-pulse bg-slate-200 h-4 w-32 mx-auto rounded"></div>;
                             }
-                            if (currentUser?.isim) {
-                                return currentUser.isim;
+                            // Auth store'dan güncel veriyi al, yoksa currentUser'dan al
+                            const isim = authUser?.isim || currentUser?.isim;
+                            if (isim) {
+                                return isim;
                             }
                             return "Kullanıcı";
                         })()}
@@ -238,6 +245,12 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         label="Kullanıcılar"
                         icon={<Users size={16} />}
                         active={pathname.startsWith("/panel/users")}
+                    />
+                    <Item
+                        to="/panel/settings"
+                        label="Ayarlar"
+                        icon={<Settings size={16} />}
+                        active={pathname.startsWith("/panel/settings")}
                     />
                 </ul>
                 </div>
