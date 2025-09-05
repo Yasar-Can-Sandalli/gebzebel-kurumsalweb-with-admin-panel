@@ -20,6 +20,7 @@ import GebzeSanalTurPage from "./sayfalar/gebze/GebzeSanalTurPage";
 
 // --- Diğer modüller
 import HaberlerPage from "./sayfalar/HaberlerPage";
+import HaberlerYeniPage from "./sayfalar/HaberlerYeniPage.tsx"
 import HizmetlerPage from "./sayfalar/HizmetlerPage";
 import EtkinliklerPage from "./sayfalar/EtkinliklerPage";
 import EtkinlikYeniPage from "./sayfalar/EtkinlikYeniPage";
@@ -66,6 +67,8 @@ export default function AdminPanelApp() {
 
                     {/* Diğer modüller (relative path'ler) */}
                     <Route path="haberler" element={<HaberlerPage />} />
+                    <Route path="haberler/yeni" element={<HaberlerYeniPage />} />
+                    <Route path="haberler/:id/duzenle" element={<HaberlerYeniPage />} />
                     <Route path="hizmetler" element={<HizmetlerPage />} />
                     <Route path="etkinlikler" element={<EtkinliklerPage />} />
                     <Route path="etkinlikler/yeni" element={<EtkinlikYeniPage />} />
