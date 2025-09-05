@@ -1,7 +1,8 @@
+// src/sayfalar/kurumsal/EditUserPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../axiosConfig.ts';
-import { ArrowLeft, Save, X, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Save, X, AlertCircle, CheckCircle } from 'lucide-react';
 import { PermissionService } from '../services/YetkiServis.tsx';
 import { User } from '../services/userService.tsx';
 import Loader from '../../loader.tsx';
@@ -15,6 +16,7 @@ export default function EditUserPage() {
     const [formData, setFormData] = useState<Partial<User>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [yetkiler, setYetkiler] = useState<any>(null);
 
     useEffect(() => {
@@ -63,6 +65,7 @@ export default function EditUserPage() {
         e.preventDefault();
         setIsSubmitting(true);
         setErrorMessage(null);
+        setSuccessMessage(null);
 
         try {
             if (formData.id && formData.status && formData.tcno) {
@@ -76,8 +79,12 @@ export default function EditUserPage() {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 });
+
                 if (response.status === 200) {
-                    navigate('/panel/users');
+                    // sayfada kal, başarı mesajı göster
+                    setSuccessMessage('Kullanıcı başarıyla güncellendi.');
+                    // backend güncel kullanıcıyı döndürüyorsa formu tazelemek istersen:
+                    // setFormData((prev) => ({ ...prev, ...response.data }));
                 } else {
                     throw new Error(`Unexpected response status: ${response.status}`);
                 }
@@ -85,23 +92,23 @@ export default function EditUserPage() {
                 throw new Error("Form data is incomplete");
             }
         } catch (error: any) {
-            setErrorMessage(error.response?.data?.message || error.message || "User update failed");
+            setErrorMessage(error?.response?.data?.message || error?.message || "User update failed");
         } finally {
             setIsSubmitting(false);
         }
     };
 
     const handleCancel = () => {
-        if (window.confirm('Changes are not saved. Are you sure you want to leave?')) {
+        if (window.confirm('Kaydedilmemiş değişiklikler var. Çıkmak istediğine emin misin?')) {
             navigate('/panel/users');
         }
     };
 
     if (!formData.id) {
-        return <Loader/>;
+        return <Loader />;
     }
-    return (
 
+    return (
         <div className="max-w-2xl mx-auto mt-10">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
@@ -136,6 +143,35 @@ export default function EditUserPage() {
                     </button>
                 </div>
             </div>
+
+            {/* Success Message */}
+            {successMessage && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                            <CheckCircle size={20} className="text-green-600 mr-2" />
+                            <div>
+                                <h3 className="text-green-800 font-medium">Başarılı</h3>
+                                <p className="text-green-700 text-sm">{successMessage}</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => navigate('/panel/users')}
+                                className="text-sm bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md"
+                            >
+                                Listeye Dön
+                            </button>
+                            <button
+                                onClick={() => setSuccessMessage(null)}
+                                className="text-sm text-green-700 hover:text-green-900 px-2 py-1"
+                            >
+                                Kapat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Error Message */}
             {errorMessage && (
@@ -198,8 +234,8 @@ export default function EditUserPage() {
                                                         className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                                                     />
                                                     <span className="ml-2 text-sm text-gray-700 capitalize">
-                                                        {yetki}
-                                                    </span>
+                            {yetki}
+                          </span>
                                                 </label>
                                             ))}
                                         </div>

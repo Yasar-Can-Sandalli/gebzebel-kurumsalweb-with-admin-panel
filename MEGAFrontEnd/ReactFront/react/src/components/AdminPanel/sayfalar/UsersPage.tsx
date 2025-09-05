@@ -2,10 +2,9 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Users, Filter, ChevronDown, ChevronUp, MoreHorizontal, Plus, Trash, Edit, Eye } from "lucide-react";
 import { useSearch } from "../context/SearchContext";
-import { fetchUsers, User, updateUser, deleteUser } from "../services/userService";
+import { fetchUsers, User, deleteUser } from "../services/userService";
 import { useClickOutside } from "../../useClickOutside";
 import Loader from "../../loader";
-import EditUserModal from "../users/EditUserModal";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
@@ -25,9 +24,6 @@ export default function UsersPage() {
     const { searchQuery, setSearchQuery } = useSearch();
     const actionDropdownRef = useRef<HTMLDivElement>(null);
     const [actionDropdownId, setActionDropdownId] = useState<number | null>(null);
-
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [currentUserToEdit, setCurrentUserToEdit] = useState<User | null>(null);
 
     const { hasPermission } = useAuthStore();
     const canView = hasPermission("kullanıcılar", "goruntuleme");
@@ -108,13 +104,6 @@ export default function UsersPage() {
         setSelectedUsers((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
     };
 
-    const handleSaveUser = async (userid: number, updatedUser: User) => {
-        const saved = await updateUser(userid, updatedUser);
-        setUsers((prev) => prev.map((u) => (u.id === saved.id ? saved : u)));
-        setIsEditModalOpen(false);
-        setCurrentUserToEdit(null);
-    };
-
     const handleClearFilters = () => {
         setSelectedRole("Tüm Roller");
         setSelectedStatus("Tüm Durumlar");
@@ -142,7 +131,10 @@ export default function UsersPage() {
                     <p className="text-gray-500">Kullanıcıları listele ve yönet</p>
                 </div>
                 {canAdd && (
-                    <Link to="/panel/users/yeni" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
+                    <Link
+                        to="/panel/users/yeni"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center"
+                    >
                         <Plus size={20} className="mr-2" />
                         Kullanıcı Ekle
                     </Link>
@@ -165,7 +157,11 @@ export default function UsersPage() {
                         >
                             <Filter size={16} className="mr-2" />
                             {selectedRole}
-                            {isRoleDropdownOpen ? <ChevronUp size={16} className="ml-2" /> : <ChevronDown size={16} className="ml-2" />}
+                            {isRoleDropdownOpen ? (
+                                <ChevronUp size={16} className="ml-2" />
+                            ) : (
+                                <ChevronDown size={16} className="ml-2" />
+                            )}
                         </button>
                         {isRoleDropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white rounded-md shadow-lg">
@@ -201,7 +197,11 @@ export default function UsersPage() {
                         >
                             <Filter size={16} className="mr-2" />
                             {selectedStatus}
-                            {isStatusDropdownOpen ? <ChevronUp size={16} className="ml-2" /> : <ChevronDown size={16} className="ml-2" />}
+                            {isStatusDropdownOpen ? (
+                                <ChevronUp size={16} className="ml-2" />
+                            ) : (
+                                <ChevronDown size={16} className="ml-2" />
+                            )}
                         </button>
                         {isStatusDropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white rounded-md shadow-lg">
@@ -250,21 +250,42 @@ export default function UsersPage() {
                                 />
                             </th>
                             <th className="px-4 py-3 text-left">
-                                <button onClick={() => handleSort("tcno")} className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <button
+                                    onClick={() => handleSort("tcno")}
+                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
                                     Tc numarası
-                                    {sortField === "tcno" ? (sortDirection === "asc" ? <ChevronUp size={14} className="ml-1" /> : <ChevronDown size={14} className="ml-1" />) : null}
+                                    {sortField === "tcno"
+                                        ? sortDirection === "asc"
+                                            ? <ChevronUp size={14} className="ml-1" />
+                                            : <ChevronDown size={14} className="ml-1" />
+                                        : null}
                                 </button>
                             </th>
                             <th className="px-4 py-3 text-left">
-                                <button onClick={() => handleSort("isim")} className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <button
+                                    onClick={() => handleSort("isim")}
+                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
                                     İsim Soyisim
-                                    {sortField === "isim" ? (sortDirection === "asc" ? <ChevronUp size={14} className="ml-1" /> : <ChevronDown size={14} className="ml-1" />) : null}
+                                    {sortField === "isim"
+                                        ? sortDirection === "asc"
+                                            ? <ChevronUp size={14} className="ml-1" />
+                                            : <ChevronDown size={14} className="ml-1" />
+                                        : null}
                                 </button>
                             </th>
                             <th className="px-4 py-3 text-left">
-                                <button onClick={() => handleSort("status")} className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <button
+                                    onClick={() => handleSort("status")}
+                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
                                     Statü
-                                    {sortField === "status" ? (sortDirection === "asc" ? <ChevronUp size={14} className="ml-1" /> : <ChevronDown size={14} className="ml-1" />) : null}
+                                    {sortField === "status"
+                                        ? sortDirection === "asc"
+                                            ? <ChevronUp size={14} className="ml-1" />
+                                            : <ChevronDown size={14} className="ml-1" />
+                                        : null}
                                 </button>
                             </th>
                             <th className="px-4 py-3 text-right">Actions</th>
@@ -295,17 +316,17 @@ export default function UsersPage() {
                                     <div className="text-sm text-gray-900">{user.isim || "-"}</div>
                                 </td>
                                 <td className="px-4 py-4">
-                      <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              user.status === "Aktif"
-                                  ? "bg-green-100 text-green-800"
-                                  : user.status === "Pasif"
-                                      ? "bg-red-100 text-red-800"
-                                      : "bg-yellow-100 text-yellow-800"
-                          }`}
-                      >
-                        {user.status}
-                      </span>
+                    <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            user.status === "Aktif"
+                                ? "bg-green-100 text-green-800"
+                                : user.status === "Pasif"
+                                    ? "bg-red-100 text-red-800"
+                                    : "bg-yellow-100 text-yellow-800"
+                        }`}
+                    >
+                      {user.status}
+                    </span>
                                 </td>
                                 <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium relative">
                                     <button
@@ -328,7 +349,10 @@ export default function UsersPage() {
                                                 </li>
                                                 <li>
                                                     {canEdit && (
-                                                        <Link to={`/panel/users/${user.id}/edit`} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+                                                        <Link
+                                                            to={`/panel/users/${user.id}/edit`}
+                                                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                                                        >
                                                             <Edit size={16} className="mr-2" />
                                                             Edit User
                                                         </Link>
@@ -375,9 +399,6 @@ export default function UsersPage() {
                     </div>
                 </div>
             </div>
-
-            {/* Modals */}
-            <EditUserModal isOpen={isEditModalOpen} onClose={() => { setIsEditModalOpen(false); setCurrentUserToEdit(null); }} user={currentUserToEdit} onSave={handleSaveUser} />
         </main>
     );
 }

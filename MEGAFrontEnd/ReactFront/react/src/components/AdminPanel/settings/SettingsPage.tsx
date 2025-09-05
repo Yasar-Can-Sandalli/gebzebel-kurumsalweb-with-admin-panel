@@ -13,7 +13,7 @@ interface UserSettings {
 
 export default function SettingsPage() {
     const { currentUser, loading, refetch } = useCurrentUser();
-    const { logout, updateUser } = useAuthStore();
+    const { updateUser } = useAuthStore();
     
     const [settings, setSettings] = useState<UserSettings>({
         isim: '',

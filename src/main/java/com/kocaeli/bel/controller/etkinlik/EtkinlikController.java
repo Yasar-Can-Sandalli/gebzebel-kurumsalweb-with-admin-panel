@@ -38,4 +38,6 @@ public class EtkinlikController {
         return etkinlikService.deleteEtkinlikById(id);
     }
 
+
+
 }

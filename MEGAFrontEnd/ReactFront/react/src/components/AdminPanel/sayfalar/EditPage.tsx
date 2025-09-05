@@ -114,6 +114,24 @@ const CATEGORY_TO_TABLE: Record<string, string> = {
     yonetim: "kurumsal_yonetim_semasi",
 };
 
+// --- NEW: HABERLER ---
+const HABERLER_CONFIG: TableConfig = {
+    tableName: "HABERLER",
+    displayName: "Haber",
+    apiEndpoint: "/api/haberler",
+    fields: [
+        { name: "id",        label: "ID",         type: "number" },
+        { name: "baslik",    label: "Başlık",     type: "text",   required: true },
+        { name: "tarih",     label: "Tarih",      type: "date",   required: true },
+        { name: "aciklama",  label: "Açıklama",   type: "textarea" },
+        { name: "resim1",    label: "Resim 1 URL",type: "text" },
+        { name: "resim2",    label: "Resim 2 URL",type: "text" },
+        // Kategori listesini ileride select’e bağlayabiliriz; şimdilik ID ile güncelleyelim
+        { name: "kategoriId",label: "Kategori ID",type: "number" },
+    ],
+};
+
+
 /* -------------------------- ETKİNLİK KONFİG -------------------------- */
 const EVENT_CONFIG: TableConfig = {
     tableName: "ETKINLIKLER",
@@ -135,6 +153,7 @@ const DynamicEditPageForm: React.FC = () => {
     const location = useLocation();
 
     const isInsidePanel = location.pathname.startsWith("/panel/");
+    const isHaberMode = location.pathname.includes("/haberler/");
     const isEventMode = location.pathname.includes("/etkinlikler/");
     const isYonetimMode = location.pathname.includes("/kurumsal/yonetim");
 
@@ -154,6 +173,33 @@ const DynamicEditPageForm: React.FC = () => {
             setError(null);
             try {
                 const numericId = parseInt(recordId, 10);
+
+                /* HABERLER */
+                if (isHaberMode) {
+                    let data: any;
+                    try {
+                        data = await apiGet<any>(`${HABERLER_CONFIG.apiEndpoint}/${numericId}`);
+                    } catch {
+                        const all = await apiGet<any[]>(HABERLER_CONFIG.apiEndpoint);
+                        data = all.find((x) => x.id === numericId);
+                    }
+                    if (!data) throw new Error("Record not found");
+
+                    setTableConfig(HABERLER_CONFIG);
+                    setFormData({
+                        id: data.id ?? "",
+                        baslik: data.baslik ?? "",
+                        tarih: data.tarih ?? "",
+                        aciklama: data.aciklama ?? "",
+                        resim1: data.resim1 ?? "",
+                        resim2: data.resim2 ?? "",
+                        kategoriId: data.kategori?.id ?? "",
+                        kategori: data.kategori ?? null, // elde dursun
+                    });
+                    setHasLoaded(true);
+                    return;
+                }
+
 
                 /* 1) ETKİNLİK */
                 if (isEventMode) {
@@ -250,6 +296,7 @@ const DynamicEditPageForm: React.FC = () => {
         setSaving(true);
         setError(null);
         try {
+            // ETKİNLİKLER SAVE
             if (isEventMode) {
                 const payload = {
                     baslik: (formData.baslik ?? "").trim(),
@@ -259,6 +306,24 @@ const DynamicEditPageForm: React.FC = () => {
                 };
                 await apiPut(`/api/etkinlikler/update/${formData.id}`, payload);
                 alert("Etkinlik güncellendi!");
+                return;
+            }
+
+            // HABERLER SAVE
+            if (isHaberMode) {
+                const payload = {
+                    baslik: (formData.baslik ?? "").trim(),
+                    tarih:  (formData.tarih  ?? "").trim(),
+                    aciklama: formData.aciklama ?? "",
+                    resim1:   formData.resim1 ?? "",
+                    resim2:   formData.resim2 ?? "",
+                    // backend kategori objesi bekliyorsa:
+                    ...(formData.kategoriId ? { kategori: { id: Number(formData.kategoriId) } } : {}),
+                    // eğer backend kategoriId bekliyorsa üst satırı silip bunu kullan:
+                    // ...(formData.kategoriId ? { kategoriId: Number(formData.kategoriId) } : {}),
+                };
+                await apiPut(`/api/haberler/update/${formData.id}`, payload);
+                alert("Haber güncellendi!");
                 return;
             }
 
@@ -294,6 +359,7 @@ const DynamicEditPageForm: React.FC = () => {
             confirm("Değişiklikler kaydedilmedi. Sayfadan çıkmak istediğinizden emin misiniz?")
         ) {
             if (isEventMode) window.location.href = "/panel/etkinlikler";
+            else if (isHaberMode) window.location.href = "/panel/haberler";
             else if (tableConfig && tableConfig.tableName.startsWith("KURUMSAL_"))
                 window.location.href = "/panel/sayfalar/kurumsal";
             else navigate(-1);
@@ -448,7 +514,11 @@ const DynamicEditPageForm: React.FC = () => {
                 <div className="flex items-center">
                     <button
                         onClick={() =>
-                            isEventMode ? (window.location.href = "/panel/etkinlikler") : navigate(-1)
+                            isEventMode
+                                ? (window.location.href = "/panel/etkinlikler")
+                                : isHaberMode
+                                    ? (window.location.href = "/panel/haberler")
+                                    : navigate(-1)
                         }
                         className="mr-4 p-2 text-gray-500 hover:text-gray-700 border rounded"
                     >

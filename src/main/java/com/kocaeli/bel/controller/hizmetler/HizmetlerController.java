@@ -49,7 +49,7 @@ public class HizmetlerController {
         return new ResponseEntity<>(createdHizmet, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<HizmetlerDTO> updateHizmet(@PathVariable Long id, @RequestBody HizmetlerDTO hizmetlerDTO) {
         HizmetlerDTO updatedHizmet = hizmetlerService.updateHizmet(id, hizmetlerDTO);
         if (updatedHizmet != null) {
