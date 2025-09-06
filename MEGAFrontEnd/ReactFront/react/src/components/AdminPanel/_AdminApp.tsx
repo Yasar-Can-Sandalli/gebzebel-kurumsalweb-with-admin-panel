@@ -8,7 +8,7 @@ import { SearchProvider } from "./context/SearchContext";
 // --- Kurumsal (nested)
 import KurumsalLayout from "./sayfalar/kurumsal/_LayoutKurumsal.tsx";
 import KurumsalYonetimPage from "./sayfalar/kurumsal/KurumsalYonetimPage.tsx";
-import KurumsalVizyonPage from "./sayfalar/kurumsal/KurumsalVizyonPage.tsx";
+import KurumsalBVMI from "./sayfalar/kurumsal/KurumsalBVMI.tsx";
 import KurumsalRaporlarPage from "./sayfalar/kurumsal/KurumsalRaporlarPage.tsx";
 import KurumsalKomisyonlarPage from "./sayfalar/kurumsal/KurumsalKomisyonlarPage.tsx";
 
@@ -60,7 +60,8 @@ export default function AdminPanelApp() {
                         <Route index element={<Navigate to="yonetim" replace />} />
                         <Route path="yonetim" element={<KurumsalYonetimPage />} />
                         <Route path="/kurumsal/yonetim/:id/edit" element={<EditPage />} />
-                        <Route path="vizyon" element={<KurumsalVizyonPage />} />
+                        <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
+                        <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
                         <Route path="komisyonlar" element={<KurumsalKomisyonlarPage />} />
                     </Route>
