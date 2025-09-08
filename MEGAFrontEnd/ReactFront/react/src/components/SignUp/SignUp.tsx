@@ -9,7 +9,6 @@ interface RegisterCredentials {
     TCNo: string;
     isim: string;
     Password: string; // Backend büyük P ile bekliyor
-    profilFoto?: string;
 }
 
 // Authentication Service
@@ -28,7 +27,6 @@ const SignUP: React.FC = () => {
     const [isim, setIsim] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [profilFoto, setProfilFoto] = useState<string>('');
     const [regisMessage, setRegisMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
@@ -41,47 +39,6 @@ const SignUP: React.FC = () => {
     // Şifre güçlülük seviyesi için state
     const [passwordStrength, setPasswordStrength] = useState<number>(0);
 
-    // Profil fotoğrafı yükleme fonksiyonu
-    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            // Dosya boyutu kontrolü (1MB - daha küçük limit)
-            if (file.size > 1 * 1024 * 1024) {
-                setError('Dosya boyutu 1MB\'dan küçük olmalıdır.');
-                return;
-            }
-
-            // Dosya tipi kontrolü
-            if (!file.type.startsWith('image/')) {
-                setError('Lütfen sadece resim dosyası seçin.');
-                return;
-            }
-
-            try {
-                // FormData oluştur
-                const formData = new FormData();
-                formData.append('file', file);
-
-                // Dosyayı backend'e yükle
-                const response = await fetch('http://localhost:8080/api/files/upload', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    setProfilFoto(result.fileName); // Sadece dosya adını sakla
-                    setError(null);
-                } else {
-                    setError(result.message || 'Resim yüklenemedi.');
-                }
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                setError('Resim yüklenirken hata oluştu.');
-            }
-        }
-    };
 
     const registermutation = useMutation({
         mutationFn: authService.register,
@@ -219,8 +176,7 @@ const SignUP: React.FC = () => {
             registermutation.mutate({
                 TCNo: TCNo,
                 isim: isim,
-                Password: password, // Büyük P ile Password olarak gönder
-                profilFoto: profilFoto
+                Password: password // Büyük P ile Password olarak gönder
             });
         }
     };
@@ -353,41 +309,6 @@ const SignUP: React.FC = () => {
                                         )}
                                     </div>
 
-                                    {/* Profil Fotoğrafı */}
-                                    <div className="mb-3">
-                                        <label htmlFor="profile-photo" className="block text-sm font-medium text-gray-700 mb-2">
-                                            Profil Fotoğrafı (İsteğe Bağlı)
-                                        </label>
-                                        <div className="flex items-center space-x-4">
-                                            <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
-                                                {profilFoto ? (
-                                                    <img
-                                                        src={`http://localhost:8080/api/files/image/${profilFoto}`}
-                                                        alt="Profil Önizleme"
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                                        <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                                                        </svg>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="flex-1">
-                                                <input
-                                                    id="profile-photo"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={handleFileUpload}
-                                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                                />
-                                                <p className="text-xs text-gray-500 mt-1">
-                                                    Maksimum 1MB, JPG, PNG formatları desteklenir
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <div className="text-center mb-4">
                                         <button
