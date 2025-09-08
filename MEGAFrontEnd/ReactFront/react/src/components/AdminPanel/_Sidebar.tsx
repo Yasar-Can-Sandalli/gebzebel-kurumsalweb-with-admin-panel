@@ -159,7 +159,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                             <ul className="ml-7 mt-1 space-y-1 text-sm">
                                 {[
                                     { to: "/panel/kurumsal/yonetim", label: "Yönetim" },
-                                    { to: "/panel/kurumsal/vizyon", label: "Vizyon-Misyon-İlke" },
+                                    { to: "/panel/kurumsal/BMVI", label: "Baskan-Vizyon-Misyon-İlke" },
                                     { to: "/panel/kurumsal/raporlar", label: "Raporlar" },
                                     { to: "/panel/kurumsal/komisyonlar", label: "Komisyonlar" },
                                 ].map((x) => (
