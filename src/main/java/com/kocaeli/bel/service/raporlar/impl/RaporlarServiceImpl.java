@@ -8,12 +8,9 @@ import com.kocaeli.bel.repository.RaporlarCategoryRepository;
 import com.kocaeli.bel.repository.RaporlarRepository;
 import com.kocaeli.bel.service.raporlar.IRaporlarService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-
+//YCS
 @Service
 @RequiredArgsConstructor
 public class RaporlarServiceImpl implements IRaporlarService {
@@ -26,15 +23,7 @@ public class RaporlarServiceImpl implements IRaporlarService {
     public RaporlarResponse getRaporById(Integer id) {
         Raporlar r = raporlarRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rapor bulunamadı: " + id));
-
-        RaporlarCategory c = r.getRaporCategory(); // LAZY ama tx açık
-        return new RaporlarResponse(
-                r.getRaporId(),
-                r.getRaporBaslik(),
-                r.getRaporUrl(),
-                c.getCategoryId(),
-                c.getCategoryName()
-        );
+        return toResponse(r);
     }
 
     @Transactional
@@ -47,15 +36,56 @@ public class RaporlarServiceImpl implements IRaporlarService {
         r.setRaporBaslik(req.getRaporBaslik());
         r.setRaporUrl(req.getRaporUrl());
         r.setRaporCategory(c);
+        r.setRaporTarihi(req.getRaporTarihi());
+        r.setRaporDurum(Boolean.TRUE.equals(req.getRaporDurum()));
 
         Raporlar saved = raporlarRepository.save(r);
+        return toResponse(saved);
+    }
 
+
+    @Transactional
+    @Override
+    public RaporlarResponse updateRapor(Integer id, CreateRaporRequest req) {
+        Raporlar r = raporlarRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rapor bulunamadı: " + id));
+
+        // Alanları güncelle (null gelenleri es geçiyoruz)
+        if (req.getRaporBaslik() != null) r.setRaporBaslik(req.getRaporBaslik());
+        if (req.getRaporUrl() != null)    r.setRaporUrl(req.getRaporUrl());
+        if (req.getRaporTarihi() != null) r.setRaporTarihi(req.getRaporTarihi());
+        if (req.getRaporDurum() != null)  r.setRaporDurum(req.getRaporDurum());
+
+        if (req.getCategoryId() != null) {
+            RaporlarCategory c = categoryRepository.findById(req.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Kategori bulunamadı: " + req.getCategoryId()));
+            r.setRaporCategory(c);
+        }
+
+        Raporlar updated = raporlarRepository.save(r);
+        return toResponse(updated);
+    }
+
+
+    @Transactional
+    @Override
+    public void deleteRapor(Integer id) {
+        Raporlar r = raporlarRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rapor bulunamadı: " + id));
+        raporlarRepository.delete(r);
+    }
+
+    // --- Helper mapper ---
+    private RaporlarResponse toResponse(Raporlar r) {
+        RaporlarCategory c = r.getRaporCategory();
         return new RaporlarResponse(
-                saved.getRaporId(),
-                saved.getRaporBaslik(),
-                saved.getRaporUrl(),
-                c.getCategoryId(),
-                c.getCategoryName()
+                r.getRaporId(),
+                r.getRaporBaslik(),
+                r.getRaporUrl(),
+                c != null ? c.getCategoryId() : null,
+                c != null ? c.getCategoryName() : null,
+                r.getRaporTarihi(),
+                r.isRaporDurum()
         );
     }
 }

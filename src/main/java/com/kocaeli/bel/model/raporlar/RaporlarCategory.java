@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import java.util.ArrayList;
 import java.util.List;
 
-
+//YCS
 @Entity
 @Table(name = "RAPORLAR_CATEGORY")
 @Getter @Setter

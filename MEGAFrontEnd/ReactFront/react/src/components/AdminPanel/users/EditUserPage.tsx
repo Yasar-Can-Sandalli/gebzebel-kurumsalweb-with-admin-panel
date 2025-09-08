@@ -102,8 +102,6 @@ export default function EditUserPage() {
         return <Loader/>;
     }
     return (
-        <AdminLayout>
-
         <div className="max-w-2xl mx-auto mt-10">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
@@ -231,6 +229,5 @@ export default function EditUserPage() {
                 </form>
             </div>
         </div>
-        </AdminLayout>
     );
 }

@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+//YCS
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +25,14 @@ public class RaporlarCategoryServiceImpl implements IRaporlarCategoryService {
                 .orElseThrow(() -> new RuntimeException("Kategori bulunamadı: " + id));
 
         var raporlar = c.getRaporlarList().stream()
-                .map(r -> new RaporlarSummary(r.getRaporId(), r.getRaporBaslik(), r.getRaporUrl()))
-                .collect(Collectors.toList()); // Java 8+ uyumlu
-
+                .map(r -> new RaporlarSummary(
+                        r.getRaporId(),
+                        r.getRaporBaslik(),
+                        r.getRaporUrl(),
+                        r.getRaporTarihi(),
+                       r.isRaporDurum()
+                ))
+                .collect(Collectors.toList());
         return new RaporlarCategoryResponse(c.getCategoryId(), c.getCategoryName(), raporlar);
     }
 

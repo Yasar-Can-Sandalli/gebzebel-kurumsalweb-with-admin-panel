@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
+//YCS
 @Entity
 @Table(name = "RAPORLAR")
 @Getter @Setter
@@ -23,6 +26,12 @@ public class Raporlar {
 
     @Column(name = "rapor_url", nullable = false)
     private String raporUrl;
+
+    @Column(name = "rapor_tarihi")
+    private Date raporTarihi;
+
+    @Column(name = "rapor_durum")
+    private boolean raporDurum;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)

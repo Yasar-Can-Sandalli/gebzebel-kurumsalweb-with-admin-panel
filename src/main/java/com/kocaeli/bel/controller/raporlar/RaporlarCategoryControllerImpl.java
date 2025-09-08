@@ -1,4 +1,3 @@
-// controller/raporlar/RaporlarCategoryControllerImpl.java
 package com.kocaeli.bel.controller.raporlar;
 
 
@@ -7,7 +6,7 @@ import com.kocaeli.bel.model.raporlar.RaporlarCategory;
 import com.kocaeli.bel.service.raporlar.IRaporlarCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
+//YCS
 @RestController
 @RequestMapping("/api/raporlar/category")
 @RequiredArgsConstructor

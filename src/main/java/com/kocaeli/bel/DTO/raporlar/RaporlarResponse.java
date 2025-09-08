@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
+//YCS
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,4 +18,6 @@ public class RaporlarResponse {
     private String raporUrl;
     private Integer categoryId;
     private String categoryName;
+    private Date raporTarihi;
+    private Boolean raporDurum;
 }
