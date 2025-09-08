@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,9 @@ public class UserController {
 
     private final UserService userService;
     private final PermissionService permissionService;
+    private final PasswordEncoder passwordEncoder;
+    private final JdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper;
 
     // UserDTO'nun isim ve status alanlarını da içerecek şekilde constructor'ı veya setter'ları olmalı.
     // Bu yardımcı metod User entity'sini UserDTO'ya dönüştürür (yanıtlar için).
@@ -39,6 +44,7 @@ public class UserController {
         dto.setIsim(user.getIsim()); // User modelinizde getIsim() olmalı
         dto.setYetkilerJson(user.getYetkilerJson());
         dto.setStatus(user.getStatus()); // User modelinizde getStatus() olmalı
+        dto.setProfilFoto(user.getProfilFoto()); // User modelinizde getProfilFoto() olmalı
         return dto;
     }
     private boolean hasPermission(User user, String area, String permission) {
@@ -46,9 +52,14 @@ public class UserController {
         return perms.getOrDefault(area, Map.of()).getOrDefault(permission, false);
     }
 
-    public UserController(UserService userService, PermissionService permissionService) {
+    public UserController(UserService userService, PermissionService permissionService, 
+                         PasswordEncoder passwordEncoder, JdbcTemplate jdbcTemplate, 
+                         ObjectMapper objectMapper) {
         this.userService = userService;
         this.permissionService = permissionService;
+        this.passwordEncoder = passwordEncoder;
+        this.jdbcTemplate = jdbcTemplate;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -89,25 +100,34 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         try {
-            User user = new User();
-            // UserDTO'dan gelen bilgileri User entity'sine aktar
-            user.setTCNo(userDTO.getTcno()); // UserDTO'da getTcNo() olmalı
-            user.setIsim(userDTO.getIsim()); // UserDTO'da getIsim(), User'da setIsim() olmalı
-            // Default yetkileri atayalım
-            Map<String, Map<String, Boolean>> defaultPermissions = permissionService.getDefaultPermissions();
-            user.setYetkilerJson(convertPermissionsToJson(defaultPermissions));
+            // TC Kimlik No kontrolü
+            if (userService.existsByTCNo(userDTO.getTcno())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            }
 
-            user.setStatus(userDTO.getStatus());// UserDTO'da getStatus(), User'da setStatus() olmalı
-            user.setPassword(userDTO.getPassword()); // UserDTO'da getPassword(), User'da setPassword() olmalı
-
-            // UserService.registerUser metodu TCNo kontrolü ve şifre hash'leme yapar
-            User createdUser = userService.registerUser(user);
+            // Şifreyi hashle
+            String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+            
+            // Varsayılan yetkileri oluştur
+            String defaultPermissionsJson = getDefaultPermissionsJson();
+            
+            // Doğrudan JDBC kullanarak SQL sorgusu çalıştır
+            String sql = "INSERT INTO KULLANICILAR (TCNO, ISIM, PASSWORD, STATUS, YETKILERJSON, PROFIL_FOTO) VALUES (?, ?, ?, ?, ?, ?)";
+            jdbcTemplate.update(sql, 
+                userDTO.getTcno(), 
+                userDTO.getIsim(), 
+                hashedPassword, 
+                userDTO.getStatus(),
+                defaultPermissionsJson,
+                userDTO.getProfilFoto() != null ? userDTO.getProfilFoto() : ""
+            );
+            
+            // Oluşturulan kullanıcıyı getir
+            User createdUser = userService.findByTCNo(userDTO.getTcno());
             return new ResponseEntity<>(convertToDTO(createdUser), HttpStatus.CREATED);
-        } catch (UserAlreadyExistsException e) {
-            // Eğer TCNo zaten varsa, UserService UserAlreadyExistsException fırlatır.
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // Veya bir hata mesajı içeren body
+            
         } catch (Exception e) {
-            // Diğer beklenmedik hatalar için
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -156,6 +176,7 @@ public class UserController {
         existingUser.setIsim(userDetailsDTO.getIsim() != null ? userDetailsDTO.getIsim() : existingUser.getIsim());
         existingUser.setYetkilerJson(userDetailsDTO.getYetkilerJson() != null ? userDetailsDTO.getYetkilerJson() : existingUser.getYetkilerJson());
         existingUser.setStatus(userDetailsDTO.getStatus() != null ? userDetailsDTO.getStatus() : existingUser.getStatus());
+        existingUser.setProfilFoto(userDetailsDTO.getProfilFoto() != null ? userDetailsDTO.getProfilFoto() : existingUser.getProfilFoto());
 
         User updatedUser = userService.saveUser(existingUser);
         return ResponseEntity.ok(convertToDTO(updatedUser));
@@ -166,6 +187,17 @@ public class UserController {
             // Gerçek uygulamada ObjectMapper kullanın
              ObjectMapper mapper = new ObjectMapper();
              return mapper.writeValueAsString(permissions);
+        } catch (Exception e) {
+            return "{}";
+        }
+    }
+    
+    /**
+     * Varsayılan yetkileri JSON formatına dönüştürür
+     */
+    private String getDefaultPermissionsJson() {
+        try {
+            return objectMapper.writeValueAsString(permissionService.getDefaultPermissions());
         } catch (Exception e) {
             return "{}";
         }

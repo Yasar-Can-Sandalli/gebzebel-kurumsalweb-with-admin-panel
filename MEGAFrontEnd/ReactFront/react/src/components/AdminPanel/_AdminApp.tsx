@@ -8,7 +8,7 @@ import { SearchProvider } from "./context/SearchContext";
 // --- Kurumsal (nested)
 import KurumsalLayout from "./sayfalar/kurumsal/_LayoutKurumsal.tsx";
 import KurumsalYonetimPage from "./sayfalar/kurumsal/KurumsalYonetimPage.tsx";
-import KurumsalVizyonPage from "./sayfalar/kurumsal/KurumsalVizyonPage.tsx";
+import KurumsalBVMI from "./sayfalar/kurumsal/KurumsalBVMI.tsx";
 import KurumsalRaporlarPage from "./sayfalar/kurumsal/KurumsalRaporlarPage.tsx";
 import KurumsalKomisyonlarPage from "./sayfalar/kurumsal/KurumsalKomisyonlarPage.tsx";
 
@@ -33,6 +33,10 @@ import IletisimPage from "./sayfalar/IletisimPage";
 // O yüzden import'ı buna göre düzeltelim:
 import UsersPage from "./sayfalar/UsersPage";
 import EditUserPage from "./users/EditUserPage";
+import AddUserPage from "./users/AddUserPage";
+
+// --- Ayarlar sayfası
+import SettingsPage from "./settings/SettingsPage";
 
 export default function AdminPanelApp() {
     return (
@@ -45,14 +49,19 @@ export default function AdminPanelApp() {
 
                     {/* Kullanıcılar (relative path) */}
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="users/yeni" element={<AddUserPage />} />
                     <Route path="users/:id/edit" element={<EditUserPage />} />
+
+                    {/* Ayarlar */}
+                    <Route path="settings" element={<SettingsPage />} />
 
                     {/* Kurumsal (nested) */}
                     <Route path="kurumsal" element={<KurumsalLayout />}>
                         <Route index element={<Navigate to="yonetim" replace />} />
                         <Route path="yonetim" element={<KurumsalYonetimPage />} />
                         <Route path="/kurumsal/yonetim/:id/edit" element={<EditPage />} />
-                        <Route path="vizyon" element={<KurumsalVizyonPage />} />
+                        <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
+                        <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
                         <Route path="komisyonlar" element={<KurumsalKomisyonlarPage />} />
                     </Route>
@@ -68,8 +77,9 @@ export default function AdminPanelApp() {
                     {/* Diğer modüller (relative path'ler) */}
                     <Route path="haberler" element={<HaberlerPage />} />
                     <Route path="haberler/yeni" element={<HaberlerYeniPage />} />
-                    <Route path="haberler/:id/duzenle" element={<EditPage />} />
+                    <Route path="haberler/duzenle/:id" element={<EditPage />} />
                     <Route path="hizmetler" element={<HizmetlerPage />} />
+                    <Route path="hizmetler/:id/duzenle" element={<EditPage />} />
                     <Route path="etkinlikler" element={<EtkinliklerPage />} />
                     <Route path="etkinlikler/yeni" element={<EtkinlikYeniPage />} />
                     <Route path="etkinlikler/:id/duzenle" element={<EditPage />} />

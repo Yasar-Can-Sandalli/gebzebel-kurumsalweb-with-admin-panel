@@ -4,7 +4,6 @@ import api from '../../axiosConfig.ts';
 import { ArrowLeft, Save, X, AlertCircle } from 'lucide-react';
 import { PermissionService } from '../services/YetkiServis.tsx';
 import { User } from '../services/userService.tsx';
-import AdminLayout from '../_LayoutAdminPanel.tsx';
 import Loader from '../../loader.tsx';
 
 const assignableStatusOptions = ['Aktif', 'Pasif', 'Beklemede'];
@@ -102,6 +101,7 @@ export default function EditUserPage() {
         return <Loader/>;
     }
     return (
+
         <div className="max-w-2xl mx-auto mt-10">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">

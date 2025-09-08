@@ -33,21 +33,7 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-//deneme haber için
-export interface Kategori {
-    id: number;
-    ad: string;
-}
-
-export interface Haber {
-    id: number;
-    baslik: string;
-    tarih: string;     // backend LocalDate → string
-    aciklama: string;
-    resim1?: string;
-    resim2?: string;
-    kategori: Kategori | null;
-}
+//----------------------- haber için-----------------------
 
 
 // Types for different entities

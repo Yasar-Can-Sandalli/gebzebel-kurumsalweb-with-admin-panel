@@ -1,7 +1,6 @@
 // src/sayfalar/kurumsal/UsersPage.tsx
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Users, Filter, ChevronDown, ChevronUp, MoreHorizontal, Plus, Trash, Edit, Eye } from "lucide-react";
-//import AdminLayout from "../_LayoutAdminPanel";
 import { useSearch } from "../context/SearchContext";
 import { fetchUsers, User, updateUser, deleteUser } from "../services/userService";
 import { useClickOutside } from "../../useClickOutside";
@@ -128,19 +127,16 @@ export default function UsersPage() {
 
     if (!canView) {
         return (
-
                 <div className="flex items-center justify-center h-96">
                     <div className="text-center">
                         <h2 className="text-2xl font-bold text-gray-800 mb-4">Yetkisiz Erişim</h2>
                         <p className="text-gray-600">Bu sayfayı görüntülemek için yetkiniz yok.</p>
                     </div>
                 </div>
-
         );
     }
 
     return (
-
             <main className="flex-1 overflow-y-auto p-6">
                 <div className="flex justify-between items-center mb-6">
                     <div>
@@ -386,6 +382,5 @@ export default function UsersPage() {
                 <EditUserModal isOpen={isEditModalOpen} onClose={() => { setIsEditModalOpen(false); setCurrentUserToEdit(null); }} user={currentUserToEdit} onSave={handleSaveUser} />
                 <AddUserModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onAdd={(u) => { setUsers((p) => [...p, u]); setIsAddModalOpen(false); }} />
             </main>
-
     );
 }
