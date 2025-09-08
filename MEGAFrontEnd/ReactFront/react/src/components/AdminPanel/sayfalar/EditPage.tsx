@@ -105,6 +105,23 @@ const CATEGORY_TO_TABLE: Record<string, string> = {
     eskibaskan: "KURUMSAL_MECLIS_ESKIBASKANLAR",
     yonetim: "kurumsal_yonetim_semasi",
 };
+// --- NEW: HİZMETLER ---
+const HIZMETLER_CONFIG: TableConfig = {
+    tableName: "HIZMETLER",
+    displayName: "Hizmet",
+    apiEndpoint: "/api/hizmetler",
+    fields: [
+        { name: "baslik",       label: "Başlık",       type: "text",   required: true },
+        { name: "imgUrl",       label: "Görsel URL",   type: "image" },
+        { name: "telefon",      label: "Telefon",      type: "text" },
+        { name: "konum",        label: "Konum",        type: "text" },
+        { name: "buttonDetay",  label: "Buton (Detay)",type: "text" },
+        { name: "buttonKonum",  label: "Buton (Konum)",type: "text" },
+        { name: "mail",         label: "E-Posta",      type: "text" },
+        { name: "kategori",     label: "Kategori",     type: "text" },
+    ],
+};
+
 
 // --- NEW: HABERLER ---
 const HABERLER_CONFIG: TableConfig = {
@@ -145,6 +162,7 @@ const DynamicEditPageForm: React.FC = () => {
     const isHaberMode = location.pathname.includes("/haberler/");
     const isEventMode = location.pathname.includes("/etkinlikler/");
     const isYonetimMode = location.pathname.includes("/kurumsal/yonetim");
+    const isHizmetMode = location.pathname.includes("/hizmetler/");
     const lowerPath = location.pathname.toLowerCase();
     const isKurumsalBMVIMode =
         lowerPath.includes("/kurumsal/bmvi/");
@@ -160,7 +178,7 @@ const DynamicEditPageForm: React.FC = () => {
 
     /* ------------------------------ Helpers ------------------------------ */
     const isImageLike = (fieldName: string) =>
-        /^(resim|image).*|.*(resim|image).*(url)?$/i.test(fieldName);
+        /^(resim|image|img).*|.*(resim|image|img).*(url)?$/i.test(fieldName);
 
     const imageOrFallback = (url?: string) =>
         url && url.trim() !== "" ? url : "/images/placeholder-16x9.jpg";
@@ -238,6 +256,32 @@ const DynamicEditPageForm: React.FC = () => {
                     return;
                 }
 
+                if (isHizmetMode) {
+                    let data: any;
+                    try {
+                        data = await apiGet<any>(`${HIZMETLER_CONFIG.apiEndpoint}/${numericId}`);
+                    } catch {
+                        const all = await apiGet<any[]>(HIZMETLER_CONFIG.apiEndpoint);
+                        data = all.find((x) => x.id === numericId);
+                    }
+                    if (!data) throw new Error("Record not found");
+
+                    setTableConfig(HIZMETLER_CONFIG);
+                    setFormData({
+                        id:           data.id ?? "",
+                        baslik:       data.baslik ?? "",
+                        imgUrl:       data.imgUrl ?? "",
+                        telefon:      data.telefon ?? "",
+                        konum:        data.konum ?? "",
+                        buttonDetay:  data.buttonDetay ?? "",
+                        buttonKonum:  data.buttonKonum ?? "",
+                        mail:         data.mail ?? "",
+                        kategori:     data.kategori ?? "",
+                    });
+                    setHasLoaded(true);
+                    return;
+                }
+
                 /* YÖNETİM ŞEMASI */
                 if (isYonetimMode) {
                     const cfg = TABLE_CONFIGS["kurumsal_yonetim_semasi"];
@@ -300,7 +344,7 @@ const DynamicEditPageForm: React.FC = () => {
                 setLoading(false);
             }
         },
-        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode]
+        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode, isHizmetMode]
     );
 
     useEffect(() => setHasLoaded(false), [id]);
@@ -322,6 +366,23 @@ const DynamicEditPageForm: React.FC = () => {
                 };
                 await apiPut(`/api/etkinlikler/update/${formData.id}`, payload);
                 alert("Etkinlik güncellendi!");
+                return;
+            }
+
+            // HİZMETLER SAVE
+            if (isHizmetMode) {
+                const payload = {
+                    baslik:      (formData.baslik ?? "").trim(),
+                    imgUrl:      (formData.imgUrl ?? "").trim(),
+                    telefon:     (formData.telefon ?? "").trim(),
+                    konum:       (formData.konum ?? "").trim(),
+                    buttonDetay: (formData.buttonDetay ?? "").trim(),
+                    buttonKonum: (formData.buttonKonum ?? "").trim(),
+                    mail:        (formData.mail ?? "").trim(),
+                    kategori:    (formData.kategori ?? "").trim(),
+                };
+                await apiPut(`/api/hizmetler/update/${formData.id}`, payload);
+                alert("Hizmet güncellendi!");
                 return;
             }
 
@@ -523,7 +584,9 @@ const DynamicEditPageForm: React.FC = () => {
                                 ? (window.location.href = "/panel/etkinlikler")
                                 : isHaberMode
                                     ? (window.location.href = "/panel/haberler")
-                                    : navigate("/panel/kurumsal/BMVI")
+                                    : isHizmetMode
+                                        ? (window.location.href = "/panel/hizmetler")
+                                        : (window.location.href = "/panel/kurumsal/BMVI")
                         }
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                     >
@@ -602,9 +665,11 @@ const DynamicEditPageForm: React.FC = () => {
                             ? "event"
                             : isHaberMode
                                 ? "haber"
-                                : isKurumsalBMVIMode
-                                    ? "kurumsal_bvmi"
-                                    : "unknown",
+                                : isHizmetMode
+                                    ? "hizmet"
+                                    : isKurumsalBMVIMode
+                                        ? "kurumsal_bvmi"
+                                        : "unknown",
                         tableConfig: tableConfig?.tableName,
                         formData,
                     }}
