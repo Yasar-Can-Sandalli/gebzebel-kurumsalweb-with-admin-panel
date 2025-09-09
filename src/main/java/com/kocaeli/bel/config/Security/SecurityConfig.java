@@ -1,5 +1,5 @@
 // Update your SecurityConfig.java file
-package com.kocaeli.bel.config.SecurityConfig;
+package com.kocaeli.bel.config.Security;
 
 import com.kocaeli.bel.security.JwtAuthenticationFilter;
 import com.kocaeli.bel.security.JwtTokenProvider;
