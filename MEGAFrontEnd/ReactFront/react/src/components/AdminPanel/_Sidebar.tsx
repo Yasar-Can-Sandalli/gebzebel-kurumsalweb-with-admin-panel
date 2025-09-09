@@ -1,4 +1,5 @@
 import gebzeLogo from "../../assets/images/gebze.png";
+import defaultUser from "../../assets/images/defaultUser.png";
 import { Link, useLocation } from "react-router-dom";
 import {
     Home,
@@ -76,21 +77,26 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     />
                 </div>
 
-                <div className="mt-4 rounded-xl p-4 text-center bg-white shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-slate-200" />
-                    <div className="mt-2 font-semibold text-slate-800">İSİM SOYİSİM</div>
-                    <div className="text-xs text-slate-500">KADEME</div>
+                <div className="mt-4 bg-gray-50 rounded-xl p-4 text-center shadow">
+                    <img
+                        src={defaultUser}
+                        alt="Kullanıcı"
+                        className="w-16 h-16 mx-auto rounded-full object-cover"
+                    />
+                    <div className="mt-2 font-semibold text-gray-800">İSİM SOYİSİM</div>
+                    <div className="text-xs text-gray-500">KADEME</div>
                 </div>
+
             </div>
 
             {/* Menü */}
             <nav className="p-4 flex-1 overflow-y-auto">
                 <ul className="space-y-1">
                     <Item
-                        to="/panel/dashboard"
+                        to="/panel/mainPage"
                         label="Anasayfa"
                         icon={<Home size={16} />}
-                        active={pathname.startsWith("/panel/dashboard")}
+                        active={pathname.startsWith("/panel/mainPage")}
                     />
 
                     {/* Kurumsal */}
@@ -103,6 +109,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                             </summary>
                             <ul className="ml-7 mt-1 space-y-1 text-sm">
                                 {[
+                                    {to:"/panel/kurumsal/baskan" ,label:"Başkan"},
                                     { to: "/panel/kurumsal/yonetim", label: "Yönetim" },
                                     { to: "/panel/kurumsal/vizyon", label: "Vizyon-Misyon-İlke" },
                                     { to: "/panel/kurumsal/raporlar", label: "Raporlar" },

@@ -20,7 +20,6 @@ public class Haberler {
     private String baslik;
 
     @Column(name= "TARIH")
-    @Temporal(TemporalType.DATE)
     private LocalDate tarih;
 
     @Lob
