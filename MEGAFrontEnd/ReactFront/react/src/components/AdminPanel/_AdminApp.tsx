@@ -59,9 +59,9 @@ export default function AdminPanelApp() {
                     <Route path="kurumsal" element={<KurumsalLayout />}>
                         <Route index element={<Navigate to="yonetim" replace />} />
                         <Route path="yonetim" element={<KurumsalYonetimPage />} />
-                        <Route path="/kurumsal/yonetim/:id/edit" element={<EditPage />} />
-                        <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
-                        <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
+                        <Route path="yonetim/:id/edit" element={<EditPage />} />
+                        <Route path="BMVI" element={<KurumsalBVMI />} />
+                        <Route path="BMVI/:id/edit" element={<EditPage />} />
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
                         <Route path="komisyonlar" element={<KurumsalKomisyonlarPage />} />
                     </Route>

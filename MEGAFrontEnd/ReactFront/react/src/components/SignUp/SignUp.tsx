@@ -325,12 +325,9 @@ const SignUP: React.FC = () => {
                                                 return 'Kayıt Ol';
                                             })()}
                                         </button>
-                                        <button
-                                            type="button"
-                                            className="block mt-2 text-sm text-blue-600 hover:text-blue-800"
-                                        >
+                                        <Link to="/forgot-password" className="block mt-2 text-sm text-blue-600 hover:text-blue-800">
                                             Parolanızı Mı Unuttunuz?
-                                        </button>
+                                        </Link>
                                     </div>
                                     <div className="flex flex-col items-center justify-center mt-4">
                                         <p className="mb-2 text-sm text-gray-700 ">
