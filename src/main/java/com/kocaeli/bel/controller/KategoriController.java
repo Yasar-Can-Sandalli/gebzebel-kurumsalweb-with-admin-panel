@@ -24,6 +24,7 @@ public class KategoriController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Kategori> getKategoriById(@PathVariable Long id) {
+
         Optional<Kategori> kategori = kategoriService.getKategoriById(id);
         return kategori.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
