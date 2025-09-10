@@ -52,42 +52,42 @@ const LoginPage: React.FC = () => {
         }
     }, [isAuthenticated, user, navigate]);
 
-    // TC Kimlik numarası doğrulama
-    const validateTCNo = (tcno: string): boolean => {
-        // Sadece 11 haneli olmalı ve sadece rakam içermeli
-        const regex = /^\d{11}$/;
-        if (!regex.test(tcno)) {
-            if (tcno.length === 0) {
-                setTcNoError("TC Kimlik No boş olamaz");
-            } else if (tcno.length < 11) {
-                setTcNoError("TC Kimlik No 11 haneli olmalıdır");
-            } else if (tcno.length > 11) {
-                setTcNoError("TC Kimlik No 11 haneli olmalıdır");
-            } else {
-                setTcNoError("TC Kimlik No sadece rakam içermelidir");
-            }
-            return false;
-        }
+    // TC Kimlik numarası doğrulama - GEÇİCİ OLARAK KAPALI
+    // const validateTCNo = (tcno: string): boolean => {
+    //     // Sadece 11 haneli olmalı ve sadece rakam içermeli
+    //     const regex = /^\d{11}$/;
+    //     if (!regex.test(tcno)) {
+    //         if (tcno.length === 0) {
+    //             setTcNoError("TC Kimlik No boş olamaz");
+    //         } else if (tcno.length < 11) {
+    //             setTcNoError("TC Kimlik No 11 haneli olmalıdır");
+    //         } else if (tcno.length > 11) {
+    //             setTcNoError("TC Kimlik No 11 haneli olmalıdır");
+    //         } else {
+    //             setTcNoError("TC Kimlik No sadece rakam içermelidir");
+    //         }
+    //         return false;
+    //     }
 
-        setTcNoError(null);
-        return true;
-    };
+    //     setTcNoError(null);
+    //     return true;
+    // };
 
-    // Parola doğrulama
-    const validatePassword = (pass: string): boolean => {
-        if (pass.length === 0) {
-            setPasswordError("Parola boş olamaz");
-            return false;
-        }
+    // Parola doğrulama - GEÇİCİ OLARAK KAPALI
+    // const validatePassword = (pass: string): boolean => {
+    //     if (pass.length === 0) {
+    //         setPasswordError("Parola boş olamaz");
+    //         return false;
+    //     }
 
-        if (pass.length < 6) {
-            setPasswordError("Parola en az 6 karakter olmalıdır");
-            return false;
-        }
+    //     if (pass.length < 6) {
+    //         setPasswordError("Parola en az 6 karakter olmalıdır");
+    //         return false;
+    //     }
 
-        setPasswordError(null);
-        return true;
-    };
+    //     setPasswordError(null);
+    //     return true;
+    // };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -97,24 +97,24 @@ const LoginPage: React.FC = () => {
         setPasswordError(null);
         setIsLoading(true);
 
-        // Form doğrulama
-        let hasError = false;
+        // Form doğrulama - GEÇİCİ OLARAK KAPALI
+        // let hasError = false;
 
-        // TC Kimlik No doğrulama
-        if (!validateTCNo(username)) {
-            hasError = true;
-        }
+        // // TC Kimlik No doğrulama
+        // if (!validateTCNo(username)) {
+        //     hasError = true;
+        // }
 
-        // Parola doğrulama
-        if (!validatePassword(password)) {
-            hasError = true;
-        }
+        // // Parola doğrulama
+        // if (!validatePassword(password)) {
+        //     hasError = true;
+        // }
 
-        // Eğer doğrulama hatası varsa işlemi durdur
-        if (hasError) {
-            setIsLoading(false);
-            return;
-        }
+        // // Eğer doğrulama hatası varsa işlemi durdur
+        // if (hasError) {
+        //     setIsLoading(false);
+        //     return;
+        // }
 
         try {
             const success = await login(username, password);
@@ -187,7 +187,7 @@ const LoginPage: React.FC = () => {
                                     value={username}
                                     onChange={(e) => {
                                         setUsername(e.target.value);
-                                        validateTCNo(e.target.value);
+                                        // validateTCNo(e.target.value); // GEÇİCİ OLARAK KAPALI
                                     }}
                                     className={`w-full px-3 py-2 border-b ${tcNoError ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:border-blue-500 transition-colors duration-300`}
                                     required
@@ -203,7 +203,7 @@ const LoginPage: React.FC = () => {
                                     value={password}
                                     onChange={(e) => {
                                         setPassword(e.target.value);
-                                        validatePassword(e.target.value);
+                                        // validatePassword(e.target.value); // GEÇİCİ OLARAK KAPALI
                                     }}
                                     className={`w-full px-3 py-2 pr-10 border-b ${passwordError ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:border-blue-500 transition-colors duration-300`}
                                     required
@@ -238,9 +238,9 @@ const LoginPage: React.FC = () => {
                                 >
                                     {isLoading ? 'Giriş Yapılıyor...' : 'GİRİŞ YAP'}
                                 </button>
-                                <button type="button" className="block mt-2 text-sm text-blue-600 hover:text-blue-800">
+                                <Link to="/forgot-password" className="block mt-2 text-sm text-blue-600 hover:text-blue-800">
                                     Parolanızı Mı Unuttunuz?
-                                </button>
+                                </Link>
                             </div>
                             <div className="flex flex-col items-center justify-center mt-4">
                                 <p className="mb-2 text-sm text-gray-700">
