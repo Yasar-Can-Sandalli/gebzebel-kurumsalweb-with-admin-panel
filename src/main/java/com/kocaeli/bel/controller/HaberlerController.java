@@ -19,6 +19,8 @@ public class HaberlerController {
     @Autowired
     private HaberlerService haberlerService;
 
+
+
     @GetMapping
     public List<Haberler> getAllHaberler() {
         List<Haberler> haberler = haberlerService.getAllHaberler();
@@ -51,7 +53,7 @@ public class HaberlerController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    //YCS
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<HttpStatus> deleteHaberler(@PathVariable Long id) {
         boolean isDeleted = haberlerService.deleteHaberler(id);

@@ -1,4 +1,3 @@
-// AdminApp.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "./_LayoutAdminPanel";
 import HomePanel from "./HomePanel";
@@ -11,6 +10,8 @@ import KurumsalYonetimPage from "./sayfalar/kurumsal/KurumsalYonetimPage.tsx";
 import KurumsalBVMI from "./sayfalar/kurumsal/KurumsalBVMI.tsx";
 import KurumsalRaporlarPage from "./sayfalar/kurumsal/KurumsalRaporlarPage.tsx";
 import KurumsalKomisyonlarPage from "./sayfalar/kurumsal/KurumsalKomisyonlarPage.tsx";
+// ⬇️ yeni edit sayfası
+import RaporEditPage from "./sayfalar/kurumsal/RaporEditPage.tsx";
 
 // --- Gebze (nested)
 import GebzeLayout from "./sayfalar/gebze/_LayoutGebze";
@@ -20,7 +21,7 @@ import GebzeSanalTurPage from "./sayfalar/gebze/GebzeSanalTurPage";
 
 // --- Diğer modüller
 import HaberlerPage from "./sayfalar/HaberlerPage";
-import HaberlerYeniPage from "./sayfalar/HaberlerYeniPage.tsx"
+import HaberlerYeniPage from "./sayfalar/HaberlerYeniPage.tsx";
 import HizmetlerPage from "./sayfalar/HizmetlerPage";
 import EtkinliklerPage from "./sayfalar/EtkinliklerPage";
 import EtkinlikYeniPage from "./sayfalar/EtkinlikYeniPage";
@@ -29,8 +30,6 @@ import YayinlarPage from "./sayfalar/YayinlarPage";
 import IletisimPage from "./sayfalar/IletisimPage";
 
 // --- Kullanıcı sayfaları
-// NOT: Dosyan senin örneğinde `src/sayfalar/kurumsal/UsersPage.tsx` altında.
-// O yüzden import'ı buna göre düzeltelim:
 import UsersPage from "./sayfalar/UsersPage";
 import EditUserPage from "./users/EditUserPage";
 import AddUserPage from "./users/AddUserPage";
@@ -47,7 +46,7 @@ export default function AdminPanelApp() {
                     <Route index element={<Navigate to="mainPage" replace />} />
                     <Route path="mainPage" element={<HomePanel />} />
 
-                    {/* Kullanıcılar (relative path) */}
+                    {/* Kullanıcılar */}
                     <Route path="users" element={<UsersPage />} />
                     <Route path="users/yeni" element={<AddUserPage />} />
                     <Route path="users/:id/edit" element={<EditUserPage />} />
@@ -62,7 +61,11 @@ export default function AdminPanelApp() {
                         <Route path="yonetim/:id/edit" element={<EditPage />} />
                         <Route path="BMVI" element={<KurumsalBVMI />} />
                         <Route path="BMVI/:id/edit" element={<EditPage />} />
+
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
+                        {/* ⬇️ Rapor edit route */}
+                        <Route path="raporlar/:id/duzenle" element={<RaporEditPage />} />
+
                         <Route path="komisyonlar" element={<KurumsalKomisyonlarPage />} />
                     </Route>
 
@@ -74,7 +77,7 @@ export default function AdminPanelApp() {
                         <Route path="sanal-tur" element={<GebzeSanalTurPage />} />
                     </Route>
 
-                    {/* Diğer modüller (relative path'ler) */}
+                    {/* Diğer modüller */}
                     <Route path="haberler" element={<HaberlerPage />} />
                     <Route path="haberler/yeni" element={<HaberlerYeniPage />} />
                     <Route path="haberler/duzenle/:id" element={<EditPage />} />
