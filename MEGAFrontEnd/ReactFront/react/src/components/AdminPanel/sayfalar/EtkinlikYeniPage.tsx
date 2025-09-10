@@ -6,7 +6,10 @@ import type { Etkinlik } from "./EtkinliklerPage";
 export default function EtkinlikYeniPage() {
     const navigate = useNavigate();
     const [form, setForm] = useState<Etkinlik>({
-        baslik: "", tarih: "", resimUrl: "", aciklama: ""
+        baslik: "",
+        tarih: "",
+        resimUrl: "",
+        aciklama: ""
     });
     const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
@@ -18,12 +21,19 @@ export default function EtkinlikYeniPage() {
         e.preventDefault();
         setError(null); setSaving(true);
         try {
-            await apiPost<Etkinlik>("/api/etkinlikler/create", { ...form, tarih: (form.tarih || "").trim() });
+            await apiPost<Etkinlik>("/api/etkinlikler/create", {
+                ...form,
+                tarih: (form.tarih || "").trim()
+            });
             navigate("..", { replace: true, relative: "path" });
         } catch (err: any) {
-            const msg = err?.response?.data?.message || err?.response?.data || err?.message || "Kaydetme hatası";
+            const msg = err?.response?.data?.message ||
+                err?.response?.data || err?.message ||
+                "Kaydetme hatası";
             setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
-        } finally { setSaving(false); }
+        } finally {
+            setSaving(false);
+        }
     };
 
     return (
@@ -45,6 +55,7 @@ export default function EtkinlikYeniPage() {
                 onSubmit={submit}
                 className="mx-auto max-w-2xl space-y-3 bg-white rounded-xl p-5 shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60"
             >
+                <div className="grid grid-cols-2 gap-3">
                 <input
                     type="text"
                     placeholder="Başlık"
@@ -63,18 +74,19 @@ export default function EtkinlikYeniPage() {
                 <input
                     type="text"
                     placeholder="Resim URL"
+
                     className={inputCls}
                     value={form.resimUrl}
                     onChange={(e) => setForm({ ...form, resimUrl: e.target.value })}
                 />
                 <textarea
                     placeholder="Açıklama"
-                    rows={6}
+                    rows={3}
                     className={inputCls}
                     value={form.aciklama}
                     onChange={(e) => setForm({ ...form, aciklama: e.target.value })}
                 />
-
+                </div>
                 <div className="flex gap-3">
                     <button
                         type="submit"

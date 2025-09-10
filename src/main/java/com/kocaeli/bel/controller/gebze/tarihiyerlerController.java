@@ -3,7 +3,7 @@ package com.kocaeli.bel.controller.gebze;
 import java.util.List;
 import java.util.Optional;
 
-import com.kocaeli.bel.service.TarihiYerService;
+import com.kocaeli.bel.service.gebze.TarihiYerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

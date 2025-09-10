@@ -1,17 +1,37 @@
 // src/axiosConfig.ts
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8080", // Spring Boot kökü
-    withCredentials: true,            // session/cookie kullanıyorsan açık kalsın
+    baseURL: "http://localhost:8080",
+    withCredentials: true, // cookie kullanmıyorsan false yapabilirsin
 });
 
-// (Opsiyonel) istek/yanıt interceptor'ları
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token");
+    if (!token) return config;
+
+    // headers'ı normalize et
+    const headers =
+        config.headers instanceof AxiosHeaders
+            ? config.headers
+            : new AxiosHeaders(config.headers);
+
+    headers.set("Authorization", `Bearer ${token}`);
+    config.headers = headers;
+
+    return config;
+});
+
 api.interceptors.response.use(
     (res) => res,
     (err) => {
-        // Merkezi hata yakalama
-        console.error("API error:", err?.response || err);
+        console.log(
+            "API error:",
+            err?.response?.status,
+            err?.config?.method?.toUpperCase(),
+            err?.config?.url,
+            err?.response?.data
+        );
         return Promise.reject(err);
     }
 );
