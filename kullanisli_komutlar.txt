@@ -1,0 +1,8 @@
+git clone <url> : Girilen repo URL'deki proje dosyasını indirir.
+git checkout -b <branch name> : Girilen branch adı altında yeni bir branch oluşturur.
+git checkout <branch name> : Belirtilen dala (branch) geçer.
+git fetch origin : Dalları günceller.
+git pull origin <branch name> : Daldaki projede değişikleri çeker.
+git add . : Proje dosyalarını göndermek üzere sıraya ekler.
+git commit -m "mesaj" : Gönderilen projelerini eklediğini onaylar.
+git push -u origin <branch name> : Belirtilen dala projeyi gönderir.
