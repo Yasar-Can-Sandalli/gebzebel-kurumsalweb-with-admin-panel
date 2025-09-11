@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../../loader.tsx";
 import { fetchYonetimRows, YonetimRow } from "../../services/pageService.tsx";
 import { Search, Mail, Phone, User, Edit, Trash2, X, Check } from "lucide-react";
+import { apiDelete } from "../../services/apiService";
 
 export default function KurumsalYonetimPage() {
     const [rows, setRows] = useState<YonetimRow[]>([]);
@@ -113,7 +114,7 @@ export default function KurumsalYonetimPage() {
                                 <div className="w-12 h-12 rounded-lg overflow-hidden ring-1 ring-slate-200 bg-slate-100 flex items-center justify-center">
                                     {r.resimUrl ? (
                                         <img
-                                            src={r.resimUrl.startsWith('http') ? r.resimUrl : `http://localhost:8080/api/files/image/yonetimsemasi/${r.resimUrl}`}
+                                            src={r.resimUrl}
                                             alt={r.isimSoyisim}
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
@@ -196,7 +197,7 @@ export default function KurumsalYonetimPage() {
                                     <button
                                         className="p-2 rounded-lg hover:bg-green-50 text-green-600 transition-colors"
                                         onClick={() => {
-                                            navigate(`/panel/edit/${r.id}`, {
+                                            navigate(`/panel/kurumsal/yonetim/${r.id}/edit`, {
                                                 state: { 
                                                     ...r, 
                                                     mode: 'yonetim',
@@ -210,10 +211,13 @@ export default function KurumsalYonetimPage() {
                                     </button>
                                     <button
                                         className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
-                                        onClick={() => {
-                                            if (confirm(`${r.isimSoyisim} kaydını silmek istediğinizden emin misiniz?`)) {
-                                                // Silme işlemi burada yapılacak
-                                                console.log('Silinecek:', r.id);
+                                        onClick={async () => {
+                                            if (!confirm(`${r.isimSoyisim} kaydını silmek istediğinizden emin misiniz?`)) return;
+                                            try {
+                                                await apiDelete<void>(`/api/kurumsal/yonetim-semasi/${r.id}`);
+                                                setRows((prev) => prev.filter((x) => x.id !== r.id));
+                                            } catch (e: any) {
+                                                alert(e?.message || "Silme işlemi başarısız oldu");
                                             }
                                         }}
                                         title="Sil"

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Save, X, AlertCircle, Eye, Upload, User, Edit, Building, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, X, AlertCircle, Upload, User, Edit } from "lucide-react";
 import { BaskanAPI } from "../services/pageService";
-import { apiGet, apiPut } from "../services/apiService";
+import { apiClient, apiGet, apiPut } from "../services/apiService";
 
 /* ------------------------- Basit Layout ------------------------- */
 const SimpleLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -186,7 +186,7 @@ const DynamicEditPageForm: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [isPreview, setIsPreview] = useState(false);
+    // Önizleme kaldırıldı
     const [formData, setFormData] = useState<Record<string, any>>({});
     const [debugMode, setDebugMode] = useState(false);
     const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
@@ -200,20 +200,6 @@ const DynamicEditPageForm: React.FC = () => {
 
     const imageOrFallback = (url?: string) => {
         if (!url || url.trim() === "") return "/images/placeholder-16x9.jpg";
-        
-        // Eğer URL zaten tam URL ise (http ile başlıyorsa) olduğu gibi döndür
-        if (url.startsWith('http')) return url;
-        
-        // Yönetim modunda yonetimsemasi klasörünü kullan
-        if (isYonetimMode) {
-            return `/images/yonetimsemasi/${url}`;
-        }
-        
-        // Eğer yüklenen dosya ise (images klasöründen) API URL'i oluştur
-        if (url.includes('images') || !url.includes('/')) {
-            return `http://localhost:8080/api/files/image/${url}`;
-        }
-        
         return url;
     };
 
@@ -237,6 +223,132 @@ const DynamicEditPageForm: React.FC = () => {
             )}
         </div>
     );
+
+    // JSON tabanlı Müdürlükler düzenleyici
+    const MudurluklerEditor: React.FC<{
+        value: string;
+        onChange: (json: string) => void;
+    }> = ({ value, onChange }) => {
+        type Mudurluk = { ad: string; mudur: string };
+
+        const parseToArray = (val: string): Mudurluk[] => {
+            if (!val) return [];
+            try {
+                const parsed = JSON.parse(val);
+                if (Array.isArray(parsed)) {
+                    return parsed
+                        .map((x) => ({ ad: String(x?.ad ?? ''), mudur: String(x?.mudur ?? '') }))
+                        .filter((x) => x.ad.trim() !== '' || x.mudur.trim() !== '');
+                }
+                return [];
+            } catch {
+                return [];
+            }
+        };
+
+        const [items, setItems] = useState<Mudurluk[]>(() => parseToArray(value));
+        const [newAd, setNewAd] = useState<string>("");
+        const [newMudur, setNewMudur] = useState<string>("");
+
+        useEffect(() => {
+            setItems(parseToArray(value));
+        }, [value]);
+
+        const commit = (next: Mudurluk[]) => {
+            setItems(next);
+            onChange(JSON.stringify(next));
+        };
+
+        const addItem = () => {
+            const ad = newAd.trim();
+            const mudur = newMudur.trim();
+            if (!ad && !mudur) return;
+            commit([...items, { ad, mudur }]);
+            setNewAd("");
+            setNewMudur("");
+        };
+
+        const removeAt = (index: number) => {
+            const next = items.filter((_, i) => i !== index);
+            commit(next);
+        };
+
+        return (
+            <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+                    <input
+                        type="text"
+                        value={newAd}
+                        onChange={(e) => setNewAd(e.target.value)}
+                        placeholder="Müdürlük adı (ad)"
+                        className="md:col-span-2 border border-slate-200/80 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent bg-white/80"
+                        onKeyDown={(e) => { if (e.key === 'Enter') addItem(); }}
+                    />
+                    <input
+                        type="text"
+                        value={newMudur}
+                        onChange={(e) => setNewMudur(e.target.value)}
+                        placeholder="Müdür adı (mudur)"
+                        className="md:col-span-2 border border-slate-200/80 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent bg-white/80"
+                        onKeyDown={(e) => { if (e.key === 'Enter') addItem(); }}
+                    />
+                    <button
+                        type="button"
+                        onClick={addItem}
+                        className="md:col-span-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                    >
+                        Ekle
+                    </button>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 overflow-hidden">
+                    <table className="w-full text-sm">
+                        <thead className="bg-slate-50 text-slate-600">
+                            <tr>
+                                <th className="px-3 py-2 w-14 text-left">Sıra</th>
+                                <th className="px-3 py-2 text-left">Müdürlük (ad)</th>
+                                <th className="px-3 py-2 text-left">Müdür (mudur)</th>
+                                <th className="px-3 py-2 w-20 text-right">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {items.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="px-3 py-4 text-center text-slate-500">Kayıt yok</td>
+                                </tr>
+                            ) : (
+                                items.map((item, idx) => (
+                                    <tr key={idx}>
+                                        <td className="px-3 py-2">{idx + 1}</td>
+                                        <td className="px-3 py-2 break-words">{item.ad}</td>
+                                        <td className="px-3 py-2 break-words">{item.mudur}</td>
+                                        <td className="px-3 py-2 text-right">
+                                            <button
+                                                type="button"
+                                                onClick={() => removeAt(idx)}
+                                                className="px-3 py-1 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
+                                            >
+                                                Sil
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    };
+
+    const extractFileName = (pathOrUrl: string): string => {
+        try {
+            const parts = pathOrUrl.split("/").filter(Boolean);
+            return parts.length ? parts[parts.length - 1] : pathOrUrl;
+        } catch {
+            return pathOrUrl;
+        }
+    };
 
     // Profil fotoğrafı yükleme
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
@@ -262,12 +374,10 @@ const DynamicEditPageForm: React.FC = () => {
                 const directory = isYonetimMode ? 'yonetimsemasi' : 'images';
                 uploadFormData.append('directory', directory);
 
-                const response = await fetch('http://localhost:8080/api/files/upload', {
-                    method: 'POST',
-                    body: uploadFormData,
+                const client = (apiClient as any);
+                const { data: result } = await client.post('/api/files/upload', uploadFormData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
                 });
-
-                const result = await response.json();
 
                 if (result.success) {
                     // Eski dosyayı sil (eğer varsa)
@@ -275,23 +385,25 @@ const DynamicEditPageForm: React.FC = () => {
                     if (currentValue && currentValue.trim() !== '') {
                         try {
                             const directory = isYonetimMode ? 'yonetimsemasi' : 'images';
-                            await fetch(`http://localhost:8080/api/files/delete`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'Content-Type': 'application/json',
+                            const fileNameOnly = extractFileName(currentValue);
+                            await client.delete('/api/files/delete', {
+                                data: {
+                                    fileName: fileNameOnly,
+                                    directory: directory,
                                 },
-                                body: JSON.stringify({ 
-                                    fileName: currentValue,
-                                    directory: directory
-                                }),
+                                headers: { 'Content-Type': 'application/json' },
                             });
                         } catch (deleteError) {
                             console.warn('Eski dosya silinemedi:', deleteError);
                         }
                     }
 
-                    // Yeni dosya adını form verisine kaydet
-                    handleInputChange(fieldName, result.fileName);
+                    // Yeni dosya bilgisini form verisine kaydet
+                    const uploadedName = result.fileName || result.filename || extractFileName(result.fileUrl || '');
+                    const newUrl = isYonetimMode
+                        ? `/images/yonetimsemasi/${uploadedName}`
+                        : (result.fileUrl || `/images/${uploadedName}`);
+                    handleInputChange(fieldName, newUrl);
                     setUploadMessage({ type: 'success', text: 'Resim başarıyla yüklendi.' });
                 } else {
                     setUploadMessage({ type: 'error', text: result.message || 'Resim yüklenemedi.' });
@@ -311,15 +423,14 @@ const DynamicEditPageForm: React.FC = () => {
         if (currentValue && currentValue.trim() !== '') {
             try {
                 const directory = isYonetimMode ? 'yonetimsemasi' : 'images';
-                await fetch(`http://localhost:8080/api/files/delete`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
+                const fileNameOnly = extractFileName(currentValue);
+                const client = (apiClient as any);
+                await client.delete('/api/files/delete', {
+                    data: { 
+                        fileName: fileNameOnly,
+                        directory: directory,
                     },
-                    body: JSON.stringify({ 
-                        fileName: currentValue,
-                        directory: directory
-                    }),
+                    headers: { 'Content-Type': 'application/json' },
                 });
             } catch (deleteError) {
                 console.warn('Dosya silinemedi:', deleteError);
@@ -593,92 +704,9 @@ const DynamicEditPageForm: React.FC = () => {
         setFormData((p) => ({ ...p, [field]: value }));
     }, []);
 
-    const handleCancel = () => {
-        if (confirm("Değişiklikler kaydedilmedi. Sayfadan çıkmak istediğinizden emin misiniz?")) {
-            // Hızlı yönlendirme için navigate kullan
-            if (isEventMode) navigate("/panel/etkinlikler");
-            else if (isHaberMode) navigate("/panel/haberler");
-            else if (isYonetimMode) navigate("/panel/kurumsal/yonetim");
-            else if (isHizmetMode) navigate("/panel/hizmetler");
-            else if (tableConfig && tableConfig.tableName.startsWith("KURUMSAL_"))
-                navigate("/panel/kurumsal/BMVI");
-            else navigate(-1);
-        }
-    };
+    // İptal kaldırıldı
 
-    // Müdürlükler için özel render fonksiyonu
-    const renderMudurluklerField = (field: FieldConfig) => {
-        const value = formData[field.name] ?? "";
-        const mudurluklerList = value ? (typeof value === 'string' ? JSON.parse(value) : value) : [];
-        const [newMudurluk, setNewMudurluk] = useState('');
-
-        const addMudurluk = () => {
-            if (newMudurluk.trim()) {
-                const updatedList = [...mudurluklerList, newMudurluk.trim()];
-                handleInputChange(field.name, JSON.stringify(updatedList));
-                setNewMudurluk('');
-            }
-        };
-
-        const removeMudurluk = (index: number) => {
-            const updatedList = mudurluklerList.filter((_: any, i: number) => i !== index);
-            handleInputChange(field.name, JSON.stringify(updatedList));
-        };
-
-        return (
-            <div className="space-y-4">
-                {/* Mevcut müdürlükler listesi */}
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-slate-700">Mevcut Müdürlükler</label>
-                    {mudurluklerList.length > 0 ? (
-                        <div className="space-y-2">
-                            {mudurluklerList.map((mudurluk: string, index: number) => (
-                                <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                    <span className="text-sm text-slate-700">{mudurluk}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeMudurluk(index)}
-                                        className="p-1 text-red-600 hover:bg-red-100 rounded-md transition-colors"
-                                        title="Müdürlüğü Sil"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="p-4 text-center text-slate-500 bg-slate-50 rounded-lg border border-slate-200">
-                            Henüz müdürlük eklenmemiş
-                        </div>
-                    )}
-                </div>
-
-                {/* Yeni müdürlük ekleme */}
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-slate-700">Yeni Müdürlük Ekle</label>
-                    <div className="flex gap-2">
-                        <input
-                            type="text"
-                            value={newMudurluk}
-                            onChange={(e) => setNewMudurluk(e.target.value)}
-                            placeholder="Müdürlük adını girin..."
-                            className="flex-1 border border-slate-200/80 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent bg-white/80"
-                            onKeyPress={(e) => e.key === 'Enter' && addMudurluk()}
-                        />
-                        <button
-                            type="button"
-                            onClick={addMudurluk}
-                            disabled={!newMudurluk.trim()}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors"
-                        >
-                            <Plus size={16} />
-                            Ekle
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    };
+    // Not: Müdürlükler için özel hook kullanan renderer kaldırıldı (hook kural ihlali).
 
     const renderField = (field: FieldConfig) => {
         const value = formData[field.name] ?? "";
@@ -754,26 +782,25 @@ const DynamicEditPageForm: React.FC = () => {
                 );
             case "textarea":
                 return (
-                    <div className="space-y-2">
-                        <textarea
-                            value={value}
-                            onChange={(e) => {
-                                const newValue = e.target.value;
-                                handleInputChange(field.name, newValue);
-                            }}
-                            className={`${common} min-h-[140px]`}
-                            rows={5}
-                            placeholder={field.name.toLowerCase().includes('mudurluk') 
-                                ? "Her satıra bir müdürlük yazın:\nÖrnek:\nMüdürlük 1\nMüdürlük 2\nMüdürlük 3" 
-                                : field.placeholder || field.label
-                            }
+                    field.name.toLowerCase().includes('mudurluk') ? (
+                        <MudurluklerEditor
+                            value={typeof value === 'string' ? value : JSON.stringify(value || [])}
+                            onChange={(json) => handleInputChange(field.name, json)}
                         />
-                        {field.name.toLowerCase().includes('mudurluk') && (
-                            <p className="text-xs text-slate-500">
-                                💡 Her satıra bir müdürlük yazın. JSON formatına gerek yok.
-                            </p>
-                        )}
-                    </div>
+                    ) : (
+                        <div className="space-y-2">
+                            <textarea
+                                value={value}
+                                onChange={(e) => {
+                                    const newValue = e.target.value;
+                                    handleInputChange(field.name, newValue);
+                                }}
+                                className={`${common} min-h-[140px]`}
+                                rows={5}
+                                placeholder={field.placeholder || field.label}
+                            />
+                        </div>
+                    )
                 );
             case "select":
                 return (
@@ -941,22 +968,6 @@ const DynamicEditPageForm: React.FC = () => {
                     </button>
 
                     <button
-                        onClick={() => setIsPreview((v) => !v)}
-                        className="px-3 py-2 rounded-lg text-sm bg-white ring-1 ring-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-2"
-                    >
-                        <Eye size={16} />
-                        {isPreview ? "Düzenleme" : "Önizleme"}
-                    </button>
-
-                    <button
-                        onClick={handleCancel}
-                        className="px-3 py-2 rounded-lg bg-slate-500 hover:bg-slate-600 text-white text-sm flex items-center gap-2"
-                    >
-                        <X size={16} />
-                        İptal
-                    </button>
-
-                    <button
                         onClick={handleSave}
                         disabled={saving}
                         className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm flex items-center gap-2"
@@ -1004,171 +1015,67 @@ const DynamicEditPageForm: React.FC = () => {
                 </div>
             )}
 
-            {/* 3 Kartlı Düzen */}
+            {/* 3 Kartlı düzen: 1) Profil + İsim  2) Diğer Alanlar  3) Müdürlükler */}
             <div className="space-y-6">
-                {!isPreview ? (
-                    <>
-                        {/* 1. Kart: Profil Fotoğrafı */}
-                        {isYonetimMode && (
-                            <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
-                                <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                                    <User size={20} />
-                                    Profil Fotoğrafı
-                                </h3>
-                                {tableConfig.fields
-                                    .filter(f => f.type === "image" || isImageLike(f.name))
-                                    .map((f) => (
-                                        <div key={f.name}>
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                {f.label}
-                                                {f.required ? " *" : ""}
-                                            </label>
-                                            {renderField(f)}
-                                        </div>
-                                    ))}
-                            </div>
-                        )}
-
-                        {/* 2. Kart: Diğer Alanlar */}
-                        <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
-                            <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                                <Edit size={20} />
-                                Genel Bilgiler
-                            </h3>
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                {tableConfig.fields
-                                    .filter(f => f.name.toLowerCase() !== 'mudurlukler' && f.type !== "image" && !isImageLike(f.name))
-                                    .map((f) => (
-                                        <div key={f.name} className={f.type === "textarea" && f.name.toLowerCase() !== 'mudurlukler' ? "lg:col-span-2" : ""}>
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                {f.label}
-                                                {f.required ? " *" : ""}
-                                            </label>
-                                            {renderField(f)}
-                                        </div>
-                                    ))}
-                            </div>
-                        </div>
-
-                        {/* 3. Kart: Müdürlükler */}
-                        {isYonetimMode && (
-                            <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
-                                <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                                    <Building size={20} />
-                                    Müdürlükler
-                                </h3>
-                                {tableConfig.fields
-                                    .filter(f => f.name.toLowerCase().includes('mudurluk'))
-                                    .map((f) => (
-                                        <div key={f.name}>
-                                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                                {f.label}
-                                                {f.required ? " *" : ""}
-                                            </label>
-                                            {renderMudurluklerField(f)}
-                                        </div>
-                                    ))}
-                            </div>
-                        )}
-                    </>
-                ) : (
-                    /* ----------------------------- ÖNİZLEME ----------------------------- */
-                    <div className="space-y-6">
-                        <h1 className="text-2xl font-semibold text-slate-900">
-                            {tableConfig.displayName} • Önizleme
-                        </h1>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {tableConfig.fields.map((f) => {
-                                const v = formData[f.name];
-
-                                // boş değerleri atla
-                                if (!v && v !== 0 && v !== false) return null;
-
-                                const label = (
-                                    <h3 className="font-medium text-slate-700 mb-2">{f.label}</h3>
-                                );
-
-                                // Görsel alanlarını IMG olarak göster
-                                if (f.type === "image" || isImageLike(f.name)) {
-                                    return (
-                                        <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
-                                            {label}
-                                            <div className="aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
-                                                <img
-                                                    src={imageOrFallback(String(v))}
-                                                    alt={f.label}
-                                                    className="w-full h-full object-cover"
-                                                    onError={(e) =>
-                                                        ((e.target as HTMLImageElement).src =
-                                                            "/images/placeholder-16x9.jpg")
-                                                    }
-                                                />
-                                            </div>
-                                            <div className="mt-2 text-xs text-slate-500 break-all">
-                                                {String(v)}
-                                            </div>
-                                        </div>
-                                    );
-                                }
-
-                                // HTML içeriği varsa zengin göster
-                                if (
-                                    f.name.toLowerCase() === "icerik" ||
-                                    f.label.toLowerCase().includes("içerik") ||
-                                    f.type === "editor"
-                                ) {
-                                    const html = String(v || "");
-                                    return (
-                                        <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4 md:col-span-2">
-                                            {label}
-                                            <div
-                                                className="prose prose-slate max-w-none prose-p:my-2 prose-ul:my-2 prose-li:my-1"
-                                                dangerouslySetInnerHTML={{ __html: html }}
-                                            />
-                                        </div>
-                                    );
-                                }
-
-                                // Tarihi okunur formatla
-                                if (f.type === "date") {
-                                    return (
-                                        <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
-                                            {label}
-                                            <span className="text-slate-700">
-                        {new Date(String(v)).toLocaleDateString("tr-TR")}
-                      </span>
-                                        </div>
-                                    );
-                                }
-
-                                // Boolean rozet
-                                if (f.type === "boolean") {
-                                    return (
-                                        <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
-                                            {label}
-                                            <span
-                                                className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs ${
-                                                    v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"
-                                                }`}
-                                            >
-                        {v ? "Aktif" : "Pasif"}
-                      </span>
-                                        </div>
-                                    );
-                                }
-
-                                // Varsayılan metin/numara/seçim
-                                return (
-                                    <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
-                                        {label}
-                                        <span className="text-slate-700 break-words">{String(v)}</span>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                {/* Kart 1: Profil Fotoğrafı + İsim Soyisim */}
+                <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                        <User size={20} />
+                        Profil ve Kimlik
+                    </h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {tableConfig.fields
+                            .filter(f => f.type === "image" || isImageLike(f.name) || f.name === 'isimSoyisim')
+                            .map((f) => (
+                                <div key={f.name} className={f.type === 'image' ? 'lg:col-span-2' : ''}>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        {f.label}
+                                        {f.required ? " *" : ""}
+                                    </label>
+                                    {renderField(f)}
+                                </div>
+                            ))}
                     </div>
-                )}
+                </div>
+
+                {/* Kart 2: Müdürlükler hariç diğer alanlar */}
+                <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                        <Edit size={20} />
+                        Genel Bilgiler
+                    </h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {tableConfig.fields
+                            .filter(f => !(f.type === "image" || isImageLike(f.name) || f.name === 'isimSoyisim' || f.name.toLowerCase().includes('mudurluk')))
+                            .map((f) => (
+                                <div key={f.name} className={f.type === 'textarea' ? 'lg:col-span-2' : ''}>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        {f.label}
+                                        {f.required ? " *" : ""}
+                                    </label>
+                                    {renderField(f)}
+                                </div>
+                            ))}
+                    </div>
+                </div>
+
+                {/* Kart 3: Müdürlükler */}
+                <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                        Müdürlükler
+                    </h3>
+                    {tableConfig.fields
+                        .filter(f => f.name.toLowerCase().includes('mudurluk'))
+                        .map((f) => (
+                            <div key={f.name}>
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                    {f.label}
+                                    {f.required ? " *" : ""}
+                                </label>
+                                {renderField(f)}
+                            </div>
+                        ))}
+                </div>
             </div>
         </Wrapper>
     );
