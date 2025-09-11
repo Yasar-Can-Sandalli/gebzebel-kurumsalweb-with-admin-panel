@@ -81,6 +81,7 @@ export default function SettingsPage() {
             try {
                 const formData = new FormData();
                 formData.append('file', file);
+                formData.append('directory', 'user_images'); // Kullanıcı resimleri için user_images dizini
 
                 const response = await fetch('http://localhost:8080/api/files/upload', {
                     method: 'POST',
@@ -90,6 +91,25 @@ export default function SettingsPage() {
                 const result = await response.json();
 
                 if (result.success) {
+                    // Eski dosyayı sil (eğer varsa)
+                    const currentPhoto = settings.profilFoto;
+                    if (currentPhoto && currentPhoto.trim() !== '') {
+                        try {
+                            await fetch(`http://localhost:8080/api/files/delete`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ 
+                                    fileName: currentPhoto,
+                                    directory: 'user_images'
+                                }),
+                            });
+                        } catch (deleteError) {
+                            console.warn('Eski dosya silinemedi:', deleteError);
+                        }
+                    }
+
                     setSettings(prev => ({ ...prev, profilFoto: result.fileName }));
                     setMessage({ type: 'success', text: 'Profil fotoğrafı yüklendi.' });
                 } else {
@@ -103,7 +123,25 @@ export default function SettingsPage() {
     };
 
     // Profil fotoğrafını kaldırma
-    const removeProfilePhoto = () => {
+    const removeProfilePhoto = async () => {
+        const currentPhoto = settings.profilFoto;
+        if (currentPhoto && currentPhoto.trim() !== '') {
+            try {
+                await fetch(`http://localhost:8080/api/files/delete`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        fileName: currentPhoto,
+                        directory: 'user_images'
+                    }),
+                });
+            } catch (deleteError) {
+                console.warn('Dosya silinemedi:', deleteError);
+            }
+        }
+        
         setSettings(prev => ({ ...prev, profilFoto: '' }));
         setMessage({ type: 'success', text: 'Profil fotoğrafı kaldırıldı.' });
     };
@@ -124,6 +162,26 @@ export default function SettingsPage() {
             const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error('Oturum bulunamadı');
+            }
+
+            // Eski profil fotoğrafını sil (eğer değiştiyse)
+            const oldPhoto = currentUser?.profilFoto;
+            const newPhoto = settings.profilFoto;
+            if (oldPhoto && oldPhoto !== newPhoto && oldPhoto.trim() !== '') {
+                try {
+                    await fetch(`http://localhost:8080/api/files/delete`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            fileName: oldPhoto,
+                            directory: 'user_images'
+                        }),
+                    });
+                } catch (deleteError) {
+                    console.warn('Eski profil fotoğrafı silinemedi:', deleteError);
+                }
             }
 
             const updateData: any = {

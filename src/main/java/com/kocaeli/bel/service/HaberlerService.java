@@ -41,6 +41,7 @@ public class HaberlerService {
         h.setResim1(dto.getResim1());
         h.setResim2(dto.getResim2());
 
+
         // Tarih iki formattan da gelebilsin:
         // Öncelik ISO (input type="date" zaten "yyyy-MM-dd" gönderir)
         h.setTarih(parseDateFlexible(dto.getTarih()));
@@ -94,7 +95,7 @@ public class HaberlerService {
             return null;
         }
     }
-
+    //YCS
     public boolean deleteHaberler(Long id) {
         Optional<Haberler> existingHaber = haberlerRepository.findById(id);
         if (existingHaber.isPresent()) {

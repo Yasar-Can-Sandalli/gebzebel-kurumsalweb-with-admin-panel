@@ -237,10 +237,10 @@ export default function UsersPage() {
             {/* Tablo */}
             <div className="bg-white rounded-lg shadow">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full min-w-[800px]">
                         <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-4 py-3 text-left">
+                            <th className="px-3 py-3 text-left w-12">
                                 <input
                                     type="checkbox"
                                     className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
@@ -249,12 +249,12 @@ export default function UsersPage() {
                                     disabled={filteredAndSortedUsers.length === 0}
                                 />
                             </th>
-                            <th className="px-4 py-3 text-left">
+                            <th className="px-3 py-3 text-left min-w-[200px]">
                                 <button
                                     onClick={() => handleSort("tcno")}
-                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700"
                                 >
-                                    Tc numarası
+                                    TC Kimlik No
                                     {sortField === "tcno"
                                         ? sortDirection === "asc"
                                             ? <ChevronUp size={14} className="ml-1" />
@@ -262,10 +262,10 @@ export default function UsersPage() {
                                         : null}
                                 </button>
                             </th>
-                            <th className="px-4 py-3 text-left">
+                            <th className="px-3 py-3 text-left min-w-[180px]">
                                 <button
                                     onClick={() => handleSort("isim")}
-                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700"
                                 >
                                     İsim Soyisim
                                     {sortField === "isim"
@@ -275,12 +275,12 @@ export default function UsersPage() {
                                         : null}
                                 </button>
                             </th>
-                            <th className="px-4 py-3 text-left">
+                            <th className="px-3 py-3 text-left w-24">
                                 <button
                                     onClick={() => handleSort("status")}
-                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    className="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700"
                                 >
-                                    Statü
+                                    Durum
                                     {sortField === "status"
                                         ? sortDirection === "asc"
                                             ? <ChevronUp size={14} className="ml-1" />
@@ -288,13 +288,13 @@ export default function UsersPage() {
                                         : null}
                                 </button>
                             </th>
-                            <th className="px-4 py-3 text-right">Actions</th>
+                            <th className="px-3 py-3 text-right w-20">İşlemler</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                         {filteredAndSortedUsers.map((user) => (
-                            <tr key={user.id} className="hover:bg-gray-50">
-                                <td className="px-4 py-4">
+                            <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                                <td className="px-3 py-3">
                                     <input
                                         type="checkbox"
                                         className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
@@ -302,73 +302,107 @@ export default function UsersPage() {
                                         onChange={() => toggleSelectUser(user.id)}
                                     />
                                 </td>
-                                <td className="px-4 py-4">
-                                    <div className="flex items-center">
-                                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold text-sm">
+                                <td className="px-3 py-3 min-w-[200px]">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold text-sm flex-shrink-0">
                                             {user.isim ? user.isim.charAt(0).toUpperCase() : user.tcno.toString().charAt(0)}
                                         </div>
-                                        <div className="ml-3">
-                                            <div className="text-sm font-medium text-gray-900">{user.tcno}</div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="text-sm font-medium text-gray-900 truncate">{user.tcno}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-4 py-4">
-                                    <div className="text-sm text-gray-900">{user.isim || "-"}</div>
+                                <td className="px-3 py-3 min-w-[180px]">
+                                    <div className="text-sm text-gray-900 truncate">{user.isim || "-"}</div>
                                 </td>
-                                <td className="px-4 py-4">
-                    <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            user.status === "Aktif"
-                                ? "bg-green-100 text-green-800"
-                                : user.status === "Pasif"
-                                    ? "bg-red-100 text-red-800"
-                                    : "bg-yellow-100 text-yellow-800"
-                        }`}
-                    >
-                      {user.status}
-                    </span>
-                                </td>
-                                <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium relative">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setActionDropdownId(actionDropdownId === user.id ? null : user.id);
-                                        }}
-                                        className="text-gray-500 hover:text-gray-700"
+                                <td className="px-3 py-3">
+                                    <span
+                                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                            user.status === "Aktif"
+                                                ? "bg-green-100 text-green-800"
+                                                : user.status === "Pasif"
+                                                    ? "bg-red-100 text-red-800"
+                                                    : "bg-yellow-100 text-yellow-800"
+                                        }`}
                                     >
-                                        <MoreHorizontal size={16} />
-                                    </button>
+                                        {user.status}
+                                    </span>
+                                </td>
+                                <td className="px-3 py-3 text-right relative">
+                                    <div className="flex items-center justify-end gap-1">
+                                        <button
+                                            className="p-1.5 rounded-md hover:bg-blue-50 text-blue-600 transition-colors"
+                                            onClick={() => {
+                                                // View details functionality
+                                                console.log('View user details:', user);
+                                            }}
+                                            title="Detay Görüntüle"
+                                        >
+                                            <Eye size={14} />
+                                        </button>
+                                        {canEdit && (
+                                            <Link
+                                                to={`/panel/users/${user.id}/edit`}
+                                                className="p-1.5 rounded-md hover:bg-green-50 text-green-600 transition-colors"
+                                                title="Düzenle"
+                                            >
+                                                <Edit size={14} />
+                                            </Link>
+                                        )}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setActionDropdownId(actionDropdownId === user.id ? null : user.id);
+                                            }}
+                                            className="p-1.5 rounded-md hover:bg-slate-50 text-slate-600 transition-colors"
+                                            title="Daha Fazla"
+                                        >
+                                            <MoreHorizontal size={14} />
+                                        </button>
+                                    </div>
+                                    
                                     {actionDropdownId === user.id && (
-                                        <div ref={actionDropdownRef} className="absolute right-4 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
+                                        <div ref={actionDropdownRef} className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg shadow-blue-500/10 ring-1 ring-slate-200/60 z-20 overflow-hidden">
                                             <ul className="py-1">
                                                 <li>
-                                                    <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                                                        <Eye size={16} className="mr-2" />
-                                                        View Details
+                                                    <button 
+                                                        className="flex items-center px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 w-full text-left transition-colors"
+                                                        onClick={() => {
+                                                            setActionDropdownId(null);
+                                                            console.log('View user details:', user);
+                                                        }}
+                                                    >
+                                                        <Eye size={14} className="mr-2" />
+                                                        Detay Görüntüle
                                                     </button>
                                                 </li>
-                                                <li>
-                                                    {canEdit && (
+                                                {canEdit && (
+                                                    <li>
                                                         <Link
                                                             to={`/panel/users/${user.id}/edit`}
-                                                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                                                            className="flex items-center px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 w-full text-left transition-colors"
+                                                            onClick={() => setActionDropdownId(null)}
                                                         >
-                                                            <Edit size={16} className="mr-2" />
-                                                            Edit User
+                                                            <Edit size={14} className="mr-2" />
+                                                            Düzenle
                                                         </Link>
-                                                    )}
-                                                </li>
-                                                <li>
-                                                    {canDelete && (
+                                                    </li>
+                                                )}
+                                                <div className="border-t border-slate-100"></div>
+                                                {canDelete && (
+                                                    <li>
                                                         <button
-                                                            onClick={() => handleDeleteUser(user.id)}
-                                                            className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
+                                                            onClick={() => {
+                                                                setActionDropdownId(null);
+                                                                handleDeleteUser(user.id);
+                                                            }}
+                                                            className="flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left transition-colors"
                                                         >
-                                                            <Trash size={16} className="mr-2" />
+                                                            <Trash size={14} className="mr-2" />
                                                             Kullanıcıyı Sil
                                                         </button>
-                                                    )}
-                                                </li>
+                                                    </li>
+                                                )}
                                             </ul>
                                         </div>
                                     )}

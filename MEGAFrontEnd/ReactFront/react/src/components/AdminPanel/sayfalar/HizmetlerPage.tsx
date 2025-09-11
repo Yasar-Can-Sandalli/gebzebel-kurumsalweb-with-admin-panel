@@ -160,10 +160,9 @@ export default function HizmetlerPage() {
                 </div>
 
                 {/* TABLO */}
-                <div className="overflow-y-auto" style={{ maxHeight: "70vh" }}>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full text-sm">
-                            <thead className="bg-slate-50 text-slate-700">
+                <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                        <thead className="bg-slate-50 text-slate-700">
                             <tr className="text-left">
                                 <th className="px-4 py-3 w-10">
                                     <input
@@ -180,8 +179,8 @@ export default function HizmetlerPage() {
                                 <th className="px-4 py-3">Konum</th>
                                 <th className="px-4 py-3 w-36">İşlemler</th>
                             </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
                             {filtered.length === 0 ? (
                                 <tr>
                                     <td
@@ -241,9 +240,8 @@ export default function HizmetlerPage() {
                                     </tr>
                                 ))
                             )}
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
