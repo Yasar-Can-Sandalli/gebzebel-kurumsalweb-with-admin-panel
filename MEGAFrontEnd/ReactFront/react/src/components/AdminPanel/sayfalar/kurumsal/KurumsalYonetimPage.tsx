@@ -113,7 +113,7 @@ export default function KurumsalYonetimPage() {
                                 <div className="w-12 h-12 rounded-lg overflow-hidden ring-1 ring-slate-200 bg-slate-100 flex items-center justify-center">
                                     {r.resimUrl ? (
                                         <img
-                                            src={r.resimUrl.startsWith('http') ? r.resimUrl : `http://localhost:8080/api/files/image/yonetimsemasi/${r.resimUrl}`}
+                                            src={r.resimUrl}
                                             alt={r.isimSoyisim}
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
@@ -196,7 +196,7 @@ export default function KurumsalYonetimPage() {
                                     <button
                                         className="p-2 rounded-lg hover:bg-green-50 text-green-600 transition-colors"
                                         onClick={() => {
-                                            navigate(`/panel/edit/${r.id}`, {
+                                            navigate(`/panel/kurumsal/yonetim/${r.id}/edit`, {
                                                 state: { 
                                                     ...r, 
                                                     mode: 'yonetim',
