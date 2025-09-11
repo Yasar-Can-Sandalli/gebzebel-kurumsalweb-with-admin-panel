@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Save, X, Eye, AlertCircle, Calendar, FileText } from "lucide-react";
 import { getRaporById, updateRapor } from "../../services/raporlarService.ts";
-import type { Rapor } from "../../../../types/raporlar";
+import type { Rapor } from "../../types/raporlar.ts";
 
 function toDateInput(val?: string | null) {
     if (!val) return "";

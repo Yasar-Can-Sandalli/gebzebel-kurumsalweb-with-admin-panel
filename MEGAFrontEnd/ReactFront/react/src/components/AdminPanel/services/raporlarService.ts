@@ -1,5 +1,5 @@
 import { apiGet, apiPost, apiPut, apiDelete } from "./apiService";
-import type { Rapor, RaporCategory } from "../../../types/raporlar";
+import type { Rapor, RaporCategory } from "../types/raporlar.ts";
 
 // Kategorileri getir
 export const getAllRaporCategories = async (): Promise<RaporCategory[]> =>

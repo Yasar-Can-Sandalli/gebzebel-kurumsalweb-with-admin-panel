@@ -7,7 +7,7 @@ import {
     createRapor,
     deleteRapor,
 } from "../../services/raporlarService.ts"; // ← services doğru
-import type { Rapor, RaporCategory } from "../../../../types/raporlar.ts";   // ← types doğru (.ts uzantılı)
+import type { Rapor, RaporCategory } from "../../types/raporlar.ts";   // ← types doğru (.ts uzantılı)
 import { CheckCircle2, CircleSlash, Calendar, FileText, Plus } from "lucide-react";
 
 // input 'YYYY-MM-DD' -> ISO
