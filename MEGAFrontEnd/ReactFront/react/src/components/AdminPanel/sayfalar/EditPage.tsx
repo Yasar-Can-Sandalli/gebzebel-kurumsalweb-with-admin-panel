@@ -53,10 +53,8 @@ const TABLE_CONFIGS: Record<string, TableConfig> = {
         displayName: "Başkan, Misyon, Vizyon & İlkelerimiz",
         apiEndpoint: "/api/kurumsal/baskan-misyon-vizyon",
         fields: [
-            { name: "ID", label: "ID", type: "number" },
             { name: "resimUrl1", label: "Resim URL 1", type: "text" },
             { name: "imageUrl2", label: "Resim URL 2", type: "text" },
-            { name: "BASLIK", label: "Başlık", type: "text", required: true },
             { name: "ICERIK", label: "İçerik", type: "textarea", required: true },
             { name: "DELTA", label: "Delta", type: "text" },
             {
@@ -73,16 +71,11 @@ const TABLE_CONFIGS: Record<string, TableConfig> = {
         displayName: "Yönetim Şeması",
         apiEndpoint: "/api/kurumsal/yonetim-semasi",
         fields: [
-            { name: "ID", label: "ID", type: "number" },
             { name: "isimSoyisim", label: "Isim Soyisim", type: "text" },
             { name: "resimUrl", label: "resimUrl", type: "text" },
             { name: "pozisyon", label: "pozisyon", type: "text" },
             { name: "siraNo", label: "siraNo", type: "text" },
             { name: "mudurlukler", label: "mudurlukler", type: "textarea" },
-            { name: "delta", label: "delta", type: "text", required: true },
-            { name: "email", label: "email", type: "text", required: true },
-            { name: "telefon", label: "telefon", type: "text", required: true },
-            { name: "biyografi", label: "biyografi", type: "textarea", required: true },
         ],
     },
 
@@ -91,7 +84,6 @@ const TABLE_CONFIGS: Record<string, TableConfig> = {
         displayName: "Etik, Arabuluculuk",
         apiEndpoint: "/api/kurumsal/etik-arabuluculuk",
         fields: [
-            { name: "ID", label: "ID", type: "number" },
             { name: "Ad", label: "AD", type: "text" },
             { name: "unvan", label: "unvan", type: "text" },
             { name: "gorev", label: "gorev", type: "text" },
@@ -113,6 +105,39 @@ const CATEGORY_TO_TABLE: Record<string, string> = {
     eskibaskan: "KURUMSAL_MECLIS_ESKIBASKANLAR",
     yonetim: "kurumsal_yonetim_semasi",
 };
+// --- NEW: HİZMETLER ---
+const HIZMETLER_CONFIG: TableConfig = {
+    tableName: "HIZMETLER",
+    displayName: "Hizmet",
+    apiEndpoint: "/api/hizmetler",
+    fields: [
+        { name: "baslik",       label: "Başlık",       type: "text",   required: true },
+        { name: "imgUrl",       label: "Görsel URL",   type: "image" },
+        { name: "telefon",      label: "Telefon",      type: "text" },
+        { name: "konum",        label: "Konum",        type: "text" },
+        { name: "buttonDetay",  label: "Buton (Detay)",type: "text" },
+        { name: "buttonKonum",  label: "Buton (Konum)",type: "text" },
+        { name: "mail",         label: "E-Posta",      type: "text" },
+        { name: "kategori",     label: "Kategori",     type: "text" },
+    ],
+};
+
+
+// --- NEW: HABERLER ---
+const HABERLER_CONFIG: TableConfig = {
+    tableName: "HABERLER",
+    displayName: "Haber",
+    apiEndpoint: "/api/haberler",
+    fields: [
+        { name: "tarih",     label: "Tarih",      type: "date",   required: true },
+        { name: "aciklama",  label: "Açıklama",   type: "textarea" },
+        { name: "resim1",    label: "Resim 1 URL",type: "text" },
+        { name: "resim2",    label: "Resim 2 URL",type: "text" },
+        // Kategori listesini ileride select’e bağlayabiliriz; şimdilik ID ile güncelleyelim
+        { name: "kategoriId",label: "Kategori ID",type: "number" },
+    ],
+};
+
 
 /* -------------------------- ETKİNLİK KONFİG -------------------------- */
 const EVENT_CONFIG: TableConfig = {
@@ -120,7 +145,6 @@ const EVENT_CONFIG: TableConfig = {
     displayName: "Etkinlik",
     apiEndpoint: "/api/etkinlikler",
     fields: [
-        { name: "id", label: "ID", type: "number" },
         { name: "baslik", label: "Başlık", type: "text", required: true },
         { name: "tarih", label: "Tarih", type: "date", required: true },
         { name: "resimUrl", label: "Resim URL", type: "text" },
@@ -135,17 +159,45 @@ const DynamicEditPageForm: React.FC = () => {
     const location = useLocation();
 
     const isInsidePanel = location.pathname.startsWith("/panel/");
+    const isHaberMode = location.pathname.includes("/haberler/");
     const isEventMode = location.pathname.includes("/etkinlikler/");
     const isYonetimMode = location.pathname.includes("/kurumsal/yonetim");
+    const isHizmetMode = location.pathname.includes("/hizmetler/");
+    const lowerPath = location.pathname.toLowerCase();
+    const isKurumsalBMVIMode =
+        lowerPath.includes("/kurumsal/bmvi/");
 
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isPreview, setIsPreview] = useState(false);
     const [formData, setFormData] = useState<Record<string, any>>({});
-    const [debugMode, setDebugMode] = useState(true);
+    const [debugMode, setDebugMode] = useState(false);
     const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
     const [hasLoaded, setHasLoaded] = useState(false);
+
+    /* ------------------------------ Helpers ------------------------------ */
+    const isImageLike = (fieldName: string) =>
+        /^(resim|image|img).*|.*(resim|image|img).*(url)?$/i.test(fieldName);
+
+    const imageOrFallback = (url?: string) =>
+        url && url.trim() !== "" ? url : "/images/placeholder-16x9.jpg";
+
+    // --- üst kısma istersen sabit değer:
+    const THUMB_HEIGHT = "h-40"; // ~160px
+
+    const renderImageThumb = (url?: string) => (
+        <div className="mt-2">
+            <div className={`w-full ${THUMB_HEIGHT} rounded-xl overflow-hidden bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center`}>
+                <img
+                    src={imageOrFallback(url)}
+                    alt="Önizleme"
+                    className="max-h-full max-w-full object-contain"
+                    onError={(e) => ((e.target as HTMLImageElement).src = "/images/placeholder-16x9.jpg")}
+                />
+            </div>
+        </div>
+    );
 
     /* ------------------------------ Fetch ------------------------------ */
     const fetchData = useCallback(
@@ -155,7 +207,33 @@ const DynamicEditPageForm: React.FC = () => {
             try {
                 const numericId = parseInt(recordId, 10);
 
-                /* 1) ETKİNLİK */
+                /* HABERLER */
+                if (isHaberMode) {
+                    let data: any;
+                    try {
+                        data = await apiGet<any>(`${HABERLER_CONFIG.apiEndpoint}/${numericId}`);
+                    } catch {
+                        const all = await apiGet<any[]>(HABERLER_CONFIG.apiEndpoint);
+                        data = all.find((x) => x.id === numericId);
+                    }
+                    if (!data) throw new Error("Record not found");
+
+                    setTableConfig(HABERLER_CONFIG);
+                    setFormData({
+                        id: data.id ?? "",
+                        baslik: data.baslik ?? "",
+                        tarih: data.tarih ?? "",
+                        aciklama: data.aciklama ?? "",
+                        resim1: data.resim1 ?? "",
+                        resim2: data.resim2 ?? "",
+                        kategoriId: data.kategori?.id ?? "",
+                        kategori: data.kategori ?? null, // elde dursun
+                    });
+                    setHasLoaded(true);
+                    return;
+                }
+
+                /* ETKİNLİK */
                 if (isEventMode) {
                     let data: any;
                     try {
@@ -178,10 +256,35 @@ const DynamicEditPageForm: React.FC = () => {
                     return;
                 }
 
-                /* 2) YÖNETİM ŞEMASI — ÖNCE bunu dene */
+                if (isHizmetMode) {
+                    let data: any;
+                    try {
+                        data = await apiGet<any>(`${HIZMETLER_CONFIG.apiEndpoint}/${numericId}`);
+                    } catch {
+                        const all = await apiGet<any[]>(HIZMETLER_CONFIG.apiEndpoint);
+                        data = all.find((x) => x.id === numericId);
+                    }
+                    if (!data) throw new Error("Record not found");
+
+                    setTableConfig(HIZMETLER_CONFIG);
+                    setFormData({
+                        id:           data.id ?? "",
+                        baslik:       data.baslik ?? "",
+                        imgUrl:       data.imgUrl ?? "",
+                        telefon:      data.telefon ?? "",
+                        konum:        data.konum ?? "",
+                        buttonDetay:  data.buttonDetay ?? "",
+                        buttonKonum:  data.buttonKonum ?? "",
+                        mail:         data.mail ?? "",
+                        kategori:     data.kategori ?? "",
+                    });
+                    setHasLoaded(true);
+                    return;
+                }
+
+                /* YÖNETİM ŞEMASI */
                 if (isYonetimMode) {
                     const cfg = TABLE_CONFIGS["kurumsal_yonetim_semasi"];
-                    // apiGet’in dönüşü bazı projelerde direkt body, bazılarında {data} olabiliyor.
                     const raw = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`);
                     const data = (raw && (raw.data ?? raw)) || null;
                     if (!data) throw new Error("Record not found");
@@ -198,37 +301,42 @@ const DynamicEditPageForm: React.FC = () => {
                     return;
                 }
 
-                /* 3) KURUMSAL: Baskan/Misyon/Vizyon/İlkeler fallback */
-                let foundData: any = null;
-                let category = "";
-                const categories = ["baskan", "misyon", "vizyon", "ilkelerimiz"];
-                for (const kategori of categories) {
-                    try {
-                        const d = await BaskanAPI.getActiveByIdAndKategori(kategori, numericId);
-                        if (d) {
-                            foundData = d;
-                            category = kategori;
-                            break;
-                        }
-                    } catch { /* ignore */ }
+                /* KURUMSAL: BVMI */
+                if (isKurumsalBMVIMode) {
+                    let foundData: any = null;
+                    let category = "";
+                    const categories = ["baskan", "misyon", "vizyon", "ilkelerimiz"];
+                    for (const kategori of categories) {
+                        try {
+                            const d = await BaskanAPI.getActiveByIdAndKategori(kategori, numericId);
+                            if (d) {
+                                foundData = d;
+                                category = kategori;
+                                break;
+                            }
+                        } catch { /* ignore */ }
+                    }
+                    if (!foundData) throw new Error("Record not found");
+
+                    const tableKey = CATEGORY_TO_TABLE[foundData.kategori || category];
+                    const config = TABLE_CONFIGS[tableKey];
+
+                    const initial: Record<string, any> = {};
+                    config.fields.forEach((f) => {
+                        const lower = f.name.toLowerCase();
+                        initial[f.name] =
+                            (foundData as any)[f.name] ??
+                            (foundData as any)[lower] ??
+                            (f.type === "number" ? 0 : "");
+                    });
+
+                    setTableConfig(config);
+                    setFormData(initial);
+                    setHasLoaded(true);
+                    return;
                 }
-                if (!foundData) throw new Error("Record not found");
 
-                const tableKey = CATEGORY_TO_TABLE[foundData.kategori || category];
-                const config = TABLE_CONFIGS[tableKey];
-
-                const initial: Record<string, any> = {};
-                config.fields.forEach((f) => {
-                    const lower = f.name.toLowerCase();
-                    initial[f.name] =
-                        (foundData as any)[f.name] ??
-                        (foundData as any)[lower] ??
-                        (f.type === "number" ? 0 : "");
-                });
-
-                setTableConfig(config);
-                setFormData(initial);
-                setHasLoaded(true);
+                throw new Error("Uygun sayfa modu bulunamadı");
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Failed to load data");
                 setTableConfig(null);
@@ -236,9 +344,8 @@ const DynamicEditPageForm: React.FC = () => {
                 setLoading(false);
             }
         },
-        [isEventMode, isYonetimMode]
+        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode, isHizmetMode]
     );
-
 
     useEffect(() => setHasLoaded(false), [id]);
     useEffect(() => {
@@ -262,11 +369,46 @@ const DynamicEditPageForm: React.FC = () => {
                 return;
             }
 
-            // Kurumsal: mevcut akış
-            const current = tableConfig?.tableName;
-            if (current === "KURUMSAL_BASKAN_MISYON_VIZYON_ILKELERIMIZ") {
+            // HİZMETLER SAVE
+            if (isHizmetMode) {
+                const payload = {
+                    baslik:      (formData.baslik ?? "").trim(),
+                    imgUrl:      (formData.imgUrl ?? "").trim(),
+                    telefon:     (formData.telefon ?? "").trim(),
+                    konum:       (formData.konum ?? "").trim(),
+                    buttonDetay: (formData.buttonDetay ?? "").trim(),
+                    buttonKonum: (formData.buttonKonum ?? "").trim(),
+                    mail:        (formData.mail ?? "").trim(),
+                    kategori:    (formData.kategori ?? "").trim(),
+                };
+                await apiPut(`/api/hizmetler/update/${formData.id}`, payload);
+                alert("Hizmet güncellendi!");
+                return;
+            }
+
+            // HABERLER SAVE
+            if (isHaberMode) {
+                const payload = {
+                    baslik: (formData.baslik ?? "").trim(),
+                    tarih:  (formData.tarih  ?? "").trim(),
+                    aciklama: formData.aciklama ?? "",
+                    resim1:   formData.resim1 ?? "",
+                    resim2:   formData.resim2 ?? "",
+                    // backend kategori objesi bekliyorsa:
+                    ...(formData.kategoriId ? { kategori: { id: Number(formData.kategoriId) } } : {}),
+                    // eğer backend kategoriId bekliyorsa üst satırı silip bunu kullan:
+                    // ...(formData.kategoriId ? { kategoriId: Number(formData.kategoriId) } : {}),
+                };
+                await apiPut(`/api/haberler/update/${formData.id}`, payload);
+                alert("Haber güncellendi!");
+                return;
+            }
+
+            if (
+                isKurumsalBMVIMode &&
+                tableConfig?.tableName === "KURUMSAL_BASKAN_MISYON_VIZYON_ILKELERIMIZ"
+            ) {
                 const updateData = {
-                    baslik: formData.BASLIK || "",
                     resimUrl1: formData.resimUrl1 || "",
                     imageUrl2: formData.imageUrl2 || "",
                     icerik: formData.ICERIK,
@@ -275,35 +417,50 @@ const DynamicEditPageForm: React.FC = () => {
                 };
                 await BaskanAPI.updateBaskan(formData.ID, updateData);
                 alert("Kayıt başarıyla güncellendi!");
+                return;
             }
         } catch (err) {
-            setError(
-                err instanceof Error ? err.message : "Kaydetme sırasında hata oluştu"
-            );
+            setError(err instanceof Error ? err.message : "Kaydetme sırasında hata oluştu");
         } finally {
             setSaving(false);
         }
     };
 
-    /* ---------------------------- Helpers ---------------------------- */
+    /* ---------------------------- Form Fields ---------------------------- */
     const handleInputChange = (field: string, value: any) =>
         setFormData((p) => ({ ...p, [field]: value }));
 
     const handleCancel = () => {
-        if (
-            confirm("Değişiklikler kaydedilmedi. Sayfadan çıkmak istediğinizden emin misiniz?")
-        ) {
+        if (confirm("Değişiklikler kaydedilmedi. Sayfadan çıkmak istediğinizden emin misiniz?")) {
             if (isEventMode) window.location.href = "/panel/etkinlikler";
+            else if (isHaberMode) window.location.href = "/panel/haberler";
             else if (tableConfig && tableConfig.tableName.startsWith("KURUMSAL_"))
-                window.location.href = "/panel/sayfalar/kurumsal";
+                window.location.href = "/panel/kurumsal/BMVI";
             else navigate(-1);
         }
     };
 
-    const togglePreview = () => setIsPreview((v) => !v);
-
     const renderField = (field: FieldConfig) => {
         const value = formData[field.name] ?? "";
+        const common =
+            "w-full border border-slate-200/80 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent bg-white/80";
+
+        // Görsel benzeri alanlar için text + canlı küçük önizleme
+        if (field.type === "text" && isImageLike(field.name)) {
+            return (
+                <>
+                    <input
+                        type="text"
+                        value={value}
+                        onChange={(e) => handleInputChange(field.name, e.target.value)}
+                        className={common}
+                        placeholder={field.placeholder || "https://..."}
+                    />
+                    {renderImageThumb(value)}
+                </>
+            );
+        }
+
         switch (field.type) {
             case "text":
                 return (
@@ -311,7 +468,7 @@ const DynamicEditPageForm: React.FC = () => {
                         type="text"
                         value={value}
                         onChange={(e) => handleInputChange(field.name, e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className={common}
                         placeholder={field.placeholder || field.label}
                     />
                 );
@@ -326,7 +483,7 @@ const DynamicEditPageForm: React.FC = () => {
                                 e.target.value === "" ? "" : parseInt(e.target.value, 10) || 0
                             )
                         }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className={common}
                         disabled={field.name.toLowerCase() === "id"}
                     />
                 );
@@ -335,8 +492,8 @@ const DynamicEditPageForm: React.FC = () => {
                     <textarea
                         value={value}
                         onChange={(e) => handleInputChange(field.name, e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        rows={4}
+                        className={`${common} min-h-[140px]`}
+                        rows={5}
                     />
                 );
             case "select":
@@ -344,7 +501,7 @@ const DynamicEditPageForm: React.FC = () => {
                     <select
                         value={value}
                         onChange={(e) => handleInputChange(field.name, e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className={common}
                     >
                         <option value="">Seçiniz...</option>
                         {field.options?.map((opt) => (
@@ -356,14 +513,14 @@ const DynamicEditPageForm: React.FC = () => {
                 );
             case "boolean":
                 return (
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-2">
                         <input
                             type="checkbox"
                             checked={Boolean(value)}
                             onChange={(e) => handleInputChange(field.name, e.target.checked)}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
                         />
-                        <label className="ml-2 text-sm text-gray-700">Aktif</label>
+                        <label className="text-sm text-slate-700">Aktif</label>
                     </div>
                 );
             case "date":
@@ -372,8 +529,21 @@ const DynamicEditPageForm: React.FC = () => {
                         type="date"
                         value={value}
                         onChange={(e) => handleInputChange(field.name, e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className={common}
                     />
+                );
+            case "image":
+                return (
+                    <>
+                        <input
+                            type="text"
+                            value={value}
+                            onChange={(e) => handleInputChange(field.name, e.target.value)}
+                            className={common}
+                            placeholder="Görsel URL"
+                        />
+                        {renderImageThumb(value)}
+                    </>
                 );
             default:
                 return (
@@ -381,7 +551,7 @@ const DynamicEditPageForm: React.FC = () => {
                         type="text"
                         value={value}
                         onChange={(e) => handleInputChange(field.name, e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className={common}
                     />
                 );
         }
@@ -406,20 +576,17 @@ const DynamicEditPageForm: React.FC = () => {
             <Wrapper>
                 <div className="text-center py-8">
                     <AlertCircle size={64} className="mx-auto text-red-300 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-500 mb-1">
-                        Tablo bulunamadı
-                    </h3>
-                    <p className="text-gray-400 mb-4">
-                        Bu tablo yapılandırması mevcut değil.
-                    </p>
-                    <div className="text-sm text-gray-600 mb-4">
-                        Available tables: {Object.keys(TABLE_CONFIGS).join(", ")}
-                    </div>
+                    <h3 className="text-lg font-medium text-gray-500 mb-1">Tablo bulunamadı</h3>
+                    <p className="text-gray-400 mb-6">Bu tablo yapılandırması mevcut değil.</p>
                     <button
                         onClick={() =>
                             isEventMode
                                 ? (window.location.href = "/panel/etkinlikler")
-                                : navigate("/panel/sayfalar/kurumsal")
+                                : isHaberMode
+                                    ? (window.location.href = "/panel/haberler")
+                                    : isHizmetMode
+                                        ? (window.location.href = "/panel/hizmetler")
+                                        : (window.location.href = "/panel/kurumsal/BMVI")
                         }
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                     >
@@ -432,90 +599,90 @@ const DynamicEditPageForm: React.FC = () => {
 
     return (
         <Wrapper>
+            {/* Sticky üst bar (cam efektli) */}
+            <div className="sticky top-0 z-10 -mx-4 px-4 py-3 mb-6 bg-white/60 backdrop-blur-md border-b border-white/40 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() =>
+                            isEventMode
+                                ? (window.location.href = "/panel/etkinlikler")
+                                : isHaberMode
+                                    ? (window.location.href = "/panel/haberler")
+                                    : (window.location.href = "/panel/kurumsal/BMVI")
+                        }
+                        className="p-2 rounded-lg ring-1 ring-slate-200 text-slate-600 hover:bg-slate-50"
+                    >
+                        <ArrowLeft size={18} />
+                    </button>
+                    <div>
+                        <h2 className="text-lg font-semibold text-slate-800 leading-none">Sayfayı Düzenle</h2>
+                        <p className="text-xs text-slate-500 mt-1">
+                            {tableConfig.displayName} • ID: {id}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setDebugMode((v) => !v)}
+                        className="px-3 py-2 rounded-lg text-xs bg-yellow-100 hover:bg-yellow-200 text-yellow-800"
+                    >
+                        {debugMode ? "Debug Gizle" : "Debug Göster"}
+                    </button>
+
+                    <button
+                        onClick={() => setIsPreview((v) => !v)}
+                        className="px-3 py-2 rounded-lg text-sm bg-white ring-1 ring-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                    >
+                        <Eye size={16} />
+                        {isPreview ? "Düzenleme" : "Önizleme"}
+                    </button>
+
+                    <button
+                        onClick={handleCancel}
+                        className="px-3 py-2 rounded-lg bg-slate-500 hover:bg-slate-600 text-white text-sm flex items-center gap-2"
+                    >
+                        <X size={16} />
+                        İptal
+                    </button>
+
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm flex items-center gap-2"
+                    >
+                        <Save size={16} />
+                        {saving ? "Kaydediliyor..." : "Kaydet"}
+                    </button>
+                </div>
+            </div>
+
             {debugMode && (
                 <DebugInfo
                     data={{
                         urlParams: { id },
-                        mode: isEventMode ? "event" : "kurumsal",
+                        mode: isEventMode
+                            ? "event"
+                            : isHaberMode
+                                ? "haber"
+                                : isHizmetMode
+                                    ? "hizmet"
+                                    : isKurumsalBMVIMode
+                                        ? "kurumsal_bvmi"
+                                        : "unknown",
                         tableConfig: tableConfig?.tableName,
                         formData,
                     }}
                 />
             )}
 
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center">
-                    <button
-                        onClick={() =>
-                            isEventMode ? (window.location.href = "/panel/etkinlikler") : navigate(-1)
-                        }
-                        className="mr-4 p-2 text-gray-500 hover:text-gray-700 border rounded"
-                    >
-                        <ArrowLeft size={20} />
-                    </button>
-                </div>
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-800">Sayfayı Düzenle</h2>
-                    <p className="text-gray-500">
-                        {tableConfig.displayName} - ID: {id}
-                    </p>
-                </div>
-                <div className="flex items-center space-x-3">
-                    <button
-                        onClick={() => setDebugMode((v) => !v)}
-                        className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 py-2 rounded-lg text-sm"
-                    >
-                        {debugMode ? "Hide" : "Show"} Debug
-                    </button>
-                    <button
-                        onClick={togglePreview}
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center"
-                    >
-                        <Eye size={16} className="mr-2" />
-                        {isPreview ? "Düzenleme" : "Önizleme"}
-                    </button>
-                    <button
-                        onClick={handleCancel}
-                        className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center"
-                    >
-                        <X size={16} className="mr-2" />
-                        İptal
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg flex items-center"
-                    >
-                        <Save size={16} className="mr-2" />
-                        {saving ? "Kaydediliyor..." : "Kaydet"}
-                    </button>
-                </div>
-            </div>
-
-            {/* Error */}
-            {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                    <div className="flex items-center">
-                        <AlertCircle size={20} className="text-red-600 mr-2" />
-                        <div>
-                            <h3 className="text-red-800 font-medium">Hata</h3>
-                            <p className="text-red-600 text-sm">{error}</p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Form */}
-            <div className="bg-white rounded-lg shadow p-6">
+            {/* Cam gövdeli kutu */}
+            <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
                 {!isPreview ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {tableConfig.fields.map((f) => (
-                            <div
-                                key={f.name}
-                                className={f.type === "textarea" ? "lg:col-span-2" : ""}
-                            >
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <div key={f.name} className={f.type === "textarea" ? "lg:col-span-2" : ""}>
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
                                     {f.label}
                                     {f.required ? " *" : ""}
                                 </label>
@@ -524,22 +691,97 @@ const DynamicEditPageForm: React.FC = () => {
                         ))}
                     </div>
                 ) : (
+                    /* ----------------------------- ÖNİZLEME ----------------------------- */
                     <div className="space-y-6">
-                        <h1 className="text-3xl font-bold text-gray-900">
-                            {tableConfig.displayName} - Önizleme
+                        <h1 className="text-2xl font-semibold text-slate-900">
+                            {tableConfig.displayName} • Önizleme
                         </h1>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {tableConfig.fields.map((f) => {
                                 const v = formData[f.name];
+
+                                // boş değerleri atla
                                 if (!v && v !== 0 && v !== false) return null;
-                                return (
-                                    <div key={f.name}>
-                                        <div className="bg-gray-50 p-4 rounded-lg">
-                                            <h3 className="font-medium text-gray-700 mb-2">
-                                                {f.label}
-                                            </h3>
-                                            <span className="text-gray-600">{String(v)}</span>
+
+                                const label = (
+                                    <h3 className="font-medium text-slate-700 mb-2">{f.label}</h3>
+                                );
+
+                                // Görsel alanlarını IMG olarak göster
+                                if (f.type === "image" || isImageLike(f.name)) {
+                                    return (
+                                        <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
+                                            {label}
+                                            <div className="aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
+                                                <img
+                                                    src={imageOrFallback(String(v))}
+                                                    alt={f.label}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) =>
+                                                        ((e.target as HTMLImageElement).src =
+                                                            "/images/placeholder-16x9.jpg")
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="mt-2 text-xs text-slate-500 break-all">
+                                                {String(v)}
+                                            </div>
                                         </div>
+                                    );
+                                }
+
+                                // HTML içeriği varsa zengin göster
+                                if (
+                                    f.name.toLowerCase() === "icerik" ||
+                                    f.label.toLowerCase().includes("içerik") ||
+                                    f.type === "editor"
+                                ) {
+                                    const html = String(v || "");
+                                    return (
+                                        <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4 md:col-span-2">
+                                            {label}
+                                            <div
+                                                className="prose prose-slate max-w-none prose-p:my-2 prose-ul:my-2 prose-li:my-1"
+                                                dangerouslySetInnerHTML={{ __html: html }}
+                                            />
+                                        </div>
+                                    );
+                                }
+
+                                // Tarihi okunur formatla
+                                if (f.type === "date") {
+                                    return (
+                                        <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
+                                            {label}
+                                            <span className="text-slate-700">
+                        {new Date(String(v)).toLocaleDateString("tr-TR")}
+                      </span>
+                                        </div>
+                                    );
+                                }
+
+                                // Boolean rozet
+                                if (f.type === "boolean") {
+                                    return (
+                                        <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
+                                            {label}
+                                            <span
+                                                className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs ${
+                                                    v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"
+                                                }`}
+                                            >
+                        {v ? "Aktif" : "Pasif"}
+                      </span>
+                                        </div>
+                                    );
+                                }
+
+                                // Varsayılan metin/numara/seçim
+                                return (
+                                    <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
+                                        {label}
+                                        <span className="text-slate-700 break-words">{String(v)}</span>
                                     </div>
                                 );
                             })}

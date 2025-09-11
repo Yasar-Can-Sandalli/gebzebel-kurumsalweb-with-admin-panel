@@ -1,7 +1,7 @@
 package com.kocaeli.bel.service.kurumsal;
 //YCS
 import com.kocaeli.bel.model.Mudurlukler;
-import com.kocaeli.bel.repository.kurumsal.MudurluklerRepository;
+import com.kocaeli.bel.repository.kurumsal.MudurlukRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.Optional;
 public class MudurluklerServiceImpl implements IMudurluklerService{
 
     @Autowired
-    private MudurluklerRepository mudurluklerRepository;
+    private MudurlukRepository mudurluklerRepository;
 
     @Override
     public List<Mudurlukler> listMudurlukler() {

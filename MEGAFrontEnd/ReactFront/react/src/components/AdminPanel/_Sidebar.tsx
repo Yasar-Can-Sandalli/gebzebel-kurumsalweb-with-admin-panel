@@ -1,5 +1,4 @@
 import gebzeLogo from "../../assets/images/gebze.png";
-import defaultUser from "../../assets/images/defaultUser.png";
 import { Link, useLocation } from "react-router-dom";
 import {
     Home,
@@ -11,12 +10,15 @@ import {
     BookOpen,
     Mail,
     Users,
+    Settings,
     ChevronRight,
 } from "lucide-react";
+import { useCurrentUser } from "./hooks/useCurrentUser";
+import { useAuthStore } from "./store/authStore";
 
 type SidebarProps = {
-    open: boolean;
-    onClose: () => void;
+    readonly open: boolean;
+    readonly onClose: () => void;
 };
 
 const Item = ({
@@ -53,6 +55,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
     const { pathname } = useLocation();
     const isKurumsal = pathname.startsWith("/panel/kurumsal");
     const isGebze = pathname.startsWith("/panel/gebze");
+    const { currentUser, loading } = useCurrentUser();
+    const { user: authUser } = useAuthStore();
 
     return (
         <aside
@@ -77,21 +81,66 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     />
                 </div>
 
-                <div className="mt-4 bg-gray-50 rounded-xl p-4 text-center shadow">
-                    <img
-                        src={defaultUser}
-                        alt="Kullanıcı"
-                        className="w-16 h-16 mx-auto rounded-full object-cover"
-                    />
-                    <div className="mt-2 font-semibold text-gray-800">İSİM SOYİSİM</div>
-                    <div className="text-xs text-gray-500">KADEME</div>
+                <div className="mt-4 rounded-xl p-4 text-center bg-white shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-slate-200 overflow-hidden">
+                        {(() => {
+                            if (loading) {
+                                return <div className="w-full h-full bg-slate-200 animate-pulse"></div>;
+                            }
+                            // Auth store'dan güncel veriyi al, yoksa currentUser'dan al
+                            const profilFoto = authUser?.profilFoto || currentUser?.profilFoto;
+                            if (profilFoto) {
+                                return (
+                                    <img
+                                        src={`http://localhost:8080/api/files/image/${profilFoto}`}
+                                        alt="Profil Fotoğrafı"
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.style.display = 'none';
+                                            target.nextElementSibling?.classList.remove('hidden');
+                                        }}
+                                    />
+                                );
+                            }
+                            return null;
+                        })()}
+                        <div className={`w-full h-full bg-slate-200 flex items-center justify-center ${(authUser?.profilFoto || currentUser?.profilFoto) ? 'hidden' : ''}`}>
+                            <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div className="mt-2 font-semibold text-slate-800">
+                        {(() => {
+                            if (loading) {
+                                return <div className="animate-pulse bg-slate-200 h-4 w-32 mx-auto rounded"></div>;
+                            }
+                            // Auth store'dan güncel veriyi al, yoksa currentUser'dan al
+                            const isim = authUser?.isim || currentUser?.isim;
+                            if (isim) {
+                                return isim;
+                            }
+                            return "Kullanıcı";
+                        })()}
+                    </div>
+                    <div className="text-xs text-slate-500">
+                        {(() => {
+                            if (loading) {
+                                return <div className="animate-pulse bg-slate-200 h-3 w-20 mx-auto rounded mt-1"></div>;
+                            }
+                            if (currentUser?.status) {
+                                return currentUser.status;
+                            }
+                            return "Durum";
+                        })()}
+                    </div>
                 </div>
-
             </div>
 
             {/* Menü */}
-            <nav className="p-4 flex-1 overflow-y-auto">
-                <ul className="space-y-1">
+            <div className="flex-1 overflow-y-auto pl-2">
+                <ul className="space-y-0.5">
                     <Item
                         to="/panel/mainPage"
                         label="Anasayfa"
@@ -109,11 +158,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                             </summary>
                             <ul className="ml-7 mt-1 space-y-1 text-sm">
                                 {[
-                                    {to:"/panel/kurumsal/baskan" ,label:"Başkan"},
                                     { to: "/panel/kurumsal/yonetim", label: "Yönetim" },
-                                    { to: "/panel/kurumsal/vizyon", label: "Vizyon-Misyon-İlke" },
+                                    { to: "/panel/kurumsal/BMVI", label: "Baskan-Vizyon-Misyon-İlke" },
                                     { to: "/panel/kurumsal/raporlar", label: "Raporlar" },
-                                    { to: "/panel/kurumsal/komisyonlar", label: "Komisyonlar" },
+                                    { to: "/panel/kurumsal/mudurlukler", label: "Müdürlükler" },
                                 ].map((x) => (
                                     <li key={x.to}>
                                         <Link
@@ -198,8 +246,14 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         icon={<Users size={16} />}
                         active={pathname.startsWith("/panel/users")}
                     />
+                    <Item
+                        to="/panel/settings"
+                        label="Ayarlar"
+                        icon={<Settings size={16} />}
+                        active={pathname.startsWith("/panel/settings")}
+                    />
                 </ul>
-            </nav>
+            </div>
 
             {/* Mobil kapatma */}
             <button
