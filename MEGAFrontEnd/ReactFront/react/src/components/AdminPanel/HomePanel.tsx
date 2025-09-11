@@ -1,28 +1,104 @@
 import { useAuthStore } from './store/authStore';
-import { Users, Building, FileText, Settings, BarChart3, Bell, Clock } from 'lucide-react';
+import { Users, Building, FileText, Bell, Clock, Calendar, Newspaper } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { apiGet } from './services/apiService';
+
+interface DashboardStats {
+    totalUsers: number;
+    totalHaberler: number;
+    totalEtkinlikler: number;
+    totalHizmetler: number;
+    totalYonetim: number;
+    totalRaporlar: number;
+}
+
+interface RecentActivity {
+    id: number;
+    action: string;
+    user: string;
+    time: string;
+    type: 'success' | 'info' | 'warning' | 'error';
+}
 
 export default function HomePanel() {
     const { user } = useAuthStore();
+    const [stats, setStats] = useState<DashboardStats>({
+        totalUsers: 0,
+        totalHaberler: 0,
+        totalEtkinlikler: 0,
+        totalHizmetler: 0,
+        totalYonetim: 0,
+        totalRaporlar: 0
+    });
+    const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const stats = [
-        { title: 'Toplam Kullanıcı', value: '1,234', icon: Users, color: 'bg-blue-500' },
-        { title: 'Aktif Projeler', value: '28', icon: Building, color: 'bg-green-500' },
-        { title: 'Toplam İçerik', value: '156', icon: FileText, color: 'bg-purple-500' },
-        { title: 'Sistem Durumu', value: 'Aktif', icon: Settings, color: 'bg-orange-500' }
-    ];
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                setLoading(true);
+                
+                // Paralel olarak tüm verileri çek
+                const [
+                    haberlerResponse,
+                    etkinliklerResponse,
+                    hizmetlerResponse,
+                    yonetimResponse,
+                    raporlarResponse
+                ] = await Promise.allSettled([
+                    apiGet('/api/haberler'),
+                    apiGet('/api/etkinlikler'),
+                    apiGet('/api/hizmetler'),
+                    apiGet('/api/kurumsal/yonetimsemasi'),
+                    apiGet('/api/kurumsal/kurumsal-raporlar')
+                ]);
 
-    const recentActivities = [
-        { id: 1, action: 'Yeni kullanıcı kaydı', user: 'Ahmet Yılmaz', time: '2 dakika önce', type: 'success' },
-        { id: 2, action: 'İçerik güncellendi', user: 'Fatma Demir', time: '15 dakika önce', type: 'info' },
-        { id: 3, action: 'Sistem yedeklemesi', user: 'Sistem', time: '1 saat önce', type: 'warning' },
-        { id: 4, action: 'Yeni proje oluşturuldu', user: 'Mehmet Kaya', time: '2 saat önce', type: 'success' }
+                // İstatistikleri hesapla
+                const newStats: DashboardStats = {
+                    totalUsers: 0, // Kullanıcı sayısı için ayrı endpoint gerekebilir
+                    totalHaberler: haberlerResponse.status === 'fulfilled' ? (haberlerResponse.value as any[]).length : 0,
+                    totalEtkinlikler: etkinliklerResponse.status === 'fulfilled' ? (etkinliklerResponse.value as any[]).length : 0,
+                    totalHizmetler: hizmetlerResponse.status === 'fulfilled' ? (hizmetlerResponse.value as any[]).length : 0,
+                    totalYonetim: yonetimResponse.status === 'fulfilled' ? 
+                        ((yonetimResponse.value as any).baskan?.length || 0) + 
+                        ((yonetimResponse.value as any).baskanYardimcilari?.length || 0) : 0,
+                    totalRaporlar: raporlarResponse.status === 'fulfilled' ? (raporlarResponse.value as any[]).length : 0
+                };
+
+                setStats(newStats);
+
+                // Son aktiviteleri oluştur (örnek veriler)
+                const activities: RecentActivity[] = [
+                    { id: 1, action: 'Yeni haber eklendi', user: 'Sistem', time: '5 dakika önce', type: 'success' },
+                    { id: 2, action: 'Etkinlik güncellendi', user: 'Sistem', time: '1 saat önce', type: 'info' },
+                    { id: 3, action: 'Rapor yüklendi', user: 'Sistem', time: '2 saat önce', type: 'success' },
+                    { id: 4, action: 'Yönetim şeması güncellendi', user: 'Sistem', time: '3 saat önce', type: 'info' }
+                ];
+
+                setRecentActivities(activities);
+
+            } catch (error) {
+                console.error('Dashboard verileri yüklenirken hata:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, []);
+
+    const statsData = [
+        { title: 'Toplam Haber', value: stats.totalHaberler.toString(), icon: Newspaper, color: 'bg-blue-500' },
+        { title: 'Aktif Etkinlikler', value: stats.totalEtkinlikler.toString(), icon: Calendar, color: 'bg-green-500' },
+        { title: 'Hizmetler', value: stats.totalHizmetler.toString(), icon: Building, color: 'bg-purple-500' },
+        { title: 'Yönetim Üyeleri', value: stats.totalYonetim.toString(), icon: Users, color: 'bg-orange-500' }
     ];
 
     const quickActions = [
-        { title: 'Yeni Kullanıcı Ekle', icon: Users, color: 'bg-blue-500', href: '/panel/users' },
-        { title: 'İçerik Yönetimi', icon: FileText, color: 'bg-green-500', href: '/panel/content' },
-        { title: 'Raporlar', icon: BarChart3, color: 'bg-purple-500', href: '/panel/reports' },
-        { title: 'Sistem Ayarları', icon: Settings, color: 'bg-orange-500', href: '/panel/settings' }
+        { title: 'Haber Yönetimi', icon: Newspaper, color: 'bg-blue-500', href: '/panel/haberler' },
+        { title: 'Etkinlik Yönetimi', icon: Calendar, color: 'bg-green-500', href: '/panel/etkinlikler' },
+        { title: 'Hizmet Yönetimi', icon: Building, color: 'bg-purple-500', href: '/panel/hizmetler' },
+        { title: 'Kurumsal Raporlar', icon: FileText, color: 'bg-orange-500', href: '/panel/kurumsal/raporlar' }
     ];
 
     return (
@@ -46,12 +122,14 @@ export default function HomePanel() {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat) => (
+                {statsData.map((stat) => (
                     <div key={stat.title} className="bg-white rounded-xl p-6 shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-slate-600">{stat.title}</p>
-                                <p className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</p>
+                                <p className="text-2xl font-bold text-slate-900 mt-1">
+                                    {loading ? '...' : stat.value}
+                                </p>
                             </div>
                             <div className={`p-3 rounded-lg ${stat.color}`}>
                                 <stat.icon className="h-6 w-6 text-white" />
