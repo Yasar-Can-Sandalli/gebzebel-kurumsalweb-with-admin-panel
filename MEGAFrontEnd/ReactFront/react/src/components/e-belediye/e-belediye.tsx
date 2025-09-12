@@ -47,13 +47,19 @@ const EBelediyeSayfasi: React.FC = () => {
                             <h2 className="text-2xl font-bold text-red-800">GEBZE İLETİŞİM MERKEZİ</h2>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {/* Başvuru Formu Kartı */}
-                            <div className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition p-6 flex flex-col items-center text-center cursor-pointer">
-                                <div className="bg-gradient-to-br from-red-100 to-red-200 p-4 rounded-full mb-4 shadow-inner">
-                                    <FileText className="text-red-700" size={36} strokeWidth={1.5} />
-                                </div>
-                                <h3 className="text-lg font-semibold">Başvuru Formu</h3>
-                            </div>
+                          {/* Başvuru Formu Kartı */}
+<a
+  href="/forms/basvuru/basvuru.html"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition p-6 flex flex-col items-center text-center cursor-pointer"
+>
+  <div className="bg-gradient-to-br from-red-100 to-red-200 p-4 rounded-full mb-4 shadow-inner">
+    <FileText className="text-red-700" size={36} strokeWidth={1.5} />
+  </div>
+  <h3 className="text-lg font-semibold">Başvuru Formu</h3>
+</a>
+
                             {/* Başvuru Takip Kartı */}
                             <div className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition p-6 flex flex-col items-center text-center cursor-pointer">
                                 <div className="bg-orange-100 p-4 rounded-full mb-4">
@@ -137,22 +143,30 @@ const EBelediyeSayfasi: React.FC = () => {
                             </div>
                         </div>
                     </div><br/>
+<div className="mt-10">
+  <div className="flex items-center mb-6 border-b pb-2">
+    <Landmark className="text-indigo-600 mr-3" size={28} />
+    <h2 className="text-2xl font-bold text-indigo-800">SPOR & EĞİTİM</h2>
+  </div>
 
-                    <div className="mt-10">
-                        <div className="flex items-center mb-6 border-b pb-2">
-                            <Landmark className="text-indigo-600 mr-3" size={28} />
-                            <h2 className="text-2xl font-bold text-indigo-800">SPOR & EĞİTİM</h2>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {/* SENDE */}
-                            <div className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition p-6 flex flex-col items-center text-center cursor-pointer">
-                                <div className="bg-indigo-100 p-4 rounded-full mb-4">
-                                    <SearchCheck className="text-indigo-600" size={36} />
-                                </div>
-                                <h3 className="text-lg font-semibold">SENDE<br/> (Kayıt ve Eğitim Portalı)</h3>
-                            </div>
-                        </div>
-                    </div><br/>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    {/* SENDE */}
+    <a
+      href="/sende/sende.html"       // Tıklayınca açılacak sayfanın yolu
+      target="_blank"                // Yeni sekmede aç
+      rel="noopener noreferrer"      // Güvenlik için ekledik
+      className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition p-6 flex flex-col items-center text-center cursor-pointer"
+    >
+      <div className="bg-indigo-100 p-4 rounded-full mb-4">
+        <SearchCheck className="text-indigo-600" size={36} />
+      </div>
+      <h3 className="text-lg font-semibold">
+        SENDE<br /> (Kayıt ve Eğitim Portalı)
+      </h3>
+    </a>
+  </div>
+</div>
+<br />
 
                     {/* İmar Yönetim Sistemi Bölümü */}
                     <div className="mt-10">
