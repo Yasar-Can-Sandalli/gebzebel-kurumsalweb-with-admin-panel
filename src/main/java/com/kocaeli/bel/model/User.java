@@ -10,7 +10,8 @@ public class User {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
+    @SequenceGenerator(name = "user_seq_gen", sequenceName = "KULLANICILAR_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "TCNO", unique = true)
@@ -28,6 +29,9 @@ public class User {
     @Column(columnDefinition = "json")
     private String yetkilerJson;
 
+    @Column(name = "PROFIL_FOTO")
+    private String profilFoto;
+
     // Default constructor
     public User() {
     }
@@ -39,10 +43,13 @@ public class User {
     }
 
     // Constructor with ID
-    public User(Long id, String TCNo, String password) {
+    public User(Long id, String TCNo, String isim, String password, String status, String yetkilerJson, String profilFoto) {
         this.id = id;
         this.TCNo = TCNo;
         this.password = password;
+        this.status = status;
+        this.yetkilerJson = yetkilerJson;
+        this.profilFoto = profilFoto;
     }
 
     // Copy constructor - FIXED
@@ -54,6 +61,7 @@ public class User {
             this.password = user.password;
             this.status = user.status;
             this.yetkilerJson = user.yetkilerJson;
+            this.profilFoto = user.profilFoto;
         }
     }
 }

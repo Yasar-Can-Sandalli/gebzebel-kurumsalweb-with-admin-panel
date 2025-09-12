@@ -33,6 +33,8 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+//----------------------- haber için-----------------------
+
 
 // Types for different entities
 export interface BaskanEntity {
@@ -184,6 +186,12 @@ export type YonetimRow = {
     isimSoyisim: string;
     resimUrl: string;
     pozisyon: string;
+    siraNo?: number;
+    mudurlukler?: string;
+    email?: string;
+    telefon?: string;
+    biyografi?: string;
+    delta?: number;
     aktif?: boolean;
 };
 
@@ -199,6 +207,12 @@ export const fetchYonetimRows = async (): Promise<YonetimRow[]> => {
         isimSoyisim: x.isimSoyisim,
         resimUrl: x.resimUrl,
         pozisyon: x.pozisyon || x.unvan || "",
+        siraNo: x.siraNo,
+        mudurlukler: x.mudurlukler,
+        email: x.email,
+        telefon: x.telefon,
+        biyografi: x.biyografi,
+        delta: x.delta,
         aktif: x.aktif,
     });
 

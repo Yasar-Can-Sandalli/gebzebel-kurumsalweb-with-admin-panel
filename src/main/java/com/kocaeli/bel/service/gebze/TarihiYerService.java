@@ -1,4 +1,4 @@
-package com.kocaeli.bel.service;
+package com.kocaeli.bel.service.gebze;
 
 import com.kocaeli.bel.repository.gebze.TarihiYerRepository;
 import com.kocaeli.bel.model.gebze.TarihiYerler;

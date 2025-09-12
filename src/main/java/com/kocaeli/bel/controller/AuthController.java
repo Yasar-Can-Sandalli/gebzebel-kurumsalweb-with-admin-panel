@@ -12,12 +12,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.kocaeli.bel.security.JwtTokenProvider;
 import com.kocaeli.bel.service.PermissionService;
+import org.springframework.jdbc.core.JdbcTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,6 +45,12 @@ public class AuthController {
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -83,25 +94,223 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterHandler registerRequest) {
         try {
+            // Debug log
+            System.out.println("Register request received: TCNo=" + registerRequest.getTCNo()
+                    + ", isim=" + registerRequest.getIsim()
+                    + ", password length=" + (registerRequest.getPassword() != null ? registerRequest.getPassword().length() : "null"));
+
+            // TC Kimlik No doğrulama (11 haneli olmalı)
+            if (registerRequest.getTCNo() == null || !registerRequest.getTCNo().matches("^\\d{11}$")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("status", "error", "message", "TC Kimlik Numarası 11 haneli olmalıdır"));
+            }
+
+            // İsim doğrulama (sadece harfler ve boşluk içermeli)
+            if (registerRequest.getIsim() == null || !registerRequest.getIsim().matches("^[a-zA-ZğüşıöçĞÜŞİÖÇ ]+$")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("status", "error", "message", "İsim sadece harflerden oluşmalıdır"));
+            }
+
+            // Parola doğrulama (test için basitleştirildi - en az 6 karakter)
+            String password = registerRequest.getPassword();
+            if (password == null || password.length() < 6) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("status", "error", "message",
+                                "Parola en az 6 karakter uzunluğunda olmalıdır"));
+            }
+
+            // TC Kimlik No kontrolü
             if (userRepository.findByTCNo(registerRequest.getTCNo()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Map.of("status", "error", "message", "Bu TC No ile kayıtlı kullanıcı zaten var"));
             }
 
-            User user = new User();
-            user.setTCNo(registerRequest.getTCNo());
-            user.setPassword(registerRequest.getPassword()); // Do NOT hash here
-            user.setStatus("Aktif");
+            try {
+                // Şifreyi hashle
+                String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
 
-            User newUser = userService.registerUser(user); // Hash in service
+                // Varsayılan yetkileri oluştur
+                String defaultPermissionsJson = getDefaultPermissionsJson();
 
-            return ResponseEntity.ok()
-                    .body(Map.of("status", "success", "data", newUser));
+                // Doğrudan JDBC kullanarak SQL sorgusu çalıştır
+                String sql = "INSERT INTO KULLANICILAR (TCNO, ISIM, PASSWORD, STATUS, YETKILERJSON, PROFIL_FOTO) VALUES (?, ?, ?, ?, ?, ?)";
+                jdbcTemplate.update(sql,
+                        registerRequest.getTCNo(),
+                        registerRequest.getIsim(),
+                        hashedPassword,
+                        "Aktif",
+                        defaultPermissionsJson,
+                        registerRequest.getProfilFoto() != null ? registerRequest.getProfilFoto() : ""
+                );
 
+                return ResponseEntity.ok()
+                        .body(Map.of(
+                                "status", "success",
+                                "message", "Kullanıcı başarıyla kaydedildi",
+                                "data", Map.of(
+                                        "TCNo", registerRequest.getTCNo(),
+                                        "isim", registerRequest.getIsim()
+                                )
+                        ));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("status", "error", "message", "Veritabanı hatası: " + ex.getMessage()));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("status", "error", "message", "Kayıt işlemi sırasında bir hata oluştu: " + e.getMessage()));
         }
     }
 
+    /**
+     * Varsayılan yetkileri JSON formatına dönüştürür
+     */
+    private String getDefaultPermissionsJson() {
+        try {
+            return objectMapper.writeValueAsString(permissionService.getDefaultPermissions());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "{}"; // Boş JSON objesi
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+        String tcNo = request.get("tcNo");
+
+        if (tcNo == null || tcNo.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("status", "error", "message", "TC Kimlik Numarası gereklidir"));
+        }
+
+        // TC Kimlik doğrulama
+        if (!tcNo.matches("^\\d{11}$")) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("status", "error", "message", "Geçerli bir TC Kimlik Numarası giriniz"));
+        }
+
+        // Kullanıcıyı kontrol et
+        Optional<User> userOptional = userRepository.findByTCNo(tcNo);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("status", "error", "message", "Bu TC Kimlik Numarası ile kayıtlı kullanıcı bulunamadı"));
+        }
+
+        // Gerçek bir uygulamada burada şifre sıfırlama e-postası gönderilir
+        // Şimdilik sadece başarılı yanıt döndürelim
+        return ResponseEntity.ok()
+                .body(Map.of(
+                        "status", "success",
+                        "message", "Şifre sıfırlama talimatları gönderildi. Lütfen e-postanızı kontrol edin."
+                ));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("status", "error", "message", "Kullanıcı kimlik doğrulaması yapılmamış"));
+            }
+
+            String currentTCNo = authentication.getName();
+            User currentUser = userService.findByTCNo(currentTCNo);
+
+            if (currentUser == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("status", "error", "message", "Kullanıcı bulunamadı"));
+            }
+
+            // Parse permissions from JSON string
+            Map<String, Map<String, Boolean>> permissions =
+                    permissionService.mergeWithDefaults(currentUser.getYetkilerJson());
+
+            // Create response with user data
+            Map<String, Object> userData = Map.of(
+                    "id", currentUser.getId(),
+                    "tcno", currentUser.getTCNo(),
+                    "isim", currentUser.getIsim() != null ? currentUser.getIsim() : "",
+                    "status", currentUser.getStatus() != null ? currentUser.getStatus() : "",
+                    "profilFoto", currentUser.getProfilFoto() != null ? currentUser.getProfilFoto() : "",
+                    "permissions", permissions
+            );
+
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "status", "success",
+                            "data", userData
+                    ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "error", "message", "Sunucu hatası: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/update-profile")
+    public ResponseEntity<?> updateProfile(@RequestBody Map<String, Object> updateRequest) {
+        try {
+            // Mevcut kullanıcıyı al
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String tcno = authentication.getName();
+
+            Optional<User> userOpt = userRepository.findByTCNo(tcno);
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("status", "error", "message", "Kullanıcı bulunamadı"));
+            }
+
+            User user = userOpt.get();
+
+            // İsim güncelleme
+            if (updateRequest.containsKey("isim")) {
+                String newIsim = (String) updateRequest.get("isim");
+                if (newIsim != null && !newIsim.trim().isEmpty()) {
+                    user.setIsim(newIsim.trim());
+                }
+            }
+
+            // Profil fotoğrafı güncelleme
+            if (updateRequest.containsKey("profilFoto")) {
+                String newProfilFoto = (String) updateRequest.get("profilFoto");
+                user.setProfilFoto(newProfilFoto != null ? newProfilFoto : "");
+            }
+
+            // Şifre güncelleme
+            if (updateRequest.containsKey("newPassword") && updateRequest.get("newPassword") != null) {
+                String currentPassword = (String) updateRequest.get("password");
+                String newPassword = (String) updateRequest.get("newPassword");
+
+                // Mevcut şifreyi kontrol et
+                if (currentPassword == null || !passwordEncoder.matches(currentPassword, user.getPassword())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Map.of("status", "error", "message", "Mevcut şifre hatalı"));
+                }
+
+                // Yeni şifre validasyonu
+                if (newPassword.length() < 6) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Map.of("status", "error", "message", "Yeni şifre en az 6 karakter olmalıdır"));
+                }
+
+                // Şifreyi hashle ve güncelle
+                user.setPassword(passwordEncoder.encode(newPassword));
+            }
+
+            // Kullanıcıyı kaydet
+            userRepository.save(user);
+
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "status", "success",
+                            "message", "Profil başarıyla güncellendi"
+                    ));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "error", "message", "Güncelleme hatası: " + e.getMessage()));
+        }
+    }
 }
