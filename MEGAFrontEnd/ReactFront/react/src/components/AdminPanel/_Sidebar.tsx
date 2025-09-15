@@ -1,4 +1,5 @@
 import gebzeLogo from "../../assets/images/gebze.png";
+import { useEffect } from "react"; // en üste ekle
 import { Link, useLocation } from "react-router-dom";
 import {
     Home,
@@ -53,10 +54,53 @@ const Item = ({
 
 export default function Sidebar({ open, onClose }: SidebarProps) {
     const { pathname } = useLocation();
+    // ⬇️ sadece ilk render’da çalışır
+    useEffect(() => {
+        const isMobile = window.matchMedia("(max-width: 767px)").matches; // Tailwind md altı
+        if (isMobile && open) onClose(); // mobilde açık geldiyse kapat
+    }, []); // mount-only
     const isKurumsal = pathname.startsWith("/panel/kurumsal");
     const isGebze = pathname.startsWith("/panel/gebze");
     const { currentUser, loading } = useCurrentUser();
     const { user: authUser } = useAuthStore();
+
+    const handleNavClick = () => {
+        // sadece md altı (mobil) ise kapat
+        if (window.matchMedia("(max-width: 767px)").matches) {
+            onClose();
+        }
+    };
+
+    // Item: onNavigate ekleyin
+    const Item = ({
+                      to,
+                      icon,
+                      label,
+                      active,
+                      onNavigate,          // 👈 eklendi
+                  }: {
+        to: string;
+        icon: React.ReactNode;
+        label: string;
+        active?: boolean;
+        onNavigate?: () => void;  // 👈 eklendi
+    }) => (
+        <li>
+            <Link
+                to={to}
+                onClick={onNavigate}    // 👈 eklendi
+                className={`group relative flex items-center gap-3 px-3 py-2 rounded-lg
+        hover:bg-slate-50 transition text-sm
+        ${active ? "bg-gradient-to-r from-blue-50 to-transparent text-blue-700 ring-1 ring-blue-200" : "text-slate-700"}`}
+            >
+      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-full
+        bg-gradient-to-b from-blue-500 to-sky-400 opacity-0 group-hover:opacity-100 transition" />
+                {icon}
+                <span>{label}</span>
+            </Link>
+        </li>
+    );
+
 
     return (
         <aside
@@ -146,6 +190,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         label="Anasayfa"
                         icon={<Home size={16} />}
                         active={pathname.startsWith("/panel/mainPage")}
+                        onNavigate={handleNavClick}
                     />
 
                     {/* Kurumsal */}
@@ -184,6 +229,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         label="Haberler"
                         icon={<FileText size={16} />}
                         active={pathname.startsWith("/panel/haberler")}
+                        onNavigate={handleNavClick}
                     />
 
                     {/* Gebze */}
@@ -221,36 +267,42 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         label="Hizmetler"
                         icon={<Layers size={16} />}
                         active={pathname.startsWith("/panel/hizmetler")}
+                        onNavigate={handleNavClick}
                     />
                     <Item
                         to="/panel/etkinlikler"
                         label="Etkinlikler"
                         icon={<CalendarDays size={16} />}
                         active={pathname.startsWith("/panel/etkinlikler")}
+                        onNavigate={handleNavClick}
                     />
                     <Item
                         to="/panel/yayinlar"
                         label="Yayınlarımız"
                         icon={<BookOpen size={16} />}
                         active={pathname.startsWith("/panel/yayinlar")}
+                        onNavigate={handleNavClick}
                     />
                     <Item
                         to="/panel/iletisim"
                         label="İletişim"
                         icon={<Mail size={16} />}
                         active={pathname.startsWith("/panel/iletisim")}
+                        onNavigate={handleNavClick}
                     />
                     <Item
                         to="/panel/users"
                         label="Kullanıcılar"
                         icon={<Users size={16} />}
                         active={pathname.startsWith("/panel/users")}
+                        onNavigate={handleNavClick}
                     />
                     <Item
                         to="/panel/settings"
                         label="Ayarlar"
                         icon={<Settings size={16} />}
                         active={pathname.startsWith("/panel/settings")}
+                        onNavigate={handleNavClick}
                     />
                 </ul>
             </div>
