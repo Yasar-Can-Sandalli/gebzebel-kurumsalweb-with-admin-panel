@@ -213,7 +213,7 @@ export default function KurumsalMudurluklerPage() {
                             <th className="px-4 py-3 w-10"><input type="checkbox" checked={allChecked} onChange={toggleAll} /></th>
                             <th className="px-4 py-3 w-28">Resim</th>
                             <th className="px-4 py-3">Müdürlük</th>
-                            <th className="px-4 py-3">Ad Soyad</th>
+                            <th className="px-4 py-3">Yönetici</th>
                             <th className="px-4 py-3">E-posta</th>
                             <th className="px-4 py-3 w-36">İşlemler</th>
                         </tr>
