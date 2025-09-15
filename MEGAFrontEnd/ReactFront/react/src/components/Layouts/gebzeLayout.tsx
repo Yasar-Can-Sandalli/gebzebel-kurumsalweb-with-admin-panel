@@ -7,11 +7,6 @@ const GebzeLayout = () => {
     const pagesWithoutSidebar = [
         '/login',
         '/signup',
-        '/gebze/tarihiyerler/*', // Dinamik sayfalar
-        '/gebze/fotograflarlaGebze',
-        '/gebze/360sanaltur',
-        '/gebze/muhtarlar',
-        '/gebze/uyeoldugumuzbirlikler',
     ];
 
     const shouldDisplaySidebar = !pagesWithoutSidebar.some(path => {

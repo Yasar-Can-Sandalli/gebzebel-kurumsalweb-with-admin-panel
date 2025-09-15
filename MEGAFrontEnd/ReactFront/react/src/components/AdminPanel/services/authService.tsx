@@ -121,7 +121,7 @@ export const getCurrentUser = async () => {
 
         const response = await fetch(`${API_URL}/me`, {
             method: 'GET',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },

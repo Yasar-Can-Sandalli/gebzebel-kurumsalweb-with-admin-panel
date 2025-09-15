@@ -20,6 +20,7 @@ public class FileController {
 
     private static final String UPLOAD_DIR = "MEGAFrontEnd/ReactFront/react/src/assets/user_images/";
 
+
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {

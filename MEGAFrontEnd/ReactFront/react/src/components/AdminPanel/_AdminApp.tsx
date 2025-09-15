@@ -1,3 +1,4 @@
+
 // AdminApp.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "./_LayoutAdminPanel";
@@ -10,7 +11,7 @@ import KurumsalLayout from "./sayfalar/kurumsal/_LayoutKurumsal.tsx";
 import KurumsalYonetimPage from "./sayfalar/kurumsal/KurumsalYonetimPage.tsx";
 import KurumsalBVMI from "./sayfalar/kurumsal/KurumsalBVMI.tsx";
 import KurumsalRaporlarPage from "./sayfalar/kurumsal/KurumsalRaporlarPage.tsx";
-import KurumsalKomisyonlarPage from "./sayfalar/kurumsal/KurumsalKomisyonlarPage.tsx";
+import KurumsalMudurluklerPage from "./sayfalar/kurumsal/KurumsalMudurluklerPage.tsx";
 
 // --- Gebze (nested)
 import GebzeLayout from "./sayfalar/gebze/_LayoutGebze";
@@ -37,7 +38,6 @@ import AddUserPage from "./users/AddUserPage";
 
 // --- Ayarlar sayfası
 import SettingsPage from "./settings/SettingsPage";
-import RaporEditPage from "./sayfalar/kurumsal/RaporEditPage.tsx";
 
 export default function AdminPanelApp() {
     return (
@@ -64,9 +64,8 @@ export default function AdminPanelApp() {
                         <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
                         <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
-
-                        <Route path="raporlar/:id/duzenle" element={<RaporEditPage/>} />
-                        <Route path="komisyonlar" element={<KurumsalKomisyonlarPage />} />
+                        <Route path="komisyonlar" element={<KurumsalMudurluklerPage />} />
+                        <Route path="/kurumsal/mudurlukler" element={<KurumsalMudurluklerPage />} />
                     </Route>
 
                     {/* Gebze (nested) */}

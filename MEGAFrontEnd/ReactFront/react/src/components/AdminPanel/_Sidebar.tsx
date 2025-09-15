@@ -161,7 +161,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                                     { to: "/panel/kurumsal/yonetim", label: "Yönetim" },
                                     { to: "/panel/kurumsal/BMVI", label: "Baskan-Vizyon-Misyon-İlke" },
                                     { to: "/panel/kurumsal/raporlar", label: "Raporlar" },
-                                    { to: "/panel/kurumsal/komisyonlar", label: "Komisyonlar" },
+                                    { to: "/panel/kurumsal/mudurlukler", label: "Müdürlükler" },
                                 ].map((x) => (
                                     <li key={x.to}>
                                         <Link

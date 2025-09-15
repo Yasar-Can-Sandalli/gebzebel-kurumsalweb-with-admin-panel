@@ -21,17 +21,21 @@ export async function getUserById(id: number | string): Promise<User> {
     return data;
 }
 
-export async function createUser(payload: {
-    tcno: string;
-    isim: string;
-    password: string;
-    status: string;
-    yetkilerJson: string;
-}): Promise<User> {
-    const { data } = await api.post<User>(API, payload, {
-        headers: { "Content-Type": "application/json" },
-    });
-    return data;
+export async function createUser(data: any) {
+    try {
+        const res = await api.post(API, data, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+        });
+        return res.data;
+    } catch (err: any) {
+        const serverMsg =
+            err?.response?.data?.message ||
+            err?.response?.data?.error ||
+            (typeof err?.response?.data === 'string' ? err.response.data : null);
+        const msg = serverMsg || err?.message || 'User creation failed';
+        throw new Error(msg);
+    }
 }
 
 export async function updateUser(id: number, payload: Partial<User>): Promise<User> {

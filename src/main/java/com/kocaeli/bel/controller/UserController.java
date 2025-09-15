@@ -52,9 +52,9 @@ public class UserController {
         return perms.getOrDefault(area, Map.of()).getOrDefault(permission, false);
     }
 
-    public UserController(UserService userService, PermissionService permissionService, 
-                         PasswordEncoder passwordEncoder, JdbcTemplate jdbcTemplate, 
-                         ObjectMapper objectMapper) {
+    public UserController(UserService userService, PermissionService permissionService,
+                          PasswordEncoder passwordEncoder, JdbcTemplate jdbcTemplate,
+                          ObjectMapper objectMapper) {
         this.userService = userService;
         this.permissionService = permissionService;
         this.passwordEncoder = passwordEncoder;
@@ -107,25 +107,25 @@ public class UserController {
 
             // Şifreyi hashle
             String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
-            
+
             // Varsayılan yetkileri oluştur
             String defaultPermissionsJson = getDefaultPermissionsJson();
-            
+
             // Doğrudan JDBC kullanarak SQL sorgusu çalıştır
             String sql = "INSERT INTO KULLANICILAR (TCNO, ISIM, PASSWORD, STATUS, YETKILERJSON, PROFIL_FOTO) VALUES (?, ?, ?, ?, ?, ?)";
-            jdbcTemplate.update(sql, 
-                userDTO.getTcno(), 
-                userDTO.getIsim(), 
-                hashedPassword, 
-                userDTO.getStatus(),
-                defaultPermissionsJson,
-                userDTO.getProfilFoto() != null ? userDTO.getProfilFoto() : ""
+            jdbcTemplate.update(sql,
+                    userDTO.getTcno(),
+                    userDTO.getIsim(),
+                    hashedPassword,
+                    userDTO.getStatus(),
+                    defaultPermissionsJson,
+                    userDTO.getProfilFoto() != null ? userDTO.getProfilFoto() : ""
             );
-            
+
             // Oluşturulan kullanıcıyı getir
             User createdUser = userService.findByTCNo(userDTO.getTcno());
             return new ResponseEntity<>(convertToDTO(createdUser), HttpStatus.CREATED);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -185,13 +185,13 @@ public class UserController {
     private String convertPermissionsToJson(Map<String, Map<String, Boolean>> permissions) {
         try {
             // Gerçek uygulamada ObjectMapper kullanın
-             ObjectMapper mapper = new ObjectMapper();
-             return mapper.writeValueAsString(permissions);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(permissions);
         } catch (Exception e) {
             return "{}";
         }
     }
-    
+
     /**
      * Varsayılan yetkileri JSON formatına dönüştürür
      */
