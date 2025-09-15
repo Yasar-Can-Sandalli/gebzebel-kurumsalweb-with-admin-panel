@@ -37,7 +37,7 @@ export default function HomePanel() {
         const fetchDashboardData = async () => {
             try {
                 setLoading(true);
-                
+
                 // Paralel olarak tüm verileri çek
                 const [
                     haberlerResponse,
@@ -59,8 +59,8 @@ export default function HomePanel() {
                     totalHaberler: haberlerResponse.status === 'fulfilled' ? (haberlerResponse.value as any[]).length : 0,
                     totalEtkinlikler: etkinliklerResponse.status === 'fulfilled' ? (etkinliklerResponse.value as any[]).length : 0,
                     totalHizmetler: hizmetlerResponse.status === 'fulfilled' ? (hizmetlerResponse.value as any[]).length : 0,
-                    totalYonetim: yonetimResponse.status === 'fulfilled' ? 
-                        ((yonetimResponse.value as any).baskan?.length || 0) + 
+                    totalYonetim: yonetimResponse.status === 'fulfilled' ?
+                        ((yonetimResponse.value as any).baskan?.length || 0) +
                         ((yonetimResponse.value as any).baskanYardimcilari?.length || 0) : 0,
                     totalRaporlar: raporlarResponse.status === 'fulfilled' ? (raporlarResponse.value as any[]).length : 0
                 };

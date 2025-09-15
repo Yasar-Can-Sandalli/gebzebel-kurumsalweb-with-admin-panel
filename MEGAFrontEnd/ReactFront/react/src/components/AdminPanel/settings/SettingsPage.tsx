@@ -14,7 +14,7 @@ interface UserSettings {
 export default function SettingsPage() {
     const { currentUser, loading, refetch } = useCurrentUser();
     const { updateUser } = useAuthStore();
-    
+
     const [settings, setSettings] = useState<UserSettings>({
         isim: '',
         password: '',
@@ -22,7 +22,7 @@ export default function SettingsPage() {
         confirmPassword: '',
         profilFoto: ''
     });
-    
+
     const [showPassword, setShowPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -72,7 +72,7 @@ export default function SettingsPage() {
                 setMessage({ type: 'error', text: 'Dosya boyutu 1MB\'dan küçük olmalıdır.' });
                 return;
             }
-            
+
             if (!file.type.startsWith('image/')) {
                 setMessage({ type: 'error', text: 'Lütfen sadece resim dosyası seçin.' });
                 return;
@@ -100,7 +100,7 @@ export default function SettingsPage() {
                                 headers: {
                                     'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify({ 
+                                body: JSON.stringify({
                                     fileName: currentPhoto,
                                     directory: 'user_images'
                                 }),
@@ -132,7 +132,7 @@ export default function SettingsPage() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         fileName: currentPhoto,
                         directory: 'user_images'
                     }),
@@ -141,7 +141,7 @@ export default function SettingsPage() {
                 console.warn('Dosya silinemedi:', deleteError);
             }
         }
-        
+
         setSettings(prev => ({ ...prev, profilFoto: '' }));
         setMessage({ type: 'success', text: 'Profil fotoğrafı kaldırıldı.' });
     };
@@ -174,7 +174,7 @@ export default function SettingsPage() {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ 
+                        body: JSON.stringify({
                             fileName: oldPhoto,
                             directory: 'user_images'
                         }),
@@ -208,13 +208,13 @@ export default function SettingsPage() {
 
             if (response.ok && result.status === 'success') {
                 setMessage({ type: 'success', text: 'Ayarlar başarıyla güncellendi.' });
-                
+
                 // Auth store'u hemen güncelle (anında görünüm için)
                 updateUser({
                     isim: settings.isim,
                     profilFoto: settings.profilFoto
                 });
-                
+
                 // Kullanıcı bilgilerini yenile (tam veri senkronizasyonu için)
                 try {
                     await refetch();
@@ -222,7 +222,7 @@ export default function SettingsPage() {
                 } catch (refreshError) {
                     console.error('Error refreshing user data:', refreshError);
                 }
-                
+
                 // Şifre alanlarını temizle
                 setSettings(prev => ({
                     ...prev,
@@ -257,8 +257,8 @@ export default function SettingsPage() {
 
             {message && (
                 <div className={`p-4 rounded-lg ${
-                    message.type === 'success' 
-                        ? 'bg-green-50 text-green-700 border border-green-200' 
+                    message.type === 'success'
+                        ? 'bg-green-50 text-green-700 border border-green-200'
                         : 'bg-red-50 text-red-700 border border-red-200'
                 }`}>
                     {message.text}
@@ -270,7 +270,7 @@ export default function SettingsPage() {
                 <div className="lg:col-span-2">
                     <div className="bg-white rounded-xl p-6 shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
                         <h2 className="text-lg font-semibold text-slate-800 mb-4">Profil Bilgileri</h2>
-                        
+
                         <form onSubmit={handleSubmit} className="space-y-4">
                             {/* İsim */}
                             <div>
@@ -386,7 +386,7 @@ export default function SettingsPage() {
                 <div className="lg:col-span-1">
                     <div className="bg-white rounded-xl p-6 shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
                         <h2 className="text-lg font-semibold text-slate-800 mb-4">Profil Fotoğrafı</h2>
-                        
+
                         <div className="text-center">
                             <div className="w-32 h-32 mx-auto rounded-full bg-gray-200 overflow-hidden mb-4">
                                 {settings.profilFoto ? (
@@ -401,7 +401,7 @@ export default function SettingsPage() {
                                     </div>
                                 )}
                             </div>
-                            
+
                             <div className="space-y-2">
                                 <label className="block">
                                     <input
@@ -415,7 +415,7 @@ export default function SettingsPage() {
                                         Fotoğraf Yükle
                                     </span>
                                 </label>
-                                
+
                                 {settings.profilFoto && (
                                     <button
                                         onClick={removeProfilePhoto}
@@ -426,7 +426,7 @@ export default function SettingsPage() {
                                     </button>
                                 )}
                             </div>
-                            
+
                             <p className="text-xs text-gray-500 mt-2">
                                 Maksimum 1MB, JPG, PNG formatları desteklenir
                             </p>
@@ -436,7 +436,7 @@ export default function SettingsPage() {
                     {/* Hesap Bilgileri */}
                     <div className="bg-white rounded-xl p-6 shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60 mt-6">
                         <h2 className="text-lg font-semibold text-slate-800 mb-4">Hesap Bilgileri</h2>
-                        
+
                         <div className="space-y-3 text-sm">
                             <div>
                                 <span className="text-gray-500">TC Kimlik No:</span>
