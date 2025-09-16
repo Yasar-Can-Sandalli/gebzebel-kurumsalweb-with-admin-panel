@@ -18,14 +18,14 @@ function toIsoFromDateInput(d: string) {
 type CatTab = { id: number; label: string };
 
 const FALLBACK_CATEGORIES: CatTab[] = [
-    { id: 12, label: "Stratejik Plan Raporları" },
-    { id: 16, label: "Ercümen Kararı Raporları" },
-    { id: 5,  label: "Finansal Raporlar" },
-    { id: 1,  label: "Faaliyet Raporu" },
-    { id: 4,  label: "Performans Raporları" },
-    { id: 13, label: "İç Kontrol Eylem Planı Raporları" },
-    { id: 15, label: "Meclis Kararı Raporları" },
-    { id: 14, label: "Mali Durum ve Beklentiler Raporları" },
+    { id: 2, label: "Stratejik Plan Raporları" },
+    { id: 28, label: "Ercümen Kararı Raporları" },
+    { id: 29,  label: "Finansal Raporlar" },
+    { id: 30,  label: "Faaliyet Raporu" },
+    { id: 31,  label: "Performans Raporları" },
+    { id: 32, label: "İç Kontrol Eylem Planı Raporları" },
+    { id: 33, label: "Meclis Kararı Raporları" },
+    { id: 34, label: "Mali Durum ve Beklentiler Raporları" },
 ];
 
 const Badge = ({ children, tone = "slate" }: { children: React.ReactNode; tone?: "green" | "slate" }) => {
