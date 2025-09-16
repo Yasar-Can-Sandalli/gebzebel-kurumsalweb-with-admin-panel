@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+// src/sayfalar/kurumsal/GebzeYonetimPage.tsx
+import { useEffect, useMemo, useState } from "react";
 import { apiGet, apiDelete, apiPost, apiPut } from "../../services/apiService";
+import { Mail, Phone } from "lucide-react";
 
 // --- Backend tipi ---
 type MuhtarBE = {
@@ -58,7 +60,9 @@ const toArray = (d: any): MuhtarBE[] => {
 
 function toMapsLink(addressOrCoords?: string) {
     if (!addressOrCoords) return undefined;
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressOrCoords)}`;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        addressOrCoords
+    )}`;
 }
 
 export default function KurumsalMuhtarlarPage() {
@@ -82,9 +86,11 @@ export default function KurumsalMuhtarlarPage() {
         resimUrl: "",
         konum: "",
     });
+
+    // Satır aksiyon menüsü (📝 ▾)
     const [actionOpen, setActionOpen] = useState<number | null>(null);
 
-    // file upload state & refs
+    // file upload state
     const [uploading, setUploading] = useState(false);
     const fileInputId = "muhtar-image-input";
 
@@ -135,6 +141,7 @@ export default function KurumsalMuhtarlarPage() {
         setEditingId(null);
         setModalOpen("add");
     };
+
     const openEdit = (row: MuhtarUI) => {
         const raw = row.__raw || {};
         setForm({
@@ -149,6 +156,7 @@ export default function KurumsalMuhtarlarPage() {
         setEditingId(row.id ?? null);
         setModalOpen("edit");
     };
+
     const closeModal = () => {
         setModalOpen(null);
         setEditingId(null);
@@ -228,6 +236,16 @@ export default function KurumsalMuhtarlarPage() {
         }
     };
 
+    // Dışarı tıklayınca satır menüsünü kapat
+    useEffect(() => {
+        const onDocClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            if (!target.closest("[data-row-menu-root]")) setActionOpen(null);
+        };
+        document.addEventListener("click", onDocClick);
+        return () => document.removeEventListener("click", onDocClick);
+    }, []);
+
     // upload helper (FormData POST -> url döner beklentisi)
     async function uploadImage(file: File): Promise<string> {
         const fd = new FormData();
@@ -256,7 +274,10 @@ export default function KurumsalMuhtarlarPage() {
                                     placeholder="Ad / Soyad / Mahalle ara…"
                                     className={inputCls}
                                 />
-                                <button onClick={() => setQ("")} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">
+                                <button
+                                    onClick={() => setQ("")}
+                                    className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50"
+                                >
                                     Temizle
                                 </button>
                             </div>
@@ -280,7 +301,9 @@ export default function KurumsalMuhtarlarPage() {
                             </div>
                         </div>
                         {error && (
-                            <div className="mt-3 text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">{error}</div>
+                            <div className="mt-3 text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">
+                                {error}
+                            </div>
                         )}
                     </div>
                 </div>
@@ -328,7 +351,8 @@ export default function KurumsalMuhtarlarPage() {
                                                 alt={`${e.AD} ${e.SOYAD}`}
                                                 className="w-16 h-16 object-cover rounded-full ring-1 ring-slate-200"
                                                 onError={(ev) =>
-                                                    ((ev.currentTarget as HTMLImageElement).src = "/images/placeholder-avatar.jpg")
+                                                    ((ev.currentTarget as HTMLImageElement).src =
+                                                        "/images/placeholder-avatar.jpg")
                                                 }
                                             />
                                         )}
@@ -337,14 +361,36 @@ export default function KurumsalMuhtarlarPage() {
                                         {e.AD} {e.SOYAD}
                                     </td>
                                     <td className="px-4 py-3 text-slate-600">{e.MAHALLE}</td>
-                                    <td className="px-4 py-3 text-slate-600">{e.TELEFON || "-"}</td>
+                                    <td className="px-4 py-3 text-slate-600">
+                                        {e.TELEFON ? (
+                                            <div className="flex items-start gap-1 text-slate-600">
+                                                <Phone size={12} className="mt-0.5 flex-shrink-0" />
+                                                <a
+                                                    href={`tel:${e.TELEFON.replace(/[^+\d]/g, "")}`}
+                                                    className="text-sm leading-tight hover:underline whitespace-nowrap text-blue-700"
+                                                    title={e.TELEFON}
+                                                >
+                                                    {e.TELEFON}
+                                                </a>
+                                            </div>
+                                        ) : (
+                                            <span className="text-slate-400 text-sm">-</span>
+                                        )}
+                                    </td>
                                     <td className="px-4 py-3 text-slate-600">
                                         {e.EPOSTA ? (
-                                            <a className="text-blue-700 underline" href={`mailto:${e.EPOSTA}`}>
-                                                {e.EPOSTA}
-                                            </a>
+                                            <div className="flex items-start gap-1 text-slate-600">
+                                                <Mail size={12} className="mt-0.5 flex-shrink-0" />
+                                                <a
+                                                    href={`mailto:${e.EPOSTA}`}
+                                                    className="text-sm break-all leading-tight hover:underline"
+                                                    title={e.EPOSTA}
+                                                >
+                                                    {e.EPOSTA}
+                                                </a>
+                                            </div>
                                         ) : (
-                                            "-"
+                                            <span className="text-slate-400 text-sm">-</span>
                                         )}
                                     </td>
                                     <td className="px-4 py-3 text-slate-600">
@@ -353,41 +399,47 @@ export default function KurumsalMuhtarlarPage() {
                                                 href={toMapsLink(e.KONUM)}
                                                 target="_blank"
                                                 rel="noreferrer"
-                                                className="text-blue-700 underline"
+                                                className="text-blue-700"
                                             >
-                                                Haritada Aç
+                                                📍Haritada göster
                                             </a>
                                         ) : (
                                             "-"
                                         )}
                                     </td>
-                                    <td className="px-4 py-3 relative">
-                                        {/* İşlemler kombosu */}
-                                        <button
-                                            className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
-                                            onClick={() => setActionOpen(actionOpen === e.id ? null : (e.id ?? null))}
-                                        >
-                                            İşlemler ▾
-                                        </button>
-                                        {actionOpen === e.id && (
-                                            <div className="absolute right-4 top-full mt-2 w-40 bg-white rounded-xl shadow-lg ring-1 ring-slate-200 z-20">
-                                                <button
-                                                    className="block w-full text-left px-3 py-2 hover:bg-slate-50"
-                                                    onClick={() => {
-                                                        setActionOpen(null);
-                                                        openEdit(e);
-                                                    }}
-                                                >
-                                                    Güncelle
-                                                </button>
-                                                <button
-                                                    className="block w-full text-left px-3 py-2 text-red-600 hover:bg-slate-50"
-                                                    onClick={() => deleteOne(e.id!)}
-                                                >
-                                                    Sil
-                                                </button>
-                                            </div>
-                                        )}
+
+                                    {/* İşlemler — istenen tasarım: 📝 ▾ butonu + altında menü */}
+                                    <td className="px-4 py-3 align-center">
+                                        <div className="relative inline-block" data-row-menu-root>
+                                            <button
+                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
+                                                onClick={() =>
+                                                    setActionOpen(actionOpen === e.id ? null : (e.id ?? null))
+                                                }
+                                            >
+                                                📝 ▾
+                                            </button>
+
+                                            {actionOpen === e.id && (
+                                                <div className="absolute left-0 top-full mt-1 w-32 rounded-md border bg-white shadow-lg z-20">
+                                                    <button
+                                                        className="w-full px-3 py-2 text-left hover:bg-slate-50"
+                                                        onClick={() => {
+                                                            setActionOpen(null);
+                                                            openEdit(e);
+                                                        }}
+                                                    >
+                                                        Güncelle
+                                                    </button>
+                                                    <button
+                                                        className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
+                                                        onClick={() => deleteOne(e.id!)}
+                                                    >
+                                                        Sil
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -403,30 +455,55 @@ export default function KurumsalMuhtarlarPage() {
                     <div className="absolute inset-0 bg-black/30" onClick={closeModal} />
                     <div className="relative z-10 w-full max-w-2xl rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200">
                         <div className="flex items-center justify-between border-b px-5 py-3">
-                            <h3 className="text-lg font-semibold">{modalOpen === "edit" ? "Muhtar Düzenle" : "Yeni Muhtar"}</h3>
-                            <button onClick={closeModal} className="rounded-md p-1 hover:bg-slate-100">✕</button>
+                            <h3 className="text-lg font-semibold">
+                                {modalOpen === "edit" ? "Muhtar Düzenle" : "Yeni Muhtar"}
+                            </h3>
+                            <button onClick={closeModal} className="rounded-md p-1 hover:bg-slate-100">
+                                ✕
+                            </button>
                         </div>
                         <div className="px-5 py-5 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs text-slate-600 mb-1">Ad *</label>
-                                    <input value={form.ad} onChange={(e) => setForm({ ...form, ad: e.target.value })} className={inputCls} />
+                                    <input
+                                        value={form.ad}
+                                        onChange={(e) => setForm({ ...form, ad: e.target.value })}
+                                        className={inputCls}
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-xs text-slate-600 mb-1">Soyad *</label>
-                                    <input value={form.soyad} onChange={(e) => setForm({ ...form, soyad: e.target.value })} className={inputCls} />
+                                    <input
+                                        value={form.soyad}
+                                        onChange={(e) => setForm({ ...form, soyad: e.target.value })}
+                                        className={inputCls}
+                                    />
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-xs text-slate-600 mb-1">Mahalle *</label>
-                                    <input value={form.mahalle} onChange={(e) => setForm({ ...form, mahalle: e.target.value })} className={inputCls} />
+                                    <input
+                                        value={form.mahalle}
+                                        onChange={(e) => setForm({ ...form, mahalle: e.target.value })}
+                                        className={inputCls}
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-xs text-slate-600 mb-1">Telefon</label>
-                                    <input value={form.telefon ?? ""} onChange={(e) => setForm({ ...form, telefon: e.target.value })} className={inputCls} />
+                                    <input
+                                        value={form.telefon ?? ""}
+                                        onChange={(e) => setForm({ ...form, telefon: e.target.value })}
+                                        className={inputCls}
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-xs text-slate-600 mb-1">E-posta</label>
-                                    <input type="email" value={form.eposta ?? ""} onChange={(e) => setForm({ ...form, eposta: e.target.value })} className={inputCls} />
+                                    <input
+                                        type="email"
+                                        value={form.eposta ?? ""}
+                                        onChange={(e) => setForm({ ...form, eposta: e.target.value })}
+                                        className={inputCls}
+                                    />
                                 </div>
 
                                 {/* Görsel seçimi: file picker + önizleme */}
@@ -434,41 +511,71 @@ export default function KurumsalMuhtarlarPage() {
                                     <label className="block text-xs text-slate-600 mb-1">Resim</label>
                                     <div className="flex items-center gap-3">
                                         {form.resimUrl && (
-                                            <img src={form.resimUrl} alt="preview" className="w-14 h-14 rounded-full object-cover ring-1 ring-slate-200" />
+                                            <img
+                                                src={form.resimUrl}
+                                                alt="preview"
+                                                className="w-14 h-14 rounded-full object-cover ring-1 ring-slate-200"
+                                            />
                                         )}
-                                        <input id={fileInputId} type="file" accept="image/*" className="hidden" onChange={async (e) => {
-                                            const f = e.target.files?.[0];
-                                            if (!f) return;
-                                            try {
-                                                setUploading(true);
-                                                const url = await uploadImage(f);
-                                                setForm((p) => ({ ...p, resimUrl: url }));
-                                            } catch (er) {
-                                                alert("Görsel yüklenemedi. Lütfen tekrar deneyin.");
-                                            } finally {
-                                                setUploading(false);
-                                            }
-                                        }} />
-                                        <button type="button" onClick={() => document.getElementById(fileInputId)?.click()} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">
-                                            {uploading ? "Yükleniyor…" : (form.resimUrl ? "Değiştir" : "Resim Seç")}
+                                        <input
+                                            id={fileInputId}
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={async (e) => {
+                                                const f = e.target.files?.[0];
+                                                if (!f) return;
+                                                try {
+                                                    setUploading(true);
+                                                    const url = await uploadImage(f);
+                                                    setForm((p) => ({ ...p, resimUrl: url }));
+                                                } catch (er) {
+                                                    alert("Görsel yüklenemedi. Lütfen tekrar deneyin.");
+                                                } finally {
+                                                    setUploading(false);
+                                                }
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => document.getElementById(fileInputId)?.click()}
+                                            className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50"
+                                        >
+                                            {uploading ? "Yükleniyor…" : form.resimUrl ? "Değiştir" : "Resim Seç"}
                                         </button>
                                     </div>
                                 </div>
 
                                 <div className="md:col-span-2">
-                                    <label className="block text-xs text-slate-600 mb-1">Konum (adres veya "41.0,29.0")</label>
-                                    <input value={form.konum ?? ""} onChange={(e) => setForm({ ...form, konum: e.target.value })} className={inputCls} />
+                                    <label className="block text-xs text-slate-600 mb-1">
+                                        Konum (adres veya "41.0,29.0")
+                                    </label>
+                                    <input
+                                        value={form.konum ?? ""}
+                                        onChange={(e) => setForm({ ...form, konum: e.target.value })}
+                                        className={inputCls}
+                                    />
                                 </div>
                             </div>
 
                             <div className="flex items-center justify-end gap-2 pt-2">
-                                <button onClick={closeModal} className="rounded-xl px-4 py-2 hover:bg-slate-100">Vazgeç</button>
+                                <button onClick={closeModal} className="rounded-xl px-4 py-2 hover:bg-slate-100">
+                                    Vazgeç
+                                </button>
                                 {modalOpen === "edit" ? (
-                                    <button onClick={handleUpdate} disabled={pending} className="rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-60">
+                                    <button
+                                        onClick={handleUpdate}
+                                        disabled={pending}
+                                        className="rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-60"
+                                    >
                                         {pending ? "Kaydediliyor…" : "Güncelle"}
                                     </button>
                                 ) : (
-                                    <button onClick={handleCreate} disabled={pending} className="rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-60">
+                                    <button
+                                        onClick={handleCreate}
+                                        disabled={pending}
+                                        className="rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-60"
+                                    >
                                         {pending ? "Kaydediliyor…" : "Kaydet"}
                                     </button>
                                 )}
