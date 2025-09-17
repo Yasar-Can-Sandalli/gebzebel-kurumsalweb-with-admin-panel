@@ -12,7 +12,8 @@ import lombok.ToString;
 public class Yayinlar {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "yayinlar_seq_gen")
+    @SequenceGenerator(name = "yayinlar_seq_gen", sequenceName = "YAYINLAR_SEQ", allocationSize = 1)
     private Integer yayinId;
 
     @Column(name = "yayin_baslik",nullable = false, length = 90)
@@ -24,7 +25,7 @@ public class Yayinlar {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
     private YayinlarCategory yayinCategory;
 }

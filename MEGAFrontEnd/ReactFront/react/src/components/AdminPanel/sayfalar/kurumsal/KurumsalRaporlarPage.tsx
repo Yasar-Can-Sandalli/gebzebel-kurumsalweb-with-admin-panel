@@ -118,7 +118,7 @@ export default function KurumsalRaporlarPage() {
     };
 
     // /panel/kurumsal/raporlar/:id/duzenle
-    const onEditGo = (r: Rapor) => nav(`/panel/kurumsal/raporlar/${r.raporId}/duzenle`);
+    const onEditGo = (r: Rapor) => nav(`/panel/kurumsal/raporlar/${r.raporId}/edit`);
 
     const onDelete = async (r: Rapor) => {
         if (!window.confirm(`Bu rapor silinsin mi?\n\n${r.raporBaslik}`)) return;
