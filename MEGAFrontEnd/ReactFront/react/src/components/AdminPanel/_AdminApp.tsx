@@ -38,6 +38,7 @@ import AddUserPage from "./users/AddUserPage";
 
 // --- Ayarlar sayfası
 import SettingsPage from "./settings/SettingsPage";
+import RaporEditPage from "./sayfalar/kurumsal/RaporEditPage.tsx";
 
 export default function AdminPanelApp() {
     return (
@@ -64,6 +65,7 @@ export default function AdminPanelApp() {
                         <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
                         <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
+                        <Route path="raporlar/:id/duzenle" element={<RaporEditPage />} />
                         <Route path="komisyonlar" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler" element={<KurumsalMudurluklerPage />} />
                     </Route>
