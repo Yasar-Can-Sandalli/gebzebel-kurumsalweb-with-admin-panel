@@ -1,25 +1,25 @@
+// src/sayfalar/HaberlerPage.tsx
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiGet, apiDelete } from "../services/apiService";
-//import type { Haber } from "../types/Haber";
 
+// --- Tipler ---
 export interface Kategori {
     id: number;
     ad: string;
 }
-
 export interface Haber {
     id?: number;
     baslik: string;
-    tarih: string;     // backend LocalDate → string
+    tarih: string;      // ISO/LocalDate string
     aciklama: string;
     resim1?: string;
     resim2?: string;
     kategori: Kategori | null;
 }
 
-
 export default function HaberlerPage() {
+    // veri
     const [items, setItems] = useState<Haber[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -33,9 +33,15 @@ export default function HaberlerPage() {
     // seçimler
     const [selected, setSelected] = useState<number[]>([]);
 
+    // satır menüsü (📝 ▾)
+    const [rowMenuOpenId, setRowMenuOpenId] = useState<number | null>(null);
+
+    const navigate = useNavigate();
+
     const inputCls =
         "rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
 
+    // --- Data fetch ---
     const fetchData = async () => {
         setError(null);
         setLoading(true);
@@ -44,15 +50,14 @@ export default function HaberlerPage() {
             setItems(data || []);
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Liste yüklenemedi";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
+            setError(`${msg}${err?.response?.status ? ` (status: ${err.response.status})` : ""}`);
         } finally {
             setLoading(false);
         }
     };
-
     useEffect(() => { fetchData(); }, []);
 
-    // filtreleme
+    // --- Filtreleme ---
     const filtered = useMemo(() => {
         const term = q.trim().toLowerCase();
         const f = from ? new Date(from) : null;
@@ -66,34 +71,71 @@ export default function HaberlerPage() {
         });
     }, [items, q, from, to]);
 
-    // seçim
-    const toggleOne = (id: number) =>
-        setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-
+    // --- Seçim ---
     const allIds = filtered.map((x) => x.id!).filter(Boolean);
     const allChecked = allIds.length > 0 && allIds.every((id) => selected.includes(id));
     const toggleAll = () =>
-        setSelected((prev) => (allChecked ? prev.filter((id) => !allIds.includes(id)) : Array.from(new Set([...prev, ...allIds]))));
+        setSelected((prev) =>
+            allChecked ? prev.filter((id) => !allIds.includes(id)) : Array.from(new Set([...prev, ...allIds]))
+        );
+    const toggleOne = (id: number) =>
+        setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
-    // TOPLU SİL
+    // --- Satır menüsü (📝 ▾) işlemleri ---
+    const toggleRowMenu = (id: number) =>
+        setRowMenuOpenId((cur) => (cur === id ? null : id));
+
+    const openEdit = (h: Haber) => {
+        navigate(`duzenle/${h.id}`);
+        setRowMenuOpenId(null);
+    };
+
+    const deleteOne = async (id: number) => {
+        const rec = items.find((x) => x.id === id);
+        if (!confirm(`${rec?.baslik || id} kaydını silmek istiyor musunuz?`)) return;
+
+        setPending(true);
+        setError(null);
+        try {
+            await apiDelete<boolean>(`/api/haberler/${id}`);
+            setItems((prev) => prev.filter((h) => h.id !== id));
+            setSelected((prev) => prev.filter((x) => x !== id));
+        } catch (err: any) {
+            const msg = err?.response?.data?.message || err?.message || "Silme hatası";
+            setError(`${msg}${err?.response?.status ? ` (status: ${err.response.status})` : ""}`);
+        } finally {
+            setPending(false);
+            setRowMenuOpenId(null);
+        }
+    };
+
     const bulkDelete = async () => {
         if (selected.length === 0) return;
         if (!confirm(`${selected.length} haber silinsin mi?`)) return;
 
-        setError(null);
         setPending(true);
+        setError(null);
         try {
             await Promise.all(selected.map((id) => apiDelete<boolean>(`/api/haberler/${id}`)));
             setItems((prev) => prev.filter((h) => !selected.includes(h.id!)));
             setSelected([]);
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Silme hatası";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
+            setError(`${msg}${err?.response?.status ? ` (status: ${err.response.status})` : ""}`);
         } finally {
             setPending(false);
         }
     };
 
+    // Dışarı tıklayınca menüyü kapat
+    useEffect(() => {
+        const onDocClick = (e: MouseEvent) => {
+            const t = e.target as HTMLElement;
+            if (!t.closest("[data-row-menu-root]")) setRowMenuOpenId(null);
+        };
+        document.addEventListener("click", onDocClick);
+        return () => document.removeEventListener("click", onDocClick);
+    }, []);
 
     if (loading) return <div className="p-6">Yükleniyor…</div>;
 
@@ -102,8 +144,7 @@ export default function HaberlerPage() {
             <h1 className="text-2xl font-semibold text-slate-800">Haberler</h1>
 
             <div className="bg-white rounded-2xl shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60 overflow-hidden flex flex-col">
-
-                {/* Kart: Sticky üst şerit + scroll’lu liste  */}
+                {/* Üst şerit (filtre + aksiyonlar) */}
                 <div className="sticky top-0 z-10 bg-white">
                     <div className="p-4 border-b">
                         <div className="grid gap-3 md:grid-cols-[1fr,auto] md:items-center">
@@ -112,17 +153,27 @@ export default function HaberlerPage() {
                                 <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Başlığa göre ara…" className={inputCls} />
                                 <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className={inputCls} />
                                 <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className={inputCls} />
-                                <button onClick={() => { setQ(""); setFrom(""); setTo(""); }} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">Temizle</button>
+                                <button onClick={() => { setQ(""); setFrom(""); setTo(""); }} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">
+                                    Temizle
+                                </button>
                             </div>
 
-                            {/* Aksiyonlar */}
+                            {/* Aksiyonlar (Toplu Sil sadece seçim varsa görünür) */}
                             <div className="flex items-center gap-2 justify-end">
-                                {/* Toplu Sil */}
-                                <button onClick={bulkDelete} disabled={selected.length === 0 || pending} className="px-3 py-2 rounded-lg bg-red-500 text-white disabled:opacity-60" title="Seçili haberleri sil">
-                                    Sil
-                                </button>
-                                {/* + Yeni Haber */}
-                                <Link to="yeni" className="px-3 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg shadow-blue-500/20 hover:brightness-110">
+                                {selected.length > 0 && (
+                                    <button
+                                        onClick={bulkDelete}
+                                        disabled={pending}
+                                        className="px-3 py-2 rounded-lg bg-red-500 text-white hover:brightness-110"
+                                        title="Seçili haberleri sil"
+                                    >
+                                        Sil
+                                    </button>
+                                )}
+                                <Link
+                                    to="yeni"
+                                    className="px-3 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg shadow-blue-500/20 hover:brightness-110"
+                                >
                                     + Yeni Haber
                                 </Link>
                             </div>
@@ -136,7 +187,7 @@ export default function HaberlerPage() {
                     </div>
                 </div>
 
-                {/* TABLO */}
+                {/* Tablo */}
                 <div className="overflow-y-auto" style={{ maxHeight: "70vh" }}>
                     <div className="overflow-x-auto">
                         <table className="min-w-full text-sm">
@@ -153,7 +204,6 @@ export default function HaberlerPage() {
                                 <th className="px-4 py-3 w-36">İşlemler</th>
                             </tr>
                             </thead>
-
 
                             <tbody className="divide-y divide-slate-100">
                             {filtered.length === 0 ? (
@@ -202,20 +252,38 @@ export default function HaberlerPage() {
                                             {new Date(h.tarih).toLocaleDateString("tr-TR")}
                                         </td>
                                         <td className="px-4 py-3">{h.kategori?.ad || "-"}</td>
-                                        <td className="px-4 py-3">
-                                            <Link
-                                                to={`duzenle/${h.id}`}
-                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
-                                            >
-                                                Güncelle
-                                            </Link>
+
+                                        {/* İşlemler — Kurumsal sayfadakiyle aynı (📝 ▾ + alt menü) */}
+                                        <td className="px-4 py-3 align-center">
+                                            <div className="relative inline-block" data-row-menu-root>
+                                                <button
+                                                    className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
+                                                    onClick={() => toggleRowMenu(h.id!)}
+                                                >
+                                                    📝 ▾
+                                                </button>
+                                                {rowMenuOpenId === h.id && (
+                                                    <div className="absolute z-20 mt-1 w-32 rounded-md border bg-white shadow-lg left-0 top-full">
+                                                        <button
+                                                            className="w-full px-3 py-2 text-left hover:bg-slate-50"
+                                                            onClick={() => openEdit(h)}
+                                                        >
+                                                            Güncelle
+                                                        </button>
+                                                        <button
+                                                            className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
+                                                            onClick={() => deleteOne(h.id!)}
+                                                        >
+                                                            Sil
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
                             )}
                             </tbody>
-
-
                         </table>
                     </div>
                 </div>

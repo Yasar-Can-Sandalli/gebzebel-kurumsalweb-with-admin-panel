@@ -1,3 +1,4 @@
+// src/sayfalar/EtkinliklerPage.tsx
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiGet, apiDelete } from "../services/apiService";
@@ -5,7 +6,7 @@ import { apiGet, apiDelete } from "../services/apiService";
 export interface Etkinlik {
     id?: number;
     baslik: string;
-    tarih: string;     // "YYYY-MM-DD"
+    tarih: string; // "YYYY-MM-DD"
     resimUrl: string;
     aciklama: string;
 }
@@ -24,6 +25,9 @@ export default function EtkinliklerPage() {
     // seçimler (toplu sil için)
     const [selected, setSelected] = useState<number[]>([]);
 
+    // satır menüsü (📝 ▾)
+    const [rowMenuOpenId, setRowMenuOpenId] = useState<number | null>(null);
+
     const inputCls =
         "rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
 
@@ -41,7 +45,9 @@ export default function EtkinliklerPage() {
         }
     };
 
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const filtered = useMemo(() => {
         const term = q.trim().toLowerCase();
@@ -63,7 +69,31 @@ export default function EtkinliklerPage() {
     const allIds = filtered.map((x) => x.id!).filter(Boolean);
     const allChecked = allIds.length > 0 && allIds.every((id) => selected.includes(id));
     const toggleAll = () =>
-        setSelected((prev) => (allChecked ? prev.filter((id) => !allIds.includes(id)) : Array.from(new Set([...prev, ...allIds]))));
+        setSelected((prev) =>
+            allChecked
+                ? prev.filter((id) => !allIds.includes(id))
+                : Array.from(new Set([...prev, ...allIds]))
+        );
+
+    // TEKİL SİL
+    const deleteOne = async (id: number) => {
+        const rec = items.find((x) => x.id === id);
+        if (!confirm(`${rec?.baslik || id} kaydını silmek istiyor musunuz?`)) return;
+
+        setPending(true);
+        setError(null);
+        try {
+            await apiDelete<boolean>(`/api/etkinlikler/delete/${id}`);
+            setItems((prev) => prev.filter((e) => e.id !== id));
+            setSelected((prev) => prev.filter((x) => x !== id));
+        } catch (err: any) {
+            const msg = err?.response?.data?.message || err?.message || "Silme hatası";
+            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
+        } finally {
+            setPending(false);
+            setRowMenuOpenId(null);
+        }
+    };
 
     // TOPLU SİL
     const bulkDelete = async () => {
@@ -84,6 +114,20 @@ export default function EtkinliklerPage() {
         }
     };
 
+    // Satır menüsü kontrolü
+    const toggleRowMenu = (id: number) =>
+        setRowMenuOpenId((cur) => (cur === id ? null : id));
+
+    // dışarı tıklayınca menüyü kapat
+    useEffect(() => {
+        const onDocClick = (e: MouseEvent) => {
+            const t = e.target as HTMLElement;
+            if (!t.closest("[data-row-menu-root]")) setRowMenuOpenId(null);
+        };
+        document.addEventListener("click", onDocClick);
+        return () => document.removeEventListener("click", onDocClick);
+    }, []);
+
     if (loading) return <div className="p-6">Yükleniyor…</div>;
 
     return (
@@ -92,7 +136,6 @@ export default function EtkinliklerPage() {
 
             {/* Kart: Sticky üst şerit + scroll’lu liste */}
             <div className="bg-white rounded-2xl shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60 overflow-hidden flex flex-col">
-
                 {/* STICKY ÜST BAR (filtreler + aksiyonlar) */}
                 <div className="sticky top-0 z-10 bg-white">
                     <div className="p-4 border-b">
@@ -105,10 +148,24 @@ export default function EtkinliklerPage() {
                                     placeholder="Başlığa göre ara…"
                                     className={inputCls}
                                 />
-                                <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className={inputCls} />
-                                <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className={inputCls} />
+                                <input
+                                    type="date"
+                                    value={from}
+                                    onChange={(e) => setFrom(e.target.value)}
+                                    className={inputCls}
+                                />
+                                <input
+                                    type="date"
+                                    value={to}
+                                    onChange={(e) => setTo(e.target.value)}
+                                    className={inputCls}
+                                />
                                 <button
-                                    onClick={() => { setQ(""); setFrom(""); setTo(""); }}
+                                    onClick={() => {
+                                        setQ("");
+                                        setFrom("");
+                                        setTo("");
+                                    }}
                                     className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50"
                                 >
                                     Temizle
@@ -117,24 +174,17 @@ export default function EtkinliklerPage() {
 
                             {/* Aksiyonlar */}
                             <div className="flex items-center gap-2 justify-end">
-                                {/* Arşivle (dummy) */}
-                                <button
-                                    type="button"
-                                    className="px-3 py-2 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
-                                    title="Arşivle (yakında)"
-                                >
-                                    Arşivle
-                                </button>
-
-                                {/* Toplu Sil */}
-                                <button
-                                    onClick={bulkDelete}
-                                    disabled={selected.length === 0 || pending}
-                                    className="px-3 py-2 rounded-lg bg-red-500 text-white disabled:opacity-60"
-                                    title="Seçili kayıtları sil"
-                                >
-                                    Sil
-                                </button>
+                                {/* Toplu Sil: sadece seçim varsa görünür */}
+                                {selected.length > 0 && (
+                                    <button
+                                        onClick={bulkDelete}
+                                        disabled={pending}
+                                        className="px-3 py-2 rounded-lg bg-red-500 text-white hover:brightness-110 disabled:opacity-60"
+                                        title="Seçili kayıtları sil"
+                                    >
+                                        Sil
+                                    </button>
+                                )}
 
                                 {/* + Ekle */}
                                 <Link
@@ -198,7 +248,9 @@ export default function EtkinliklerPage() {
                                                 />
                                             )}
                                         </td>
-                                        <td className="px-4 py-3 font-medium text-slate-800 align-top">{e.baslik}</td>
+                                        <td className="px-4 py-3 font-medium text-slate-800 align-top">
+                                            {e.baslik}
+                                        </td>
                                         <td className="px-4 py-3 text-slate-600 align-top">
                                             {new Date(e.tarih).toLocaleDateString("tr-TR")}
                                         </td>
@@ -207,13 +259,35 @@ export default function EtkinliklerPage() {
                           {e.aciklama}
                         </span>
                                         </td>
+
+                                        {/* İşlemler — istenen tasarım: 📝 ▾ butonu + altında menü */}
                                         <td className="px-4 py-3 align-top">
-                                            <Link
-                                                to={`${e.id}/duzenle`}
-                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
-                                            >
-                                                Güncelle
-                                            </Link>
+                                            <div className="relative inline-block" data-row-menu-root>
+                                                <button
+                                                    className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
+                                                    onClick={() => toggleRowMenu(e.id!)}
+                                                >
+                                                    📝 ▾
+                                                </button>
+
+                                                {rowMenuOpenId === e.id && (
+                                                    <div className="absolute left-0 top-full mt-1 w-32 rounded-md border bg-white shadow-lg z-20">
+                                                        <Link
+                                                            to={`${e.id}/duzenle`}
+                                                            className="block w-full px-3 py-2 text-left hover:bg-slate-50"
+                                                            onClick={() => setRowMenuOpenId(null)}
+                                                        >
+                                                            Güncelle
+                                                        </Link>
+                                                        <button
+                                                            className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
+                                                            onClick={() => deleteOne(e.id!)}
+                                                        >
+                                                            Sil
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -222,7 +296,6 @@ export default function EtkinliklerPage() {
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     );

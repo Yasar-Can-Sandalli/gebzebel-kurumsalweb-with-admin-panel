@@ -1,15 +1,17 @@
 // src/sayfalar/kurumsal/KurumsalYonetimPage.tsx
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../loader.tsx";
 import { fetchYonetimRows, YonetimRow } from "../../services/pageService.tsx";
-import { Search, Mail, Phone, User, Edit, Trash2, X, Check } from "lucide-react";
+import { Search, Mail, Phone, User, X, Check } from "lucide-react";
 
 export default function KurumsalYonetimPage() {
     const [rows, setRows] = useState<YonetimRow[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState("");
+    const [rowMenuOpenId, setRowMenuOpenId] = useState<number | null>(null);
+
     const navigate = useNavigate();
 
     const inputCls =
@@ -42,39 +44,55 @@ export default function KurumsalYonetimPage() {
         );
     }, [rows, search]);
 
+    // === ACTIONS ===
+    const toggleRowMenu = (id: number) => {
+        setRowMenuOpenId((cur) => (cur === id ? null : id));
+    };
+
+    const openEdit = (r: YonetimRow) => {
+        navigate(`/panel/kurumsal/yonetim/${r.id}/edit`, {
+            state: { ...r, mode: "yonetim", tableName: "kurumsal_yonetim_semasi" },
+        });
+        setRowMenuOpenId(null);
+    };
+
+    const deleteOne = (id: number) => {
+        const rec = rows.find((x) => x.id === id);
+        if (confirm(`${rec?.isimSoyisim || id} kaydını silmek istediğinize emin misiniz?`)) {
+            // TODO: burada silme API çağrınızı yapın
+            console.log("Silinecek:", id);
+            setRowMenuOpenId(null);
+        }
+    };
+
+    // menüyü dışarı tıklayınca kapatmak isterseniz (opsiyonel)
+    useEffect(() => {
+        const onDocClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            // buton/menü kapsayıcıları dışına tıklanırsa kapat
+            if (!target.closest("[data-row-menu-root]")) setRowMenuOpenId(null);
+        };
+        document.addEventListener("click", onDocClick);
+        return () => document.removeEventListener("click", onDocClick);
+    }, []);
+
     if (loading) return <Loader />;
 
     return (
         <div className="space-y-5">
-            <style dangerouslySetInnerHTML={{
-                __html: `
-                    .line-clamp-1 {
-                        display: -webkit-box;
-                        -webkit-line-clamp: 1;
-                        -webkit-box-orient: vertical;
-                        overflow: hidden;
-                    }
-                    .line-clamp-2 {
-                        display: -webkit-box;
-                        -webkit-line-clamp: 2;
-                        -webkit-box-orient: vertical;
-                        overflow: hidden;
-                    }
-                `
-            }} />
             {/* Başlık */}
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-slate-800">Yönetim</h2>
             </div>
 
-            {/* Hata mesajı */}
+            {/* Hata */}
             {error && (
                 <div className="text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">
                     {error}
                 </div>
             )}
 
-            {/* Arama kutusu */}
+            {/* Arama */}
             <div className="bg-white rounded-xl p-4 shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
                 <div className="relative max-w-md">
                     <input
@@ -97,17 +115,17 @@ export default function KurumsalYonetimPage() {
                         <th className="px-3 py-4 text-left w-16 font-semibold">Resim</th>
                         <th className="px-3 py-4 text-left w-48 font-semibold">İsim Soyisim</th>
                         <th className="px-3 py-4 text-left w-40 font-semibold">Pozisyon</th>
-                        <th className="px-3 py-4 text-left w-48 font-semibold">Email</th>
+                        <th className="px-3 py-4 text-left w-48 font-semibold">E-posta</th>
                         <th className="px-3 py-4 text-left w-32 font-semibold">Telefon</th>
                         <th className="px-3 py-4 text-center w-16 font-semibold">Durum</th>
-                        <th className="px-3 py-4 text-right w-20 font-semibold">İşlemler</th>
+                        <th className="px-3 py-4 text-left w-24 font-semibold">İşlemler</th>
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                     {filtered.map((r) => (
                         <tr key={r.id} className="hover:bg-slate-50/60 transition-colors">
                             <td className="px-3 py-4 font-mono text-sm text-slate-700 font-medium">{r.id}</td>
-                            
+
                             {/* Resim */}
                             <td className="px-3 py-4">
                                 <div className="w-12 h-12 rounded-lg overflow-hidden ring-1 ring-slate-200 bg-slate-100 flex items-center justify-center">
@@ -117,40 +135,35 @@ export default function KurumsalYonetimPage() {
                                             alt={r.isimSoyisim}
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
-                                                const target = e.currentTarget as HTMLImageElement;
-                                                const nextElement = target.nextElementSibling as HTMLElement;
-                                                target.style.display = 'none';
-                                                if (nextElement) {
-                                                    nextElement.style.display = 'flex';
-                                                }
+                                                const img = e.currentTarget;
+                                                img.style.display = "none";
+                                                (img.nextElementSibling as HTMLElement).style.display = "flex";
                                             }}
                                         />
                                     ) : null}
-                                    <div className="w-full h-full flex items-center justify-center text-slate-400" style={{display: r.resimUrl ? 'none' : 'flex'}}>
+                                    <div
+                                        className="w-full h-full hidden items-center justify-center text-slate-400"
+                                        style={{ display: r.resimUrl ? "none" : "flex" }}
+                                    >
                                         <User size={16} />
                                     </div>
                                 </div>
                             </td>
-                            
+
                             {/* İsim Soyisim */}
                             <td className="px-3 py-4">
                                 <div className="font-semibold text-slate-800 text-sm leading-tight break-words">
                                     {r.isimSoyisim}
                                 </div>
-                                {r.biyografi && (
-                                    <div className="text-xs text-slate-500 mt-1 line-clamp-1 leading-tight">
-                                        {r.biyografi.length > 40 ? `${r.biyografi.substring(0, 40)}...` : r.biyografi}
-                                    </div>
-                                )}
                             </td>
-                            
+
                             {/* Pozisyon */}
                             <td className="px-3 py-4">
                                 <div className="font-medium text-slate-700 text-sm leading-tight break-words">
                                     {r.pozisyon}
                                 </div>
                             </td>
-                            
+
                             {/* Email */}
                             <td className="px-3 py-4">
                                 {r.email ? (
@@ -162,7 +175,7 @@ export default function KurumsalYonetimPage() {
                                     <span className="text-slate-400 text-sm">-</span>
                                 )}
                             </td>
-                            
+
                             {/* Telefon */}
                             <td className="px-3 py-4">
                                 {r.telefon ? (
@@ -174,7 +187,7 @@ export default function KurumsalYonetimPage() {
                                     <span className="text-slate-400 text-sm">-</span>
                                 )}
                             </td>
-                            
+
                             {/* Durum */}
                             <td className="px-3 py-4">
                                 <div className="flex items-center justify-center">
@@ -189,37 +202,32 @@ export default function KurumsalYonetimPage() {
                                     )}
                                 </div>
                             </td>
-                            
-                            {/* İşlemler */}
-                            <td className="px-3 py-4 text-right">
-                                <div className="flex items-center justify-end gap-2">
+
+                            {/* İşlemler — tam sizin paylaştığınız yapı */}
+                            <td className="px-4 py-3 align-center">
+                                <div className="relative inline-block" data-row-menu-root>
                                     <button
-                                        className="p-2 rounded-lg hover:bg-green-50 text-green-600 transition-colors"
-                                        onClick={() => {
-                                            navigate(`/panel/kurumsal/yonetim/${r.id}/edit`, {
-                                                state: { 
-                                                    ...r, 
-                                                    mode: 'yonetim',
-                                                    tableName: 'kurumsal_yonetim_semasi'
-                                                },
-                                            });
-                                        }}
-                                        title="Düzenle"
+                                        className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
+                                        onClick={() => toggleRowMenu(r.id!)}
                                     >
-                                        <Edit size={16} />
+                                        📝 ▾
                                     </button>
-                                    <button
-                                        className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
-                                        onClick={() => {
-                                            if (confirm(`${r.isimSoyisim} kaydını silmek istediğinizden emin misiniz?`)) {
-                                                // Silme işlemi burada yapılacak
-                                                console.log('Silinecek:', r.id);
-                                            }
-                                        }}
-                                        title="Sil"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
+                                    {rowMenuOpenId === r.id && (
+                                        <div className="absolute z-20 mt-1 w-32 rounded-md border bg-white shadow-lg">
+                                            <button
+                                                className="w-full px-3 py-2 text-left hover:bg-slate-50"
+                                                onClick={() => openEdit(r)}
+                                            >
+                                                Güncelle
+                                            </button>
+                                            <button
+                                                className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
+                                                onClick={() => deleteOne(r.id!)}
+                                            >
+                                                Sil
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </td>
                         </tr>
