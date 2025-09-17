@@ -36,6 +36,7 @@ public class YayinlarServiceImpl implements IYayinlarService {
         Yayinlar y = new Yayinlar();
         y.setYayinBaslik(request.getYayinBaslik());
         y.setYayinUrl(request.getYayinUrl());
+        y.setDescription(request.getDescription());
         y.setYayinCategory(yc);
 
         Yayinlar saved = yayinlarRepository.save(y);
@@ -52,7 +53,8 @@ public class YayinlarServiceImpl implements IYayinlarService {
                 .orElseThrow(() -> new RuntimeException("Rapor bulunamadı: " + id));
 
         if(request.getYayinBaslik() != null) y.setYayinBaslik(request.getYayinBaslik());
-        if (request.getYayinUrl() != null) y.setYayinUrl(request.getYayinUrl());
+        if(request.getYayinUrl() != null) y.setYayinUrl(request.getYayinUrl());
+        if(request.getDescription() != null) y.setDescription(request.getDescription());
 
         if(request.getCategoryId() != null) {
             YayinlarCategory yc = yayinlarCategoryRepository.findById(request.getCategoryId())

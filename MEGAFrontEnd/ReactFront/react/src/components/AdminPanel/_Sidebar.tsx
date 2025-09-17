@@ -72,13 +72,15 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             {/* Logo + profil */}
             <div className="p-4 border-b border-transparent">
                 <div className="flex items-center gap-3">
-                    <img
-                        src={gebzeLogo}
-                        alt="Gebze Belediyesi"
-                        width={120}
-                        height={28}
-                        className="block h-auto w-auto object-contain"
-                    />
+                    <Link to="/panel/mainPage">
+                        <img
+                            src={gebzeLogo}
+                            alt="Gebze Belediyesi"
+                            width={120}
+                            height={28}
+                            className="block h-auto w-auto object-contain"
+                        />
+                    </Link>
                 </div>
 
                 <div className="mt-4 rounded-xl p-4 text-center bg-white shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">

@@ -64,7 +64,7 @@ export default function AdminPanelApp() {
 
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
                         {/* ⬇️ Rapor edit route */}
-                        <Route path="raporlar/:id/duzenle" element={<RaporEditPage />} />
+                        <Route path="raporlar/:id/edit" element={<RaporEditPage />} />
 
                         <Route path="komisyonlar" element={<KurumsalKomisyonlarPage />} />
                     </Route>

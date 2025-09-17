@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class YayinlarControllerImpl {
 
-    private  final IYayinlarService yayinlarService;
+    private final IYayinlarService yayinlarService;
 
     @GetMapping("/find/{id}")
     public YayinlarResponse getYayinById(@PathVariable Integer id){

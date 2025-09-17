@@ -1,5 +1,6 @@
 package com.kocaeli.bel.service.yayinlar.impl;
 
+import com.kocaeli.bel.DTO.yayinlar.YayinCategoryDto;
 import com.kocaeli.bel.DTO.yayinlar.YayinlarCategoryResponse;
 import com.kocaeli.bel.DTO.yayinlar.YayinlarSummary;
 import com.kocaeli.bel.model.yayınlar.YayinlarCategory;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +36,8 @@ public class YayinlarCategoryServiceImpl implements IYayinlarCategoryService {
     }
 
 
+
+
     @Transactional
     @Override
     public YayinlarCategory updateYayinlarCategoryById(Integer id, YayinlarCategory yayinlarCategory) {
@@ -49,6 +53,15 @@ public class YayinlarCategoryServiceImpl implements IYayinlarCategoryService {
     public YayinlarCategory saveYayinlarCategory(YayinlarCategory yayinlarCategory) {
         return yayinlarCategoryRepository.save(yayinlarCategory);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<YayinCategoryDto> getAllYayinlarCategory() {
+        return yayinlarCategoryRepository.findAll().stream()
+                .map(category -> new YayinCategoryDto(category.getCategoryId(), category.getCategoryName()))
+                .collect(Collectors.toList());
+    }
+
 
 
 }
