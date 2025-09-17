@@ -1,3 +1,4 @@
+// HMZ
 import gebzeLogo from "../../assets/images/gebze.png";
 import { useEffect } from "react"; // en üste ekle
 import { Link, useLocation } from "react-router-dom";
