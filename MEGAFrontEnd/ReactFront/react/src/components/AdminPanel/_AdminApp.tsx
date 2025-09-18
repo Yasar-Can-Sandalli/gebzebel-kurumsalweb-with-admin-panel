@@ -12,6 +12,8 @@ import KurumsalYonetimPage from "./sayfalar/kurumsal/KurumsalYonetimPage.tsx";
 import KurumsalBVMI from "./sayfalar/kurumsal/KurumsalBVMI.tsx";
 import KurumsalRaporlarPage from "./sayfalar/kurumsal/KurumsalRaporlarPage.tsx";
 import KurumsalMudurluklerPage from "./sayfalar/kurumsal/KurumsalMudurluklerPage.tsx";
+import KurumsalMudurluklerYeniPage from "./sayfalar/kurumsal/KurumsalMudurluklerYeniPage.tsx";
+import KurumsalMudurluklerEditPage from "./sayfalar/kurumsal/KurumsalMudurluklerEditPage.tsx";
 
 // --- Gebze (nested)
 import GebzeLayout from "./sayfalar/gebze/_LayoutGebze";
@@ -27,7 +29,6 @@ import EtkinliklerPage from "./sayfalar/EtkinliklerPage";
 import EtkinlikYeniPage from "./sayfalar/EtkinlikYeniPage";
 import EditPage from "./sayfalar/EditPage";
 import YayinlarPage from "./sayfalar/YayinlarPage";
-import YayinlarYeniPage  from "./sayfalar/YayinlarYeniPage.tsx";
 import IletisimPage from "./sayfalar/IletisimPage";
 
 // --- Kullanıcı sayfaları
@@ -39,6 +40,7 @@ import AddUserPage from "./users/AddUserPage";
 
 // --- Ayarlar sayfası
 import SettingsPage from "./settings/SettingsPage";
+import RaporEditPage from "./sayfalar/kurumsal/RaporEditPage.tsx";
 
 export default function AdminPanelApp() {
     return (
@@ -65,9 +67,11 @@ export default function AdminPanelApp() {
                         <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
                         <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
-                        <Route path="raporlar/:id/edit" element={<EditPage />} />
+                        <Route path="raporlar/:id/duzenle" element={<RaporEditPage />} />
                         <Route path="komisyonlar" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler" element={<KurumsalMudurluklerPage />} />
+                        <Route path="/kurumsal/mudurlukler/yeni" element={<KurumsalMudurluklerYeniPage />} />
+                        <Route path="/kurumsal/mudurlukler/duzenle/:id" element={<KurumsalMudurluklerEditPage />} />
                     </Route>
 
                     {/* Gebze (nested) */}
@@ -89,8 +93,6 @@ export default function AdminPanelApp() {
                     <Route path="etkinlikler/yeni" element={<EtkinlikYeniPage />} />
                     <Route path="etkinlikler/:id/duzenle" element={<EditPage />} />
                     <Route path="yayinlar" element={<YayinlarPage />} />
-                    <Route path="yayinlar/yeni" element={<YayinlarYeniPage />} />
-                    <Route path="yayinlar/duzenle/:id" element={<EditPage />} />
                     <Route path="iletisim" element={<IletisimPage />} />
 
                     {/* 404 */}
