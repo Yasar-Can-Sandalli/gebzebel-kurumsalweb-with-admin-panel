@@ -25,7 +25,7 @@ public class YayinlarControllerImpl {
         return yayinlarService.saveYayin(request);
     }
 
-    @GetMapping(path = "/list")
+    @GetMapping("/list")
     public List<YayinlarResponse> getAllYayinlar(){
         return yayinlarService.getAllYayinlar();
     }
