@@ -11,6 +11,9 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "HABERLER")
 public class Haberler {
+
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "haberler_seq_gen")
+    //@SequenceGenerator(name = "haberler_seq_gen", sequenceName = "HABERLER_SEQ", allocationSize = 1)
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
