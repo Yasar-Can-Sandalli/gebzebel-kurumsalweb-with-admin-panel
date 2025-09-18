@@ -23,7 +23,15 @@ const DebugInfo: React.FC<{ data: any }> = ({data}) => (
 
 // herhangi bir objeden güvenli ID çek
 const extractId = (obj: any) =>
-    obj?.id ?? obj?.ID ?? obj?.raporId ?? obj?.RAPOR_ID ?? obj?.raporid ?? obj?.RAPORID ?? null;
+    obj?.id ??
+    obj?.ID ??
+    obj?.yayinId ??          // 🔴 eklendi
+    obj?.YAYINID ??          // 🔴 eklendi
+    obj?.raporId ??
+    obj?.RAPOR_ID ??
+    obj?.raporid ??
+    obj?.RAPORID ??
+    null;
 
 // objeden ilk dolu değeri al (farklı yazımları tolere eder)
 const pick = (obj: any, ...keys: string[]) => {
@@ -139,6 +147,20 @@ const HIZMETLER_CONFIG: TableConfig = {
     ],
 };
 
+/* --- NEW: YAYINLAR --- */
+const YAYINLAR_CONFIG: TableConfig = {
+    tableName: "YAYINLAR",
+    displayName: "Yayın",
+    apiEndpoint: "/api/yayinlar",
+    fields: [
+        { name: "yayinBaslik", label: "Yayın Başlık", type: "text", required: true },
+        { name: "yayinUrl",    label: "Yayın URL",    type: "text", required: true },
+        { name: "description", label: "Açıklama",     type: "textarea" },
+        { name: "categoryId",  label: "Kategori ID",  type: "number", required: true },
+    ],
+};
+
+
 /* --- NEW: RAPORLAR --- */
 const RAPORLAR_CONFIG: TableConfig = {
     tableName: "RAPORLAR",
@@ -192,6 +214,7 @@ const DynamicEditPageForm: React.FC = () => {
     const isInsidePanel = location.pathname.startsWith("/panel/");
     const isHaberMode = location.pathname.includes("/haberler/");
     const isEventMode = location.pathname.includes("/etkinlikler/");
+    const isYayinMode = location.pathname.includes("/yayinlar/");
     const isYonetimMode = location.pathname.includes("/kurumsal/yonetim");
     const isHizmetMode = location.pathname.includes("/hizmetler/");
     const isRaporMode = location.pathname.includes("/kurumsal/raporlar/");
@@ -203,6 +226,7 @@ const DynamicEditPageForm: React.FC = () => {
         if (isEventMode) return "/panel/etkinlikler";
         if (isHaberMode) return "/panel/haberler";
         if (isHizmetMode) return "/panel/hizmetler";
+        if (isYayinMode) return "/panel/yayinlar";          // 🔴 eklendi
         if (isRaporMode) return "/panel/kurumsal/raporlar";
         if (isYonetimMode) return "/panel/kurumsal/yonetim";   // 🔴 yeni
         if (isKurumsalBMVIMode) return "/panel/kurumsal/BMVI";
@@ -268,7 +292,6 @@ const DynamicEditPageForm: React.FC = () => {
         caretRef.current = null;
     }, [formData]);
 
-
     /* ------------------------------ Helpers ------------------------------ */
     const isImageLike = (fieldName: string) =>
         /^(resim|image|img).*|.*(resim|image|img).*(url)?$/i.test(fieldName);
@@ -322,6 +345,36 @@ const DynamicEditPageForm: React.FC = () => {
                         resim2: data.resim2 ?? "",
                         kategoriId: data.kategori?.id ?? "",
                         kategori: data.kategori ?? null, // elde dursun
+                    });
+                    setHasLoaded(true);
+                    return;
+                }
+
+                /* YAYINLAR */
+                if (isYayinMode) {
+                    const cfg = YAYINLAR_CONFIG;
+                    let data: any;
+
+                    try {
+                        data = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`);
+                    } catch {
+                        try {
+                            data = await apiGet<any>(`${cfg.apiEndpoint}/find/${numericId}`);
+                        } catch {
+                            const all = await apiGet<any[]>(`${cfg.apiEndpoint}/list`)
+                                .catch(() => apiGet<any[]>(cfg.apiEndpoint));
+                            data = all.find((x) => extractId(x) === numericId);
+                        }
+                    }
+                    if (!data) throw new Error("Record not found");
+
+                    setTableConfig(cfg);
+                    setFormData({
+                        id: extractId(data),
+                        yayinBaslik: pick(data, "yayinBaslik", "YAYIN_BASLIK"),
+                        yayinUrl:    pick(data, "yayinUrl",    "YAYIN_URL"),
+                        description: pick(data, "description", "DESCRIPTION"),
+                        categoryId:  Number(pick(data, "categoryId", "CATEGORY_ID")) || 0,
                     });
                     setHasLoaded(true);
                     return;
@@ -505,7 +558,7 @@ const DynamicEditPageForm: React.FC = () => {
                 setLoading(false);
             }
         },
-        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode, isHizmetMode, isRaporMode]
+        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode, isHizmetMode, isRaporMode,isYayinMode]
     );
 
     useEffect(() => setHasLoaded(false), [id]);
@@ -546,6 +599,29 @@ const DynamicEditPageForm: React.FC = () => {
                 alert("Hizmet güncellendi!");
                 return;
             }
+
+            // YAYINLAR SAVE
+            if (isYayinMode) {
+                const idForPut = extractId(formData);
+                if (!idForPut) throw new Error("Yayın ID bulunamadı");
+
+                const payload = {
+                    yayinBaslik: (formData.yayinBaslik ?? "").trim(),
+                    yayinUrl:    (formData.yayinUrl ?? "").trim(),
+                    description: (formData.description ?? "").toString(),
+                    categoryId:  Number(formData.categoryId) || 0,
+                };
+
+                try {
+                    await apiPut(`/api/yayinlar/${idForPut}`, payload);
+                } catch {
+                    await apiPut(`/api/yayinlar/update/${idForPut}`, payload);
+                }
+
+                alert("Yayın güncellendi!");
+                return;
+            }
+
             // handleSave içinde:
             if (isRaporMode) {
                 const payload = {
@@ -877,15 +953,13 @@ const DynamicEditPageForm: React.FC = () => {
                 <DebugInfo
                     data={{
                         urlParams: {id},
-                        mode: isEventMode
-                            ? "event"
-                            : isHaberMode
-                                ? "haber"
-                                : isHizmetMode
-                                    ? "hizmet"
-                                    : isKurumsalBMVIMode
-                                        ? "kurumsal_bvmi"
-                                        : "unknown",
+                        mode: isEventMode ? "event"
+                            : isHaberMode ? "haber"
+                                : isHizmetMode ? "hizmet"
+                                    : isRaporMode ? "rapor"
+                                        : isYayinMode ? "yayin"          // 🔴 eklendi
+                                            : isKurumsalBMVIMode ? "kurumsal_bmvi"
+                                                : "unknown",
                         tableConfig: tableConfig?.tableName,
                         formData,
                     }}
