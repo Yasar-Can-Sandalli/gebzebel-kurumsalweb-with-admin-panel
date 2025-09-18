@@ -3,6 +3,9 @@ import {useParams, useNavigate, useLocation} from "react-router-dom";
 import {ArrowLeft, Save, X, AlertCircle, Eye} from "lucide-react";
 import {BaskanAPI} from "../services/pageService";
 import {apiGet, apiPut} from "../services/apiService";
+import { getAllYayinCategories } from "../services/yayinlarService";
+import type { YayinCategorySummary } from "../types/yayinlar";
+
 
 /* ------------------------- Basit Layout ------------------------- */
 const SimpleLayout: React.FC<{ children: React.ReactNode }> = ({children}) => (
@@ -156,7 +159,7 @@ const YAYINLAR_CONFIG: TableConfig = {
         { name: "yayinBaslik", label: "Yayın Başlık", type: "text", required: true },
         { name: "yayinUrl",    label: "Yayın URL",    type: "text", required: true },
         { name: "description", label: "Açıklama",     type: "textarea" },
-        { name: "categoryId",  label: "Kategori ID",  type: "number", required: true },
+        { name: "categoryId",  label: "Kategori ID",  type: "select", required: true },
     ],
 };
 
@@ -242,13 +245,25 @@ const DynamicEditPageForm: React.FC = () => {
     const [debugMode, setDebugMode] = useState(false);
     const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
     const [hasLoaded, setHasLoaded] = useState(false);
-
     const fieldRefs = React.useRef<Record<string, HTMLTextAreaElement | HTMLInputElement | null>>({});
     const caretRef = React.useRef<{ name: string; start: number; end: number } | null>(null);
 
     // 🔴 yeni:
     const lastFocusedRef = React.useRef<string | null>(null);
     const rememberFocus = (name: string) => () => { lastFocusedRef.current = name; };
+    const [yayinCategories, setYayinCategories] = useState<YayinCategorySummary[]>([]);
+    useEffect(() => {
+        if (!isYayinMode) return;
+        (async () => {
+            try {
+                const data = await getAllYayinCategories();
+                setYayinCategories(data);
+            } catch (e) {
+                console.error("Yayın kategorileri yüklenemedi", e);
+            }
+        })();
+    }, [isYayinMode]);
+
 
 // 🔁 formData her değiştiğinde odağı kesin olarak geri ver
     useEffect(() => {
@@ -600,7 +615,6 @@ const DynamicEditPageForm: React.FC = () => {
                 return;
             }
 
-            // YAYINLAR SAVE
             if (isYayinMode) {
                 const idForPut = extractId(formData);
                 if (!idForPut) throw new Error("Yayın ID bulunamadı");
@@ -617,10 +631,10 @@ const DynamicEditPageForm: React.FC = () => {
                 } catch {
                     await apiPut(`/api/yayinlar/update/${idForPut}`, payload);
                 }
-
                 alert("Yayın güncellendi!");
                 return;
             }
+
 
             // handleSave içinde:
             if (isRaporMode) {
@@ -800,6 +814,25 @@ const DynamicEditPageForm: React.FC = () => {
                     />
                 );
             case "select":
+                // YAYINLAR: dinamik kategori listesi
+                if (isYayinMode && field.name === "categoryId") {
+                    return (
+                        <select
+                            value={formData.categoryId ?? ""}
+                            onChange={(e) => handleInputChange(field.name, e.target.value === "" ? "" : Number(e.target.value))}
+                            className={common}
+                        >
+                            <option value="">Kategori Seçiniz</option>
+                            {yayinCategories.map((cat) => (
+                                <option key={cat.categoryId} value={cat.categoryId}>
+                                    {cat.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    );
+                }
+
+                // Diğer select’ler (ör. BMVI sabit options vs.)
                 return (
                     <select
                         value={value}
@@ -814,6 +847,7 @@ const DynamicEditPageForm: React.FC = () => {
                         ))}
                     </select>
                 );
+
             case "boolean":
                 return (
                     <div className="flex items-center gap-2">
