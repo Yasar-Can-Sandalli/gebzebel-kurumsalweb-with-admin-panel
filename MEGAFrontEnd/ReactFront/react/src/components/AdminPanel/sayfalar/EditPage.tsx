@@ -3,6 +3,8 @@ import {useParams, useNavigate, useLocation} from "react-router-dom";
 import {ArrowLeft, Save, X, AlertCircle, Eye} from "lucide-react";
 import {BaskanAPI} from "../services/pageService";
 import {apiGet, apiPut} from "../services/apiService";
+import { getAllYayinCategories, getYayinById } from "../services/yayinlarService";
+import type { Yayin, YayinCategorySummary } from "../types/yayinlar";
 
 /* ------------------------- Basit Layout ------------------------- */
 const SimpleLayout: React.FC<{ children: React.ReactNode }> = ({children}) => (
@@ -167,6 +169,19 @@ const EVENT_CONFIG: TableConfig = {
     ],
 };
 
+// --- NEW: YAYINLAR ---
+const YAYINLAR_CONFIG: TableConfig = {
+    tableName: "YAYINLAR",
+    displayName: "Yayın",
+    apiEndpoint: "/api/yayinlar",
+    fields: [
+        { name: "yayinBaslik", label: "Yayın Başlığı", type: "text", required: true, maxLength: 90 },
+        { name: "yayinUrl", label: "Yayın URL", type: "text", required: true },
+        { name: "description", label: "Açıklama", type: "textarea" },
+        { name: "categoryId", label: "Kategori", type: "select", required: true },
+    ],
+};
+
 /* =============================== KOMPONENT =============================== */
 const DynamicEditPageForm: React.FC = () => {
     const {id} = useParams<{ id: string }>();
@@ -179,6 +194,7 @@ const DynamicEditPageForm: React.FC = () => {
     const isYonetimMode = location.pathname.includes("/kurumsal/yonetim");
     const isHizmetMode = location.pathname.includes("/hizmetler/");
     const isRaporMode = location.pathname.includes("/kurumsal/raporlar/");
+    const isYayinMode = location.pathname.includes("/yayinlar/duzenle");
     const lowerPath = location.pathname.toLowerCase();
     const isKurumsalBMVIMode =
         lowerPath.includes("/kurumsal/bmvi/");
@@ -191,6 +207,7 @@ const DynamicEditPageForm: React.FC = () => {
     const [debugMode, setDebugMode] = useState(false);
     const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
     const [hasLoaded, setHasLoaded] = useState(false);
+    const [categories, setCategories] = useState<YayinCategorySummary[]>([]);
 
     /* ------------------------------ Helpers ------------------------------ */
     const isImageLike = (fieldName: string) =>
@@ -223,137 +240,56 @@ const DynamicEditPageForm: React.FC = () => {
             setError(null);
             try {
                 const numericId = parseInt(recordId, 10);
+                let data: any = null;
+                let config: TableConfig | null = null;
 
-                /* HABERLER */
                 if (isHaberMode) {
-                    let data: any;
                     try {
                         data = await apiGet<any>(`${HABERLER_CONFIG.apiEndpoint}/${numericId}`);
+                        config = HABERLER_CONFIG;
                     } catch {
                         const all = await apiGet<any[]>(HABERLER_CONFIG.apiEndpoint);
                         data = all.find((x) => x.id === numericId);
+                        config = HABERLER_CONFIG;
                     }
-                    if (!data) throw new Error("Record not found");
-
-                    setTableConfig(HABERLER_CONFIG);
-                    setFormData({
-                        id: data.id ?? "",
-                        baslik: data.baslik ?? "",
-                        tarih: data.tarih ?? "",
-                        aciklama: data.aciklama ?? "",
-                        resim1: data.resim1 ?? "",
-                        resim2: data.resim2 ?? "",
-                        kategoriId: data.kategori?.id ?? "",
-                        kategori: data.kategori ?? null, // elde dursun
-                    });
-                    setHasLoaded(true);
-                    return;
-                }
-
-                /* RAPORLAR */
-                if (isRaporMode) {
-                    let data: any;
+                } else if (isRaporMode) {
                     try {
-                        // BE servisinde find/:id var
                         data = await apiGet<any>(`${RAPORLAR_CONFIG.apiEndpoint}/find/${numericId}`);
+                        config = RAPORLAR_CONFIG;
                     } catch {
-                        // fallback: olası list endpoint
                         try {
                             const all = await apiGet<any[]>(`${RAPORLAR_CONFIG.apiEndpoint}/list`);
                             data = all.find((x) => x.raporid === numericId || x.id === numericId);
                         } catch {
-                            // son çare generic liste
                             const all2 = await apiGet<any[]>(RAPORLAR_CONFIG.apiEndpoint);
                             data = all2.find((x) => x.raporid === numericId || x.id === numericId);
                         }
+                        config = RAPORLAR_CONFIG;
                     }
-                    if (!data) throw new Error("Record not found");
-
-                    // DB alan eşlemeleri (Oracle sütunları PascalCase olabilir)
-                    setTableConfig(RAPORLAR_CONFIG);
-                    setFormData({
-                        id: data.raporid ?? data.id ?? "",
-                        raporBaslik: data.raporBaslik ?? data.RAPOR_BASLIK ?? "",
-                        raporUrl: data.raporUrl ?? data.RAPOR_URL ?? "",
-                        categoryId: data.categoryId ?? data.CATEGORY_ID ?? 0,
-                        raporDurum: (typeof data.raporDurum === "boolean" ? data.raporDurum : data.RAPOR_DURUM) ?? false,
-                        // ISO string bekliyor; timestamp geldiyse string'e çevir
-                        raporTarihi: (data.raporTarihi ?? data.RAPOR_TARIHI ?? "").toString().slice(0, 10), // yyyy-mm-dd
-                    });
-                    setHasLoaded(true);
-                    return;
-                }
-
-                /* ETKİNLİK */
-                if (isEventMode) {
-                    let data: any;
+                } else if (isEventMode) {
                     try {
                         data = await apiGet<any>(`/api/etkinlikler/${numericId}`);
+                        config = EVENT_CONFIG;
                     } catch {
                         const all = await apiGet<any[]>("/api/etkinlikler");
                         data = all.find((x) => x.id === numericId);
+                        config = EVENT_CONFIG;
                     }
-                    if (!data) throw new Error("Record not found");
-
-                    setTableConfig(EVENT_CONFIG);
-                    setFormData({
-                        id: data.id ?? "",
-                        baslik: data.baslik ?? "",
-                        tarih: data.tarih ?? "",
-                        resimUrl: data.resimUrl ?? "",
-                        aciklama: data.aciklama ?? "",
-                    });
-                    setHasLoaded(true);
-                    return;
-                }
-
-                if (isHizmetMode) {
-                    let data: any;
+                } else if (isHizmetMode) {
                     try {
                         data = await apiGet<any>(`${HIZMETLER_CONFIG.apiEndpoint}/${numericId}`);
+                        config = HIZMETLER_CONFIG;
                     } catch {
                         const all = await apiGet<any[]>(HIZMETLER_CONFIG.apiEndpoint);
                         data = all.find((x) => x.id === numericId);
+                        config = HIZMETLER_CONFIG;
                     }
-                    if (!data) throw new Error("Record not found");
-
-                    setTableConfig(HIZMETLER_CONFIG);
-                    setFormData({
-                        id: data.id ?? "",
-                        baslik: data.baslik ?? "",
-                        imgUrl: data.imgUrl ?? "",
-                        telefon: data.telefon ?? "",
-                        konum: data.konum ?? "",
-                        buttonDetay: data.buttonDetay ?? "",
-                        buttonKonum: data.buttonKonum ?? "",
-                        mail: data.mail ?? "",
-                        kategori: data.kategori ?? "",
-                    });
-                    setHasLoaded(true);
-                    return;
-                }
-
-                /* YÖNETİM ŞEMASI */
-                if (isYonetimMode) {
+                } else if (isYonetimMode) {
                     const cfg = TABLE_CONFIGS["kurumsal_yonetim_semasi"];
                     const raw = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`);
-                    const data = (raw && (raw.data ?? raw)) || null;
-                    if (!data) throw new Error("Record not found");
-
-                    const initial: Record<string, any> = {};
-                    cfg.fields.forEach((f) => {
-                        const lower = f.name.toLowerCase();
-                        initial[f.name] = data[f.name] ?? data[lower] ?? (f.type === "number" ? 0 : "");
-                    });
-
-                    setTableConfig(cfg);
-                    setFormData(initial);
-                    setHasLoaded(true);
-                    return;
-                }
-
-                /* KURUMSAL: BVMI */
-                if (isKurumsalBMVIMode) {
+                    data = (raw && (raw.data ?? raw)) || null;
+                    config = cfg;
+                } else if (isKurumsalBMVIMode) {
                     let foundData: any = null;
                     let category = "";
                     const categories = ["baskan", "misyon", "vizyon", "ilkelerimiz"];
@@ -365,44 +301,68 @@ const DynamicEditPageForm: React.FC = () => {
                                 category = kategori;
                                 break;
                             }
-                        } catch { /* ignore */
-                        }
+                        } catch { /* ignore */ }
                     }
-                    if (!foundData) throw new Error("Record not found");
-
-                    const tableKey = CATEGORY_TO_TABLE[foundData.kategori || category];
-                    const config = TABLE_CONFIGS[tableKey];
-
-                    const initial: Record<string, any> = {};
-                    config.fields.forEach((f) => {
-                        const lower = f.name.toLowerCase();
-                        initial[f.name] =
-                            (foundData as any)[f.name] ??
-                            (foundData as any)[lower] ??
-                            (f.type === "number" ? 0 : "");
-                    });
-
-                    setTableConfig(config);
-                    setFormData(initial);
-                    setHasLoaded(true);
-                    return;
+                    data = foundData;
+                    const tableKey = data ? CATEGORY_TO_TABLE[data.kategori || category] : null;
+                    config = tableKey ? TABLE_CONFIGS[tableKey] : null;
+                } else if (isYayinMode) {
+                    data = await apiGet<any>(`${YAYINLAR_CONFIG.apiEndpoint}/find/${numericId}`);
+                    config = YAYINLAR_CONFIG;
                 }
 
-                throw new Error("Uygun sayfa modu bulunamadı");
+                if (!data || !config) {
+                    throw new Error("Uygun sayfa modu veya kayıt bulunamadı");
+                }
+
+                setTableConfig(config);
+
+                const initial: Record<string, any> = {};
+
+                if (config.tableName === "YAYINLAR") {
+                    initial.yayinId = data.yayinId;
+                    initial.yayinBaslik = data.yayinBaslik ?? "";
+                    initial.yayinUrl = data.yayinUrl ?? "";
+                    initial.description = data.description ?? "";
+                    initial.categoryId = data.categoryId ?? "";
+                } else {
+                    config.fields.forEach((f) => {
+                        const lower = f.name.toLowerCase();
+                        initial[f.name] = data[f.name] ?? data[lower] ?? (f.type === "number" ? 0 : "");
+                    });
+                }
+
+                setFormData(initial);
+                setHasLoaded(true);
             } catch (err) {
-                setError(err instanceof Error ? err.message : "Failed to load data");
+                setError(err instanceof Error ? err.message : "Veri yüklenemedi");
                 setTableConfig(null);
             } finally {
                 setLoading(false);
             }
         },
-        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode, isHizmetMode]
+        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode, isHizmetMode, isRaporMode, isYayinMode]
     );
+
 
     useEffect(() => setHasLoaded(false), [id]);
     useEffect(() => {
         if (id && !hasLoaded) fetchData(id);
     }, [id, hasLoaded, fetchData]);
+
+    useEffect(() => {
+        if (isYayinMode) {
+            const loadCategories = async () => {
+                try {
+                    const data = await getAllYayinCategories();
+                    setCategories(data);
+                } catch (err) {
+                    console.error("Kategoriler yüklenemedi", err);
+                }
+            };
+            loadCategories();
+        }
+    }, [isYayinMode]);
 
     /* ------------------------------ Save ------------------------------ */
     const handleSave = async () => {
@@ -469,6 +429,18 @@ const DynamicEditPageForm: React.FC = () => {
                 return;
             }
 
+            if (isYayinMode) {
+                const payload = {
+                    yayinBaslik: (formData.yayinBaslik ?? "").trim(),
+                    yayinUrl: (formData.yayinUrl ?? "").trim(),
+                    description: formData.description ?? "",
+                    categoryId: Number(formData.categoryId),
+                };
+                await apiPut(`${YAYINLAR_CONFIG.apiEndpoint}/update/${formData.yayinId}`, payload);
+                alert("Yayın başarıyla güncellendi!");
+                return;
+            }
+
             if (
                 isKurumsalBMVIMode &&
                 tableConfig?.tableName === "KURUMSAL_BASKAN_MISYON_VIZYON_ILKELERIMIZ"
@@ -499,9 +471,10 @@ const DynamicEditPageForm: React.FC = () => {
         if (confirm("Değişiklikler kaydedilmedi. Sayfadan çıkmak istediğinizden emin misiniz?")) {
             if (isEventMode) window.location.href = "/panel/etkinlikler";
             else if (isHaberMode) window.location.href = "/panel/haberler";
-            else if (tableConfig && tableConfig.tableName.startsWith("KURUMSAL_"))
-                window.location.href = "/panel/kurumsal/BMVI";
-            else navigate(-1);
+            else if (isHizmetMode) window.location.href = "/panel/hizmetler";
+            else if (isRaporMode) window.location.href = "/panel/kurumsal/raporlar";
+            else if (isYayinMode) navigate("/panel/yayinlar");
+            else window.location.href = "/panel/kurumsal/BMVI";
         }
     };
 
@@ -562,6 +535,22 @@ const DynamicEditPageForm: React.FC = () => {
                     />
                 );
             case "select":
+                if (isYayinMode && field.name === "categoryId") {
+                    return (
+                        <select
+                            value={formData.categoryId ?? ''}
+                            onChange={(e) => handleInputChange(field.name, e.target.value)}
+                            className={common}
+                        >
+                            <option value="">Kategori Seçiniz</option>
+                            {categories.map((cat) => (
+                                <option key={cat.categoryId} value={cat.categoryId}>
+                                    {cat.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    );
+                }
                 return (
                     <select
                         value={value}
@@ -623,14 +612,14 @@ const DynamicEditPageForm: React.FC = () => {
     };
 
     /* ------------------------------ Render ------------------------------ */
-    const Wrapper: React.FC<{ children: React.ReactNode }> = ({children}) =>
+    const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         isInsidePanel ? <>{children}</> : <SimpleLayout>{children}</SimpleLayout>;
 
     if (loading) {
         return (
             <Wrapper>
                 <div className="flex justify-center items-center h-64">
-                    <div className="text-lg">Loading...</div>
+                    <div className="text-lg">Yükleniyor...</div>
                 </div>
             </Wrapper>
         );
@@ -640,7 +629,7 @@ const DynamicEditPageForm: React.FC = () => {
         return (
             <Wrapper>
                 <div className="text-center py-8">
-                    <AlertCircle size={64} className="mx-auto text-red-300 mb-4"/>
+                    <AlertCircle size={64} className="mx-auto text-red-300 mb-4" />
                     <h3 className="text-lg font-medium text-gray-500 mb-1">Tablo bulunamadı</h3>
                     <p className="text-gray-400 mb-6">Bu tablo yapılandırması mevcut değil.</p>
                     <button
@@ -666,23 +655,13 @@ const DynamicEditPageForm: React.FC = () => {
 
     return (
         <Wrapper>
-            {/* Sticky üst bar (cam efektli) */}
-            <div
-                className="sticky top-0 z-10 -mx-4 px-4 py-3 mb-6 bg-white/60 backdrop-blur-md border-b border-white/40 flex items-center justify-between">
+            <div className="sticky top-0 z-10 -mx-4 px-4 py-3 mb-6 bg-white/60 backdrop-blur-md border-b border-white/40 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <button
-                        // üst sticky barda geri butonunda:
-                        onClick={() =>
-                            isEventMode ? (window.location.href = "/panel/etkinlikler")
-                                : isHaberMode ? (window.location.href = "/panel/haberler")
-                                    : isHizmetMode ? (window.location.href = "/panel/hizmetler")
-                                        : isRaporMode ? (window.location.href = "/panel/kurumsal/raporlar")
-                                            : (window.location.href = "/panel/kurumsal/BMVI")
-                        }
-
+                        onClick={() => navigate(-1)} // En doğru çözüm, bir önceki sayfaya dönmek
                         className="p-2 rounded-lg ring-1 ring-slate-200 text-slate-600 hover:bg-slate-50"
                     >
-                        <ArrowLeft size={18}/>
+                        <ArrowLeft size={18} />
                     </button>
                     <div>
                         <h2 className="text-lg font-semibold text-slate-800 leading-none">Sayfayı Düzenle</h2>
@@ -699,7 +678,6 @@ const DynamicEditPageForm: React.FC = () => {
                     >
                         {debugMode ? "Debug Gizle" : "Debug Göster"}
                     </button>
-
                     <button
                         onClick={() => setIsPreview((v) => !v)}
                         className="px-3 py-2 rounded-lg text-sm bg-white ring-1 ring-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-2"
@@ -707,7 +685,6 @@ const DynamicEditPageForm: React.FC = () => {
                         <Eye size={16}/>
                         {isPreview ? "Düzenleme" : "Önizleme"}
                     </button>
-
                     <button
                         onClick={handleCancel}
                         className="px-3 py-2 rounded-lg bg-slate-500 hover:bg-slate-600 text-white text-sm flex items-center gap-2"
@@ -715,7 +692,6 @@ const DynamicEditPageForm: React.FC = () => {
                         <X size={16}/>
                         İptal
                     </button>
-
                     <button
                         onClick={handleSave}
                         disabled={saving}
@@ -730,16 +706,20 @@ const DynamicEditPageForm: React.FC = () => {
             {debugMode && (
                 <DebugInfo
                     data={{
-                        urlParams: {id},
+                        urlParams: { id },
                         mode: isEventMode
                             ? "event"
                             : isHaberMode
                                 ? "haber"
                                 : isHizmetMode
                                     ? "hizmet"
-                                    : isKurumsalBMVIMode
-                                        ? "kurumsal_bvmi"
-                                        : "unknown",
+                                    : isRaporMode
+                                        ? "rapor"
+                                        : isYayinMode
+                                            ? "yayin"
+                                            : isKurumsalBMVIMode
+                                                ? "kurumsal_bvmi"
+                                                : "unknown",
                         tableConfig: tableConfig?.tableName,
                         formData,
                     }}
@@ -747,8 +727,7 @@ const DynamicEditPageForm: React.FC = () => {
             )}
 
             {/* Cam gövdeli kutu */}
-            <div
-                className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
+            <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">
                 {!isPreview ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {tableConfig.fields.map((f) => (
@@ -767,14 +746,11 @@ const DynamicEditPageForm: React.FC = () => {
                         <h1 className="text-2xl font-semibold text-slate-900">
                             {tableConfig.displayName} • Önizleme
                         </h1>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {tableConfig.fields.map((f) => {
                                 const v = formData[f.name];
-
                                 // boş değerleri atla
                                 if (!v && v !== 0 && v !== false) return null;
-
                                 const label = (
                                     <h3 className="font-medium text-slate-700 mb-2">{f.label}</h3>
                                 );
@@ -784,8 +760,7 @@ const DynamicEditPageForm: React.FC = () => {
                                     return (
                                         <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
                                             {label}
-                                            <div
-                                                className="aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
+                                            <div className="aspect-video w-full overflow-hidden rounded-lg bg-slate-100">
                                                 <img
                                                     src={imageOrFallback(String(v))}
                                                     alt={f.label}
@@ -828,8 +803,8 @@ const DynamicEditPageForm: React.FC = () => {
                                         <div key={f.name} className="bg-white rounded-xl ring-1 ring-slate-200 p-4">
                                             {label}
                                             <span className="text-slate-700">
-                        {new Date(String(v)).toLocaleDateString("tr-TR")}
-                      </span>
+                                                {new Date(String(v)).toLocaleDateString("tr-TR")}
+                                            </span>
                                         </div>
                                     );
                                 }
@@ -842,8 +817,7 @@ const DynamicEditPageForm: React.FC = () => {
                                             <span
                                                 className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs ${
                                                     v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"
-                                                }`}
-                                            >
+                                                }`}>
                         {v ? "Aktif" : "Pasif"}
                       </span>
                                         </div>
