@@ -4,40 +4,38 @@ import React, { useEffect, useState } from "react";
 import {
     getAllYayinCategories,
     getYayinCategoryById,
+    getAllYayin,
     deleteYayin,
 } from "../services/yayinlarService";
-import type { YayinCategory, Yayin } from "../../../types/yayinlar";
+
+// İlgili tipleri güncel import ediyoruz
+import type { Yayin, YayinCategorySummary } from "../types/yayinlar";
 import { useNavigate } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
-import { MdEdit, MdDelete } from "react-icons/md";
-import { FaFilePdf } from "react-icons/fa6";
-import { TbPencil, TbTrash } from "react-icons/tb"; // Yeni Düzenle ve Sil ikonları
-import { LiaFilePdf } from "react-icons/lia";
+import { FileText, Plus } from "lucide-react";
+
+
+
 
 const YayinlarPage = () => {
     const navigate = useNavigate();
 
-    const [categories, setCategories] = useState<YayinCategory[]>([]);
+    const [categories, setCategories] = useState<YayinCategorySummary[]>([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
     const [yayinlar, setYayinlar] = useState<Yayin[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchAllData = async () => {
+        const fetchData = async () => {
             setLoading(true);
             setError(null);
             try {
-                // Tüm kategorileri getir
-                const fetchedCategories = await getAllYayinCategories();
-                setCategories(fetchedCategories);
+                const [fetchedCategories, allYayinlar] = await Promise.all([
+                    getAllYayinCategories(),
+                    getAllYayin(),
+                ]);
 
-                // Tüm kategorilerdeki yayınları getir
-                const allYayinlarPromises = fetchedCategories.map(cat =>
-                    getYayinCategoryById(cat.categoryId).then(data => data.yayinlar)
-                );
-                const allYayinlarArrays = await Promise.all(allYayinlarPromises);
-                const allYayinlar = allYayinlarArrays.flat();
+                setCategories(fetchedCategories);
                 setYayinlar(allYayinlar);
             } catch (err) {
                 console.error("Veriler yüklenirken hata oluştu:", err);
@@ -47,7 +45,7 @@ const YayinlarPage = () => {
             }
         };
 
-        fetchAllData();
+        fetchData();
     }, []);
 
     const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -58,11 +56,7 @@ const YayinlarPage = () => {
 
         try {
             if (isNaN(id)) { // "Tüm Yayınlar" seçeneği
-                const allYayinlarPromises = categories.map(cat =>
-                    getYayinCategoryById(cat.categoryId).then(data => data.yayinlar)
-                );
-                const allYayinlarArrays = await Promise.all(allYayinlarPromises);
-                const allYayinlar = allYayinlarArrays.flat();
+                const allYayinlar = await getAllYayin();
                 setYayinlar(allYayinlar);
             } else { // Belirli bir kategori seçildiğinde
                 const data = await getYayinCategoryById(id);
@@ -88,7 +82,6 @@ const YayinlarPage = () => {
         if (window.confirm("Bu yayını silmek istediğinizden emin misiniz?")) {
             try {
                 await deleteYayin(yayinId);
-                // Başarılı olursa listeyi güncelle
                 setYayinlar(prevYayinlar => prevYayinlar.filter(yayin => yayin.yayinId !== yayinId));
                 alert("Yayın başarıyla silindi.");
             } catch (err) {
@@ -99,96 +92,92 @@ const YayinlarPage = () => {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Yayınlar</h1>
-
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                    <label htmlFor="category-select" className="text-sm text-gray-700 font-medium">
-                        Kategori
-                    </label>
-                    <select
-                        id="category-select"
-                        className="w-auto border-gray-300 rounded-md shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 p-2"
-                        onChange={handleCategoryChange}
-                        value={selectedCategoryId ?? ''}
-                        disabled={loading}
-                    >
-                        <option value={''}>Tüm Yayınlar</option>
-                        {categories.map((cat) => (
-                            <option key={cat.categoryId} value={cat.categoryId}>
-                                {cat.categoryName}
-                            </option>
-                        ))}
-                    </select>
+        <div className="p-4">
+            {/* Başlık */}
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4">
+                <div>
+                    <h1 className="text-xl font-bold text-slate-900">Yayınlar</h1>
                 </div>
 
-                <button
-                    onClick={handleCreateNewYayin}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-                >
-                    <FaPlus className="-ml-1 mr-2 h-4 w-4" aria-hidden="true" />
-                    Yeni Yayın
-                </button>
+                <div className="flex gap-2">
+                    {/* Kategori combobox */}
+                    <label className="inline-flex items-center gap-2">
+                        <span className="text-sm text-slate-600">Kategori</span>
+                        <select
+                            className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-800 shadow-sm hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300"
+                            value={selectedCategoryId ?? ''}
+                            onChange={handleCategoryChange}
+                        >
+                            <option value={''}>Tüm Yayınlar</option>
+                            {categories.map((cat) => (
+                                <option key={cat.categoryId} value={cat.categoryId}>
+                                    {cat.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
+                    <button
+                        onClick={handleCreateNewYayin}
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-sky-600 text-white shadow-sm hover:bg-sky-700 active:bg-sky-800 transition"
+                    >
+                        <Plus size={16} />
+                        Yeni Yayın
+                    </button>
+                </div>
             </div>
 
-            {loading ? (
-                <div className="text-center py-12">
-                    <p className="text-gray-500">Yayınlar yükleniyor...</p>
-                </div>
-            ) : error ? (
-                <div className="text-center py-12 text-red-500">
-                    <p>{error}</p>
-                </div>
-            ) : yayinlar.length === 0 ? (
-                <div className="text-center py-12">
-                    <p className="text-gray-500">Bu kategoride henüz yayın yok.</p>
-                </div>
-            ) : (
-                <div className="space-y-4">
+            {/* İçerik */}
+            {loading && <div className="text-slate-600">Yükleniyor…</div>}
+            {error && <div className="text-red-700">{error}</div>}
+
+            {!loading && !error && (
+                <div className="grid gap-3">
                     {yayinlar.map((yayin) => (
-                        <div key={yayin.yayinId} className="bg-white shadow-md rounded-lg p-6">
-                            <div className="flex justify-between items-start">
-                                <div className="flex items-center space-x-4">
-                                    <LiaFilePdf className="h-8 w-8 text-gray-500" />
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900">
-                                            {yayin.yayinBaslik}
-                                        </h3>
-                                        <a
-                                            href={yayin.yayinUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-sm text-blue-600 hover:underline"
-                                        >
-                                            {yayin.yayinUrl}
-                                        </a>
-                                        {yayin.description && (
-                                            <p className="text-sm text-gray-500 mt-1">
-                                                {yayin.description}
-                                            </p>
-                                        )}
-                                    </div>
+                        <div
+                            key={yayin.yayinId}
+                            className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow transition"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 grid place-items-center rounded-lg border border-slate-200 bg-slate-50">
+                                    <FileText size={18} className="text-slate-500" />
                                 </div>
-                                <div className="flex space-x-2 items-center">
-                                    <button
-                                        onClick={() => handleEditYayin(yayin.yayinId)}
-                                        className="inline-flex items-center justify-center h-10 w-10 text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full"
-                                        aria-label="Düzenle"
+
+                                <div className="space-y-1">
+                                    <div className="font-medium text-slate-900">{yayin.yayinBaslik}</div>
+                                    <a
+                                        href={yayin.yayinUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-xs text-sky-700 underline break-all"
                                     >
-                                        <TbPencil className="h-5 w-5" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeleteYayin(yayin.yayinId)}
-                                        className="inline-flex items-center justify-center h-10 w-10 text-red-500 hover:text-white bg-red-100 hover:bg-red-600 rounded-full"
-                                        aria-label="Sil"
-                                    >
-                                        <TbTrash className="h-5 w-5" />
-                                    </button>
+                                        {yayin.yayinUrl}
+                                    </a>
+                                    {yayin.description && (
+                                        <div className="text-xs text-slate-500">{yayin.description}</div>
+                                    )}
                                 </div>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleEditYayin(yayin.yayinId)}
+                                    className="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 active:bg-slate-100 transition"
+                                >
+                                    Düzenle
+                                </button>
+                                <button
+                                    onClick={() => handleDeleteYayin(yayin.yayinId)}
+                                    className="px-3 py-2 rounded-lg border border-rose-200 text-rose-700 bg-rose-50 hover:bg-rose-100 active:bg-rose-200/40 transition"
+                                >
+                                    Sil
+                                </button>
                             </div>
                         </div>
                     ))}
+                    {yayinlar.length === 0 && (
+                        <div className="text-slate-500 text-center py-8">Bu kategoride henüz yayın yok.</div>
+                    )}
                 </div>
             )}
         </div>

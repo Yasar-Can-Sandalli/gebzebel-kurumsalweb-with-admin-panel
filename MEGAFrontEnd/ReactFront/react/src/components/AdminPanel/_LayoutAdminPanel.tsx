@@ -15,7 +15,7 @@ export default function AdminLayout({
                                         hideHeader = false,
                                         contentWidth = "wide", // ⬅️ varsayılanı geniş yaptım
                                     }: AdminLayoutProps) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
     // İç konteyner genişlik/padding haritası
     const widthMap = {

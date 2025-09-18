@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,12 @@ public class YayinlarServiceImpl implements IYayinlarService {
 
     private final YayinlarRepository yayinlarRepository;
     private final YayinlarCategoryRepository yayinlarCategoryRepository;
+
+    @Override
+    public List<YayinlarResponse> getAllYayinlar() {
+        return yayinlarRepository.findAll().stream()
+                .map(this::toResponse).toList();
+    }
 
     @Transactional(readOnly = true)
     @Override

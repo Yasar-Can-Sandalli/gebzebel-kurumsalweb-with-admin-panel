@@ -6,6 +6,8 @@ import com.kocaeli.bel.service.yayinlar.IYayinlarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/yayinlar")
 @RequiredArgsConstructor
@@ -21,6 +23,11 @@ public class YayinlarControllerImpl {
     @PostMapping("/create")
     public YayinlarResponse saveYayin(@RequestBody CreateYayinRequest request){
         return yayinlarService.saveYayin(request);
+    }
+
+    @GetMapping("/list")
+    public List<YayinlarResponse> getAllYayinlar(){
+        return yayinlarService.getAllYayinlar();
     }
 
     @PutMapping("/update/{id}")
