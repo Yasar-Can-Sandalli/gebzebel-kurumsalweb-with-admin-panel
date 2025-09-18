@@ -20,6 +20,31 @@ const DebugInfo: React.FC<{ data: any }> = ({data}) => (
     </div>
 );
 
+
+// herhangi bir objeden güvenli ID çek
+const extractId = (obj: any) =>
+    obj?.id ??
+    obj?.ID ??
+    obj?.yayinId ??          // 🔴 eklendi
+    obj?.YAYINID ??          // 🔴 eklendi
+    obj?.raporId ??
+    obj?.RAPOR_ID ??
+    obj?.raporid ??
+    obj?.RAPORID ??
+    null;
+
+// objeden ilk dolu değeri al (farklı yazımları tolere eder)
+const pick = (obj: any, ...keys: string[]) => {
+    for (const k of keys) {
+        if (obj?.[k] != null) return obj[k];
+        const lower = k.toLowerCase();
+        const upper = k.toUpperCase();
+        if (obj?.[lower] != null) return obj[lower];
+        if (obj?.[upper] != null) return obj[upper];
+    }
+    return "";
+};
+
 /* ------------------------------ Tipler ------------------------------ */
 interface TableConfig {
     tableName: string;
@@ -122,6 +147,20 @@ const HIZMETLER_CONFIG: TableConfig = {
     ],
 };
 
+/* --- NEW: YAYINLAR --- */
+const YAYINLAR_CONFIG: TableConfig = {
+    tableName: "YAYINLAR",
+    displayName: "Yayın",
+    apiEndpoint: "/api/yayinlar",
+    fields: [
+        { name: "yayinBaslik", label: "Yayın Başlık", type: "text", required: true },
+        { name: "yayinUrl",    label: "Yayın URL",    type: "text", required: true },
+        { name: "description", label: "Açıklama",     type: "textarea" },
+        { name: "categoryId",  label: "Kategori ID",  type: "number", required: true },
+    ],
+};
+
+
 /* --- NEW: RAPORLAR --- */
 const RAPORLAR_CONFIG: TableConfig = {
     tableName: "RAPORLAR",
@@ -175,12 +214,25 @@ const DynamicEditPageForm: React.FC = () => {
     const isInsidePanel = location.pathname.startsWith("/panel/");
     const isHaberMode = location.pathname.includes("/haberler/");
     const isEventMode = location.pathname.includes("/etkinlikler/");
+    const isYayinMode = location.pathname.includes("/yayinlar/");
     const isYonetimMode = location.pathname.includes("/kurumsal/yonetim");
     const isHizmetMode = location.pathname.includes("/hizmetler/");
     const isRaporMode = location.pathname.includes("/kurumsal/raporlar/");
     const lowerPath = location.pathname.toLowerCase();
     const isKurumsalBMVIMode =
         lowerPath.includes("/kurumsal/bmvi/");
+
+    const goBackToList = () => {
+        if (isEventMode) return "/panel/etkinlikler";
+        if (isHaberMode) return "/panel/haberler";
+        if (isHizmetMode) return "/panel/hizmetler";
+        if (isYayinMode) return "/panel/yayinlar";          // 🔴 eklendi
+        if (isRaporMode) return "/panel/kurumsal/raporlar";
+        if (isYonetimMode) return "/panel/kurumsal/yonetim";   // 🔴 yeni
+        if (isKurumsalBMVIMode) return "/panel/kurumsal/BMVI";
+        return "/panel";
+    };
+
 
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -190,6 +242,55 @@ const DynamicEditPageForm: React.FC = () => {
     const [debugMode, setDebugMode] = useState(false);
     const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
     const [hasLoaded, setHasLoaded] = useState(false);
+
+    const fieldRefs = React.useRef<Record<string, HTMLTextAreaElement | HTMLInputElement | null>>({});
+    const caretRef = React.useRef<{ name: string; start: number; end: number } | null>(null);
+
+    // 🔴 yeni:
+    const lastFocusedRef = React.useRef<string | null>(null);
+    const rememberFocus = (name: string) => () => { lastFocusedRef.current = name; };
+
+// 🔁 formData her değiştiğinde odağı kesin olarak geri ver
+    useEffect(() => {
+        const name = caretRef.current?.name ?? lastFocusedRef.current;
+        if (!name) return;
+
+        const el = fieldRefs.current[name];
+        if (el) {
+            el.focus({ preventScroll: true });                 // odak her seferinde geri ver
+            if (caretRef.current && "setSelectionRange" in el) {
+                const { start, end } = caretRef.current;
+                try { (el as HTMLInputElement | HTMLTextAreaElement).setSelectionRange(start, end); } catch {}
+            }
+        }
+        caretRef.current = null;
+    }, [formData]);
+
+
+    // Yalnızca textarea için change handler (imleç kaydetme)
+    const handleTextAreaChange = (field: string) =>
+        (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            const { selectionStart, selectionEnd, value } = e.target;
+            caretRef.current = {
+                name: field,
+                start: selectionStart ?? value.length,
+                end: selectionEnd ?? value.length,
+            };
+            setFormData((p) => ({ ...p, [field]: value }));
+        };
+
+// Form data güncellenince odağı geri yükle
+    useEffect(() => {
+        if (!caretRef.current) return;
+        const { name, start, end } = caretRef.current;
+        const el = fieldRefs.current[name];
+        // Sadece odak kaybolmuşsa geri ver
+        if (el && document.activeElement !== el) {
+            el.focus({ preventScroll: true });
+            try { el.setSelectionRange(start, end); } catch {}
+        }
+        caretRef.current = null;
+    }, [formData]);
 
     /* ------------------------------ Helpers ------------------------------ */
     const isImageLike = (fieldName: string) =>
@@ -249,39 +350,69 @@ const DynamicEditPageForm: React.FC = () => {
                     return;
                 }
 
-                /* RAPORLAR */
-                if (isRaporMode) {
+                /* YAYINLAR */
+                if (isYayinMode) {
+                    const cfg = YAYINLAR_CONFIG;
                     let data: any;
+
                     try {
-                        // BE servisinde find/:id var
-                        data = await apiGet<any>(`${RAPORLAR_CONFIG.apiEndpoint}/find/${numericId}`);
+                        data = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`);
                     } catch {
-                        // fallback: olası list endpoint
                         try {
-                            const all = await apiGet<any[]>(`${RAPORLAR_CONFIG.apiEndpoint}/list`);
-                            data = all.find((x) => x.raporid === numericId || x.id === numericId);
+                            data = await apiGet<any>(`${cfg.apiEndpoint}/find/${numericId}`);
                         } catch {
-                            // son çare generic liste
-                            const all2 = await apiGet<any[]>(RAPORLAR_CONFIG.apiEndpoint);
-                            data = all2.find((x) => x.raporid === numericId || x.id === numericId);
+                            const all = await apiGet<any[]>(`${cfg.apiEndpoint}/list`)
+                                .catch(() => apiGet<any[]>(cfg.apiEndpoint));
+                            data = all.find((x) => extractId(x) === numericId);
                         }
                     }
                     if (!data) throw new Error("Record not found");
 
-                    // DB alan eşlemeleri (Oracle sütunları PascalCase olabilir)
-                    setTableConfig(RAPORLAR_CONFIG);
+                    setTableConfig(cfg);
                     setFormData({
-                        id: data.raporid ?? data.id ?? "",
-                        raporBaslik: data.raporBaslik ?? data.RAPOR_BASLIK ?? "",
-                        raporUrl: data.raporUrl ?? data.RAPOR_URL ?? "",
-                        categoryId: data.categoryId ?? data.CATEGORY_ID ?? 0,
-                        raporDurum: (typeof data.raporDurum === "boolean" ? data.raporDurum : data.RAPOR_DURUM) ?? false,
-                        // ISO string bekliyor; timestamp geldiyse string'e çevir
-                        raporTarihi: (data.raporTarihi ?? data.RAPOR_TARIHI ?? "").toString().slice(0, 10), // yyyy-mm-dd
+                        id: extractId(data),
+                        yayinBaslik: pick(data, "yayinBaslik", "YAYIN_BASLIK"),
+                        yayinUrl:    pick(data, "yayinUrl",    "YAYIN_URL"),
+                        description: pick(data, "description", "DESCRIPTION"),
+                        categoryId:  Number(pick(data, "categoryId", "CATEGORY_ID")) || 0,
                     });
                     setHasLoaded(true);
                     return;
                 }
+
+
+                /* RAPORLAR */
+                if (isRaporMode) {
+                    let data: any;
+                    try {
+                        data = await apiGet<any>(`${RAPORLAR_CONFIG.apiEndpoint}/find/${numericId}`);
+                    } catch {
+                        try {
+                            const all = await apiGet<any[]>(`${RAPORLAR_CONFIG.apiEndpoint}/list`);
+                            data = all.find((x) => extractId(x) === numericId);
+                        } catch {
+                            const all2 = await apiGet<any[]>(RAPORLAR_CONFIG.apiEndpoint);
+                            data = all2.find((x) => extractId(x) === numericId);
+                        }
+                    }
+                    if (!data) throw new Error("Record not found");
+
+                    const theId = extractId(data); //  ID’yi tek noktadan çek
+                    setTableConfig(RAPORLAR_CONFIG);
+                    setFormData({
+                        id: theId ?? "", //  formData.id ARTIK DOLU
+                        raporBaslik: pick(data, "raporBaslik", "RAPOR_BASLIK"),
+                        raporUrl: pick(data, "raporUrl", "RAPOR_URL"),
+                        categoryId: pick(data, "categoryId", "CATEGORY_ID") || 0,
+                        raporDurum: pick(data, "raporDurum", "RAPOR_DURUM") ?? false,
+                        raporTarihi: (pick(data, "raporTarihi", "RAPOR_TARIHI") || "")
+                            .toString()
+                            .slice(0, 10),
+                    });
+                    setHasLoaded(true);
+                    return;
+                }
+
 
                 /* ETKİNLİK */
                 if (isEventMode) {
@@ -335,14 +466,30 @@ const DynamicEditPageForm: React.FC = () => {
                 /* YÖNETİM ŞEMASI */
                 if (isYonetimMode) {
                     const cfg = TABLE_CONFIGS["kurumsal_yonetim_semasi"];
-                    const raw = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`);
-                    const data = (raw && (raw.data ?? raw)) || null;
+
+                    // /:id -> /find/:id -> /list ya da / (fallback) sırasıyla dene
+                    let data: any;
+                    try {
+                        data = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`);
+                    } catch {
+                        try {
+                            data = await apiGet<any>(`${cfg.apiEndpoint}/find/${numericId}`);
+                        } catch {
+                            const all = await apiGet<any[]>(`${cfg.apiEndpoint}/list`)
+                                .catch(() => apiGet<any[]>(cfg.apiEndpoint));
+                            data = all.find((x) => extractId(x) === numericId);
+                        }
+                    }
                     if (!data) throw new Error("Record not found");
 
-                    const initial: Record<string, any> = {};
+                    const initial: Record<string, any> = {
+                        id: extractId(data), // 🔴 id’yi forma yaz
+                    };
+
+                    // Alanları case-insensitive doldur
                     cfg.fields.forEach((f) => {
-                        const lower = f.name.toLowerCase();
-                        initial[f.name] = data[f.name] ?? data[lower] ?? (f.type === "number" ? 0 : "");
+                        const val = pick(data, f.name);
+                        initial[f.name] = f.type === "number" ? Number(val ?? 0) : (val ?? "");
                     });
 
                     setTableConfig(cfg);
@@ -351,11 +498,13 @@ const DynamicEditPageForm: React.FC = () => {
                     return;
                 }
 
-                /* KURUMSAL: BVMI */
+
+                /* KURUMSAL: BMVİ (Başkan-Misyon-Vizyon-İlkeler) */
                 if (isKurumsalBMVIMode) {
                     let foundData: any = null;
                     let category = "";
                     const categories = ["baskan", "misyon", "vizyon", "ilkelerimiz"];
+
                     for (const kategori of categories) {
                         try {
                             const d = await BaskanAPI.getActiveByIdAndKategori(kategori, numericId);
@@ -364,23 +513,37 @@ const DynamicEditPageForm: React.FC = () => {
                                 category = kategori;
                                 break;
                             }
-                        } catch { /* ignore */
-                        }
+                        } catch {}
                     }
-                    if (!foundData) throw new Error("Record not found");
+                    if (!foundData) throw new Error("Record not found (BMVİ)");
 
                     const tableKey = CATEGORY_TO_TABLE[foundData.kategori || category];
                     const config = TABLE_CONFIGS[tableKey];
 
-                    const initial: Record<string, any> = {};
-                    config.fields.forEach((f) => {
-                        const lower = f.name.toLowerCase();
-                        initial[f.name] =
-                            (foundData as any)[f.name] ??
-                            (foundData as any)[lower] ??
-                            (f.type === "number" ? 0 : "");
-                    });
+                    const idForForm = extractId(foundData);
 
+                    // Alan adlarını esnekçe doldur (ICERIK/KATEGORI ve resim alanları dahil)
+                    const initial: Record<string, any> = {
+                        // ID’yi iki şekilde de koy (ID ve id), save tarafında hangisi okunursa okunsun
+                        ID: idForForm,
+                        id: idForForm,
+
+                        // alanlar
+                        resimUrl1: pick(foundData, "resimUrl1", "RESIM_URL1", "resim_url1"),
+                        imageUrl2: pick(foundData, "imageUrl2", "IMAGE_URL2", "image_url2"),
+
+                        // config'te isimler büyük (ICERIK/KATEGORI) olduğu için form anahtarları da öyle olsun:
+                        ICERIK: pick(foundData, "ICERIK", "icerik", "CONTENT", "content", "html"),
+                        DELTA: pick(foundData, "DELTA", "delta"),
+                        KATEGORI: (foundData.kategori ?? category) || "",
+                    };
+
+                    // Config’te başka alanlar varsa onları da doldur
+                    config.fields.forEach((f) => {
+                        if (initial[f.name] === undefined) {
+                            initial[f.name] = pick(foundData, f.name);
+                        }
+                    });
                     setTableConfig(config);
                     setFormData(initial);
                     setHasLoaded(true);
@@ -395,7 +558,7 @@ const DynamicEditPageForm: React.FC = () => {
                 setLoading(false);
             }
         },
-        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode, isHizmetMode]
+        [isEventMode, isHaberMode, isKurumsalBMVIMode, isYonetimMode, isHizmetMode, isRaporMode,isYayinMode]
     );
 
     useEffect(() => setHasLoaded(false), [id]);
@@ -436,6 +599,29 @@ const DynamicEditPageForm: React.FC = () => {
                 alert("Hizmet güncellendi!");
                 return;
             }
+
+            // YAYINLAR SAVE
+            if (isYayinMode) {
+                const idForPut = extractId(formData);
+                if (!idForPut) throw new Error("Yayın ID bulunamadı");
+
+                const payload = {
+                    yayinBaslik: (formData.yayinBaslik ?? "").trim(),
+                    yayinUrl:    (formData.yayinUrl ?? "").trim(),
+                    description: (formData.description ?? "").toString(),
+                    categoryId:  Number(formData.categoryId) || 0,
+                };
+
+                try {
+                    await apiPut(`/api/yayinlar/${idForPut}`, payload);
+                } catch {
+                    await apiPut(`/api/yayinlar/update/${idForPut}`, payload);
+                }
+
+                alert("Yayın güncellendi!");
+                return;
+            }
+
             // handleSave içinde:
             if (isRaporMode) {
                 const payload = {
@@ -468,6 +654,57 @@ const DynamicEditPageForm: React.FC = () => {
                 return;
             }
 
+            // YÖNETİM ŞEMASI SAVE
+            if (isYonetimMode) {
+                const idForPut = extractId(formData);
+                if (!idForPut) throw new Error("Yönetim şeması ID bulunamadı");
+
+                const payload = {
+                    isimSoyisim: (formData.isimSoyisim ?? "").trim(),
+                    resimUrl: (formData.resimUrl ?? "").trim(),
+                    pozisyon: (formData.pozisyon ?? "").trim(),
+                    siraNo: Number(formData.siraNo) || 0,
+                    mudurlukler: (formData.mudurlukler ?? "").toString(),
+                };
+
+                const base = TABLE_CONFIGS["kurumsal_yonetim_semasi"].apiEndpoint; // "/api/kurumsal/yonetim-semasi"
+
+                try {
+                    // 1) plain :id
+                    await apiPut(`${base}/${idForPut}`, payload);
+                } catch {
+                    // 2) update/:id fallback
+                    await apiPut(`${base}/update/${idForPut}`, payload);
+                }
+
+                alert("Yönetim şeması güncellendi!");
+                return;
+            }
+
+
+            if (isRaporMode) {
+                const idForPut = extractId(formData);    // 🔴 kaydederken ID’yi güvenli çek
+                if (!idForPut) throw new Error("Rapor ID bulunamadı");
+
+                const payload = {
+                    raporBaslik: (formData.raporBaslik ?? "").trim(),
+                    raporUrl: (formData.raporUrl ?? "").trim(),
+                    categoryId: Number(formData.categoryId) || 0,
+                    raporTarihi: (formData.raporTarihi ?? "").trim() || undefined,
+                    raporDurum: !!formData.raporDurum,
+                };
+
+                // Bazı projelerde /raporlar/:id, bazılarında /raporlar/update/:id kullanılıyor.
+                // Önce plain yolu dene, 404 olursa update yoluna düş.
+                try {
+                    await apiPut(`/api/raporlar/${idForPut}`, payload);
+                } catch {
+                    await apiPut(`/api/raporlar/update/${idForPut}`, payload);
+                }
+                alert("Rapor güncellendi!");
+                return;
+            }
+
             if (
                 isKurumsalBMVIMode &&
                 tableConfig?.tableName === "KURUMSAL_BASKAN_MISYON_VIZYON_ILKELERIMIZ"
@@ -496,13 +733,10 @@ const DynamicEditPageForm: React.FC = () => {
 
     const handleCancel = () => {
         if (confirm("Değişiklikler kaydedilmedi. Sayfadan çıkmak istediğinizden emin misiniz?")) {
-            if (isEventMode) window.location.href = "/panel/etkinlikler";
-            else if (isHaberMode) window.location.href = "/panel/haberler";
-            else if (tableConfig && tableConfig.tableName.startsWith("KURUMSAL_"))
-                window.location.href = "/panel/kurumsal/BMVI";
-            else navigate(-1);
+            window.location.href = goBackToList();
         }
     };
+
 
     const renderField = (field: FieldConfig) => {
         const value = formData[field.name] ?? "";
@@ -529,13 +763,16 @@ const DynamicEditPageForm: React.FC = () => {
             case "text":
                 return (
                     <input
+                        ref={(el) => (fieldRefs.current[field.name] = el)}
                         type="text"
                         value={value}
                         onChange={(e) => handleInputChange(field.name, e.target.value)}
+                        onFocus={rememberFocus(field.name)}        // 🔴 yeni
                         className={common}
                         placeholder={field.placeholder || field.label}
                     />
                 );
+
             case "number":
                 return (
                     <input
@@ -554,8 +791,10 @@ const DynamicEditPageForm: React.FC = () => {
             case "textarea":
                 return (
                     <textarea
+                        ref={(el) => (fieldRefs.current[field.name] = el)}
                         value={value}
-                        onChange={(e) => handleInputChange(field.name, e.target.value)}
+                        onChange={handleTextAreaChange(field.name)}
+                        onFocus={rememberFocus(field.name)}        // 🔴 yeni
                         className={`${common} min-h-[140px]`}
                         rows={5}
                     />
@@ -643,21 +882,12 @@ const DynamicEditPageForm: React.FC = () => {
                     <h3 className="text-lg font-medium text-gray-500 mb-1">Tablo bulunamadı</h3>
                     <p className="text-gray-400 mb-6">Bu tablo yapılandırması mevcut değil.</p>
                     <button
-                        onClick={() =>
-                            isEventMode
-                                ? (window.location.href = "/panel/etkinlikler")
-                                : isHaberMode
-                                    ? (window.location.href = "/panel/haberler")
-                                    : isHizmetMode
-                                        ? (window.location.href = "/panel/hizmetler")
-                                        : isRaporMode
-                                            ? (window.location.href = "/panel/kurumsal/raporlar")
-                                            : (window.location.href = "/panel/kurumsal/BMVI")
-                        }
+                        onClick={() => (window.location.href = goBackToList())}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                     >
                         Geri Dön
                     </button>
+
                 </div>
             </Wrapper>
         );
@@ -670,19 +900,12 @@ const DynamicEditPageForm: React.FC = () => {
                 className="sticky top-0 z-10 -mx-4 px-4 py-3 mb-6 bg-white/60 backdrop-blur-md border-b border-white/40 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <button
-                        // üst sticky barda geri butonunda:
-                        onClick={() =>
-                            isEventMode ? (window.location.href = "/panel/etkinlikler")
-                                : isHaberMode ? (window.location.href = "/panel/haberler")
-                                    : isHizmetMode ? (window.location.href = "/panel/hizmetler")
-                                        : isRaporMode ? (window.location.href = "/panel/kurumsal/raporlar")
-                                            : (window.location.href = "/panel/kurumsal/BMVI")
-                        }
-
+                        onClick={() => (window.location.href = goBackToList())}
                         className="p-2 rounded-lg ring-1 ring-slate-200 text-slate-600 hover:bg-slate-50"
                     >
                         <ArrowLeft size={18}/>
                     </button>
+
                     <div>
                         <h2 className="text-lg font-semibold text-slate-800 leading-none">Sayfayı Düzenle</h2>
                         <p className="text-xs text-slate-500 mt-1">
@@ -730,15 +953,13 @@ const DynamicEditPageForm: React.FC = () => {
                 <DebugInfo
                     data={{
                         urlParams: {id},
-                        mode: isEventMode
-                            ? "event"
-                            : isHaberMode
-                                ? "haber"
-                                : isHizmetMode
-                                    ? "hizmet"
-                                    : isKurumsalBMVIMode
-                                        ? "kurumsal_bvmi"
-                                        : "unknown",
+                        mode: isEventMode ? "event"
+                            : isHaberMode ? "haber"
+                                : isHizmetMode ? "hizmet"
+                                    : isRaporMode ? "rapor"
+                                        : isYayinMode ? "yayin"          // 🔴 eklendi
+                                            : isKurumsalBMVIMode ? "kurumsal_bmvi"
+                                                : "unknown",
                         tableConfig: tableConfig?.tableName,
                         formData,
                     }}

@@ -12,6 +12,8 @@ import KurumsalYonetimPage from "./sayfalar/kurumsal/KurumsalYonetimPage.tsx";
 import KurumsalBVMI from "./sayfalar/kurumsal/KurumsalBVMI.tsx";
 import KurumsalRaporlarPage from "./sayfalar/kurumsal/KurumsalRaporlarPage.tsx";
 import KurumsalMudurluklerPage from "./sayfalar/kurumsal/KurumsalMudurluklerPage.tsx";
+import KurumsalMudurluklerYeniPage from "./sayfalar/kurumsal/KurumsalMudurluklerYeniPage.tsx";
+import KurumsalMudurluklerEditPage from "./sayfalar/kurumsal/KurumsalMudurluklerEditPage.tsx";
 
 // --- Gebze (nested)
 import GebzeLayout from "./sayfalar/gebze/_LayoutGebze";
@@ -68,6 +70,8 @@ export default function AdminPanelApp() {
                         <Route path="raporlar/:id/duzenle" element={<RaporEditPage />} />
                         <Route path="komisyonlar" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler" element={<KurumsalMudurluklerPage />} />
+                        <Route path="/kurumsal/mudurlukler/yeni" element={<KurumsalMudurluklerYeniPage />} />
+                        <Route path="/kurumsal/mudurlukler/duzenle/:id" element={<KurumsalMudurluklerEditPage />} />
                     </Route>
 
                     {/* Gebze (nested) */}
