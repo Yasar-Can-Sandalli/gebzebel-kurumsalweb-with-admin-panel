@@ -13,3 +13,9 @@ export interface YayinCategory {
     categoryName: string;
     yayinlar: Yayin[];
 }
+
+// YENİ TİP: Kategori listesi için daha sade versiyon
+export interface YayinCategorySummary {
+    categoryId: number;
+    categoryName: string;
+}

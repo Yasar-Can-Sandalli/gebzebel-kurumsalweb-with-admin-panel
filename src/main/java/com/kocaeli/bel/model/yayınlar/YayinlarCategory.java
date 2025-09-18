@@ -25,6 +25,6 @@ public class YayinlarCategory {
     @Column(name = "category_name",nullable = false,unique = true)
     private String categoryName;
 
-    @OneToMany(mappedBy = "yayinCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "yayinCategory", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<Yayinlar> yayinlarList = new ArrayList<>();
 }

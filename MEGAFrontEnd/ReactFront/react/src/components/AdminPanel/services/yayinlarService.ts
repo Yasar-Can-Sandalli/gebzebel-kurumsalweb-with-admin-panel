@@ -1,10 +1,15 @@
 import { apiGet, apiPost, apiPut, apiDelete } from "./apiService";
-import type { Yayin, YayinCategory } from "../../../types/yayinlar";
+import type { Yayin, YayinCategory } from "../types/yayinlar";
 
 // Kategorileri getir
 
 export const getAllYayinCategories = async (): Promise<YayinCategory[]> =>
     apiGet<YayinCategory[]>("/api/yayinlar/category/list");
+
+
+export const getAllYayin = async (): Promise<Yayin[]> =>
+    apiGet<Yayin[]>("/api/yayinlar/list");
+
 
 // Seçili kategori + yayinlar
 export const getYayinCategoryById = async (id: number): Promise<YayinCategory> =>
