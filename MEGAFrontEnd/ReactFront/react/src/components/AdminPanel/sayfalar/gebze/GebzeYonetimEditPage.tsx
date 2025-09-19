@@ -126,7 +126,7 @@ export default function GebzeYonetimEditPage() {
                 ...form,
                 resimUrl: (form.resimUrl || "").trim(), // /images/resimler/<ad>
             });
-            nav("/panel/kurumsal/gebze-yonetim");
+            nav("/panel/gebze/yonetim");
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Güncelleme hatası";
             setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
