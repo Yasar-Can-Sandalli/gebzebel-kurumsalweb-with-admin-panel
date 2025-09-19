@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="FREE" uuid="85fb876d-8c84-49a5-acaf-da2d3535c8ac">
+    <data-source source="LOCAL" name="oracle-service-gebzebel" uuid="85fb876d-8c84-49a5-acaf-da2d3535c8ac">
       <driver-ref>oracle.19</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
