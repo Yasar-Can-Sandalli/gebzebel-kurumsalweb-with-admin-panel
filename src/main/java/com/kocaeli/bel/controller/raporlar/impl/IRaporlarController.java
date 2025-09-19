@@ -1,10 +1,12 @@
 package com.kocaeli.bel.controller.raporlar.impl;
 
-import com.kocaeli.bel.model.raporlar.Raporlar;
+import com.kocaeli.bel.DTO.raporlar.CreateRaporRequest;
+import com.kocaeli.bel.DTO.raporlar.RaporlarResponse;
 
 //YCS
 public interface IRaporlarController {
-    Raporlar getRaporById(Integer id);
 
-    Raporlar saveRapor(Raporlar rapor);
+    RaporlarResponse getRaporById(Integer id);
+
+    RaporlarResponse saveRapor(CreateRaporRequest rapor);
 }

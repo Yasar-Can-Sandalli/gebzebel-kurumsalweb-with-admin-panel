@@ -1,16 +1,22 @@
 package com.kocaeli.bel.controller.raporlar;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kocaeli.bel.DTO.raporlar.RaporlarCategoryResponse;
+import com.kocaeli.bel.DTO.raporlar.RaporlarCategoryResponseBasic;
+import com.kocaeli.bel.controller.raporlar.impl.IRaporlarCategoryController;
 import com.kocaeli.bel.model.raporlar.RaporlarCategory;
 import com.kocaeli.bel.service.raporlar.IRaporlarCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 //YCS
 @RestController
 @RequestMapping("/api/raporlar/category")
 @RequiredArgsConstructor
-public class RaporlarCategoryControllerImpl {
+public class RaporlarCategoryControllerImpl implements IRaporlarCategoryController {
 
     private final IRaporlarCategoryService raporlarCategoryService;
 
@@ -28,5 +34,11 @@ public class RaporlarCategoryControllerImpl {
     @PostMapping("/create")
     public RaporlarCategory saveRaporlarCategory(@RequestBody RaporlarCategory raporlarCategory) {
         return raporlarCategoryService.saveRaporlarCategory(raporlarCategory);
+    }
+
+    @Override
+    @GetMapping("/list")
+    public List<RaporlarCategoryResponseBasic> getAllRaporlarCategory() {
+        return raporlarCategoryService.getAllRaporlarCategory();
     }
 }
