@@ -18,14 +18,14 @@ function toIsoFromDateInput(d: string) {
 type CatTab = { id: number; label: string };
 
 const FALLBACK_CATEGORIES: CatTab[] = [
-    { id: 2, label: "Stratejik Plan Raporları" },
-    { id: 28, label: "Ercümen Kararı Raporları" },
-    { id: 29,  label: "Finansal Raporlar" },
-    { id: 30,  label: "Faaliyet Raporu" },
-    { id: 31,  label: "Performans Raporları" },
-    { id: 32, label: "İç Kontrol Eylem Planı Raporları" },
-    { id: 33, label: "Meclis Kararı Raporları" },
-    { id: 34, label: "Mali Durum ve Beklentiler Raporları" },
+    { id: 12, label: "Stratejik Plan Raporları" },
+    { id: 16, label: "Ercümen Kararı Raporları" },
+    { id: 5,  label: "Finansal Raporlar" },
+    { id: 1,  label: "Faaliyet Raporu" },
+    { id: 4,  label: "Performans Raporları" },
+    { id: 13, label: "İç Kontrol Eylem Planı Raporları" },
+    { id: 15, label: "Meclis Kararı Raporları" },
+    { id: 14, label: "Mali Durum ve Beklentiler Raporları" },
 ];
 
 const Badge = ({ children, tone = "slate" }: { children: React.ReactNode; tone?: "green" | "slate" }) => {
@@ -39,6 +39,9 @@ const Badge = ({ children, tone = "slate" }: { children: React.ReactNode; tone?:
     </span>
     );
 };
+
+
+
 
 export default function KurumsalRaporlarPage() {
     const nav = useNavigate();
@@ -79,21 +82,53 @@ export default function KurumsalRaporlarPage() {
         (async () => {
             try {
                 const list = await getAllRaporCategories();
+
                 if (!live || !Array.isArray(list) || list.length === 0) return;
-                const mapped = list.map((c) => ({ id: c.categoryId, label: c.categoryName }));
-                setCats(mapped);
-                setActiveId(mapped[0].id);
-            } catch {
-                // endpoint yoksa fallback
+
+                // Güvenli/Esnek map
+                const mapped = list
+                    .map((c: any) => {
+                        const id =
+                            Number(
+                                c?.categoryId ??
+                                c?.kategoriId ??
+                                c?.id
+                            );
+                        const label =
+                            c?.categoryName ??
+                            c?.kategoriAdi ??
+                            c?.name ??
+                            c?.ad ??
+                            "Kategori";
+                        return { id, label };
+                    })
+                    .filter((x) => Number.isFinite(x.id)); // hatalıları at
+
+                if (mapped.length > 0) {
+                    setCats(mapped);
+                    setActiveId(mapped[0].id);
+                } else {
+                    // Hiç doğru kayıt yoksa fallback kalsın
+                    console.warn("[raporlar] Gelen kategori verisi beklenen formatta değil, fallback kullanılıyor:", list);
+                }
+            } catch (err) {
+                console.warn("[raporlar] Kategori endpointi okunamadı, fallback kullanılacak.", err);
+                // endpoint yoksa fallback zaten state’te
             }
         })();
+
         return () => {
             live = false;
         };
     }, []);
 
+
     // Seçili kategori raporlarını çek
     const refresh = React.useCallback(async (categoryId: number) => {
+        if (!Number.isFinite(categoryId)) {
+            console.error("[raporlar] Geçersiz categoryId:", categoryId);
+            return;
+        }
         try {
             setLoading(true);
             setError(null);
@@ -106,6 +141,7 @@ export default function KurumsalRaporlarPage() {
             setLoading(false);
         }
     }, []);
+
 
     React.useEffect(() => {
         refresh(activeId);
@@ -159,8 +195,11 @@ export default function KurumsalRaporlarPage() {
                         <span className="text-sm text-slate-600">Kategori</span>
                         <select
                             className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-800 shadow-sm hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300"
-                            value={activeId}
-                            onChange={(e) => setActiveId(Number(e.target.value))}
+                            value={Number.isFinite(activeId) ? activeId : ""}
+                            onChange={(e) => {
+                                const next = Number(e.target.value);
+                                if (Number.isFinite(next)) setActiveId(next);
+                            }}
                         >
                             {cats.map((c) => (
                                 <option key={c.id} value={c.id}>
@@ -168,6 +207,7 @@ export default function KurumsalRaporlarPage() {
                                 </option>
                             ))}
                         </select>
+
                     </label>
 
                     <button

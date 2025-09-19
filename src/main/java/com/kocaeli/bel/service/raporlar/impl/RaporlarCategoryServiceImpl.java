@@ -1,15 +1,19 @@
 package com.kocaeli.bel.service.raporlar.impl;
 
 import com.kocaeli.bel.DTO.raporlar.RaporlarCategoryResponse;
+import com.kocaeli.bel.DTO.raporlar.RaporlarCategoryResponseBasic;
 import com.kocaeli.bel.DTO.raporlar.RaporlarSummary;
 import com.kocaeli.bel.model.raporlar.RaporlarCategory;
 import com.kocaeli.bel.repository.RaporlarCategoryRepository;
 import com.kocaeli.bel.service.raporlar.IRaporlarCategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 //YCS
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,5 +53,24 @@ public class RaporlarCategoryServiceImpl implements IRaporlarCategoryService {
     @Override
     public RaporlarCategory saveRaporlarCategory(RaporlarCategory raporlarCategory) {
         return raporlarCategoryRepository.save(raporlarCategory);
+    }
+
+    @Override
+    public List<RaporlarCategoryResponseBasic> getAllRaporlarCategory() {
+        List<RaporlarCategoryResponseBasic> categories = new ArrayList<>();
+
+        for (RaporlarCategory r : raporlarCategoryRepository.findAll()){
+
+            RaporlarCategoryResponseBasic responseCategory = new RaporlarCategoryResponseBasic();
+            responseCategory.setId(r.getCategoryId());
+            responseCategory.setCategoryName(r.getCategoryName());
+            categories.add(responseCategory);
+
+
+        }
+
+        return categories;
+
+
     }
 }
