@@ -1,9 +1,9 @@
 // src/sayfalar/kurumsal/GebzeYonetimPage.tsx
 import { useEffect, useMemo, useState } from "react";
-import { apiGet, apiDelete, apiPost, apiPut } from "../../services/apiService";
+import { Link } from "react-router-dom";
+import { apiGet, apiDelete } from "../../services/apiService";
 import { Mail, Phone } from "lucide-react";
 
-// --- Backend tipi ---
 type MuhtarBE = {
     id?: number;
     ad: string;
@@ -15,7 +15,6 @@ type MuhtarBE = {
     konum?: string;
 };
 
-// --- UI tipi ---
 interface MuhtarUI {
     id?: number;
     AD: string;
@@ -31,14 +30,10 @@ interface MuhtarUI {
 const inputCls =
     "rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
 
-// --- API endpoints ---
 const API_BASE = "/api/muhtarlar";
 const API_LIST = `${API_BASE}`;
-const API_CREATE = `${API_BASE}/create`;
 const API_DELETE_ONE = (id: number) => `${API_BASE}/delete/${id}`;
-const API_UPDATE_ONE = (id: number) => `${API_BASE}/update/${id}`;
 
-// --- helpers ---
 const mapToUI = (r: MuhtarBE): MuhtarUI => ({
     id: r.id,
     AD: r.ad ?? "",
@@ -65,7 +60,7 @@ function toMapsLink(addressOrCoords?: string) {
     )}`;
 }
 
-export default function KurumsalMuhtarlarPage() {
+export default function GebzeYonetimPage() {
     const [items, setItems] = useState<MuhtarUI[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -73,44 +68,22 @@ export default function KurumsalMuhtarlarPage() {
 
     const [q, setQ] = useState("");
     const [selected, setSelected] = useState<number[]>([]);
-
-    // Ekle / Düzenle modal state
-    const [modalOpen, setModalOpen] = useState<"add" | "edit" | null>(null);
-    const [editingId, setEditingId] = useState<number | null>(null);
-    const [form, setForm] = useState<MuhtarBE>({
-        ad: "",
-        soyad: "",
-        mahalle: "",
-        telefon: "",
-        eposta: "",
-        resimUrl: "",
-        konum: "",
-    });
-
-    // Satır aksiyon menüsü (📝 ▾)
     const [actionOpen, setActionOpen] = useState<number | null>(null);
 
-    // file upload state
-    const [uploading, setUploading] = useState(false);
-    const fileInputId = "muhtar-image-input";
-
-    const fetchData = async () => {
-        setError(null);
-        setLoading(true);
-        try {
-            const res = await apiGet<any>(API_LIST);
-            const arrBE = toArray(res);
-            setItems(arrBE.map(mapToUI));
-        } catch (err: any) {
-            const msg = err?.response?.data?.message || err?.message || "Liste yüklenemedi";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        fetchData();
+        (async () => {
+            setError(null);
+            setLoading(true);
+            try {
+                const res = await apiGet<any>(API_LIST);
+                setItems(toArray(res).map(mapToUI));
+            } catch (err: any) {
+                const msg = err?.response?.data?.message || err?.message || "Liste yüklenemedi";
+                setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
+            } finally {
+                setLoading(false);
+            }
+        })();
     }, []);
 
     const filtered = useMemo(() => {
@@ -135,90 +108,6 @@ export default function KurumsalMuhtarlarPage() {
     const toggleOne = (id: number) =>
         setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
 
-    // --- CRUD ---
-    const openAdd = () => {
-        setForm({ ad: "", soyad: "", mahalle: "", telefon: "", eposta: "", resimUrl: "", konum: "" });
-        setEditingId(null);
-        setModalOpen("add");
-    };
-
-    const openEdit = (row: MuhtarUI) => {
-        const raw = row.__raw || {};
-        setForm({
-            ad: raw.ad ?? row.AD ?? "",
-            soyad: raw.soyad ?? row.SOYAD ?? "",
-            mahalle: raw.mahalle ?? row.MAHALLE ?? "",
-            telefon: raw.telefon ?? row.TELEFON ?? "",
-            eposta: raw.eposta ?? row.EPOSTA ?? "",
-            resimUrl: raw.resimUrl ?? row.RESIM_URL ?? "",
-            konum: raw.konum ?? row.KONUM ?? "",
-        });
-        setEditingId(row.id ?? null);
-        setModalOpen("edit");
-    };
-
-    const closeModal = () => {
-        setModalOpen(null);
-        setEditingId(null);
-    };
-
-    const validate = () => {
-        if (!form.ad?.trim() || !form.soyad?.trim()) return "Ad ve Soyad zorunludur";
-        if (!form.mahalle?.trim()) return "Mahalle zorunludur";
-        if (form.eposta && !form.eposta.includes("@")) return "Geçerli bir e-posta girin";
-        return null;
-    };
-
-    const handleCreate = async () => {
-        const v = validate();
-        if (v) return alert(v);
-        setPending(true);
-        setError(null);
-        try {
-            await apiPost(API_CREATE, form);
-            closeModal();
-            await fetchData();
-        } catch (err: any) {
-            const msg = err?.response?.data?.message || err?.message || "Ekleme hatası";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
-        } finally {
-            setPending(false);
-        }
-    };
-
-    const handleUpdate = async () => {
-        if (editingId == null) return;
-        const v = validate();
-        if (v) return alert(v);
-        setPending(true);
-        setError(null);
-        try {
-            await apiPut(API_UPDATE_ONE(editingId), form);
-            closeModal();
-            await fetchData();
-        } catch (err: any) {
-            const msg = err?.response?.data?.message || err?.message || "Güncelleme hatası";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
-        } finally {
-            setPending(false);
-        }
-    };
-
-    const deleteOne = async (id: number) => {
-        if (!confirm("Kayıt silinsin mi?")) return;
-        setPending(true);
-        try {
-            await apiDelete<boolean>(API_DELETE_ONE(id));
-            await fetchData();
-        } catch (err: any) {
-            const msg = err?.response?.data?.message || err?.message || "Silme hatası";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
-        } finally {
-            setPending(false);
-            setActionOpen(null);
-        }
-    };
-
     const bulkDelete = async () => {
         if (selected.length === 0) return;
         if (!confirm(`${selected.length} kayıt silinsin mi?`)) return;
@@ -236,7 +125,6 @@ export default function KurumsalMuhtarlarPage() {
         }
     };
 
-    // Dışarı tıklayınca satır menüsünü kapat
     useEffect(() => {
         const onDocClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
@@ -246,16 +134,6 @@ export default function KurumsalMuhtarlarPage() {
         return () => document.removeEventListener("click", onDocClick);
     }, []);
 
-    // upload helper (FormData POST -> url döner beklentisi)
-    async function uploadImage(file: File): Promise<string> {
-        const fd = new FormData();
-        fd.append("file", file);
-        const res = await fetch("/api/upload", { method: "POST", body: fd });
-        if (!res.ok) throw new Error("Görsel yüklenemedi");
-        const data = await res.json();
-        return data.url || data.path || data.location; // backend'e göre ayarla
-    }
-
     if (loading) return <div className="p-6">Yükleniyor…</div>;
 
     return (
@@ -263,7 +141,6 @@ export default function KurumsalMuhtarlarPage() {
             <h1 className="text-2xl font-semibold text-slate-800">Muhtarlar</h1>
 
             <div className="bg-white rounded-2xl shadow-md ring-1 ring-slate-200/60 overflow-hidden flex flex-col">
-                {/* Üst bar */}
                 <div className="sticky top-0 z-10 bg-white">
                     <div className="p-4 border-b">
                         <div className="grid gap-3 md:grid-cols-[1fr,auto] md:items-center">
@@ -282,7 +159,6 @@ export default function KurumsalMuhtarlarPage() {
                                 </button>
                             </div>
                             <div className="flex items-center gap-2 justify-end">
-                                {/* Sil butonu: yalnızca seçim olduğunda göster */}
                                 {selected.length > 0 && (
                                     <button
                                         onClick={bulkDelete}
@@ -292,12 +168,15 @@ export default function KurumsalMuhtarlarPage() {
                                         Sil
                                     </button>
                                 )}
-                                <button
-                                    onClick={openAdd}
+
+                                {/* POPUP: Yeni */}
+                                <Link
+                                    to="yeni"
+                                    state={{ overlay: true }}
                                     className="px-3 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg shadow-blue-500/20 hover:brightness-110"
                                 >
                                     + Ekle
-                                </button>
+                                </Link>
                             </div>
                         </div>
                         {error && (
@@ -308,7 +187,6 @@ export default function KurumsalMuhtarlarPage() {
                     </div>
                 </div>
 
-                {/* Tablo */}
                 <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
                         <thead className="bg-slate-50 text-slate-700">
@@ -408,7 +286,7 @@ export default function KurumsalMuhtarlarPage() {
                                         )}
                                     </td>
 
-                                    {/* İşlemler — istenen tasarım: 📝 ▾ butonu + altında menü */}
+                                    {/* İşlemler: açılır menü; Güncelle popup'a gider */}
                                     <td className="px-4 py-3 align-center">
                                         <div className="relative inline-block" data-row-menu-root>
                                             <button
@@ -422,18 +300,35 @@ export default function KurumsalMuhtarlarPage() {
 
                                             {actionOpen === e.id && (
                                                 <div className="absolute left-0 top-full mt-1 w-32 rounded-md border bg-white shadow-lg z-20">
-                                                    <button
-                                                        className="w-full px-3 py-2 text-left hover:bg-slate-50"
-                                                        onClick={() => {
-                                                            setActionOpen(null);
-                                                            openEdit(e);
-                                                        }}
+                                                    <Link
+                                                        to={`duzenle/${e.id}`}
+                                                        state={{ overlay: true, record: e.__raw }}
+                                                        className="block w-full px-3 py-2 text-left hover:bg-slate-50"
+                                                        onClick={() => setActionOpen(null)}
                                                     >
                                                         Güncelle
-                                                    </button>
+                                                    </Link>
                                                     <button
                                                         className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
-                                                        onClick={() => deleteOne(e.id!)}
+                                                        onClick={async () => {
+                                                            setActionOpen(null);
+                                                            if (!e.id) return;
+                                                            if (!confirm("Kayıt silinsin mi?")) return;
+                                                            setPending(true);
+                                                            try {
+                                                                await apiDelete<boolean>(API_DELETE_ONE(e.id));
+                                                                setItems((prev) => prev.filter((x) => x.id !== e.id));
+                                                                setSelected((prev) => prev.filter((x) => x !== e.id));
+                                                            } catch (err: any) {
+                                                                alert(
+                                                                    err?.response?.data?.message ||
+                                                                    err?.message ||
+                                                                    "Silme hatası"
+                                                                );
+                                                            } finally {
+                                                                setPending(false);
+                                                            }
+                                                        }}
                                                     >
                                                         Sil
                                                     </button>
@@ -448,142 +343,6 @@ export default function KurumsalMuhtarlarPage() {
                     </table>
                 </div>
             </div>
-
-            {/* EKLE & DÜZENLE MODAL */}
-            {modalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-black/30" onClick={closeModal} />
-                    <div className="relative z-10 w-full max-w-2xl rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200">
-                        <div className="flex items-center justify-between border-b px-5 py-3">
-                            <h3 className="text-lg font-semibold">
-                                {modalOpen === "edit" ? "Muhtar Düzenle" : "Yeni Muhtar"}
-                            </h3>
-                            <button onClick={closeModal} className="rounded-md p-1 hover:bg-slate-100">
-                                ✕
-                            </button>
-                        </div>
-                        <div className="px-5 py-5 space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs text-slate-600 mb-1">Ad *</label>
-                                    <input
-                                        value={form.ad}
-                                        onChange={(e) => setForm({ ...form, ad: e.target.value })}
-                                        className={inputCls}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs text-slate-600 mb-1">Soyad *</label>
-                                    <input
-                                        value={form.soyad}
-                                        onChange={(e) => setForm({ ...form, soyad: e.target.value })}
-                                        className={inputCls}
-                                    />
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-xs text-slate-600 mb-1">Mahalle *</label>
-                                    <input
-                                        value={form.mahalle}
-                                        onChange={(e) => setForm({ ...form, mahalle: e.target.value })}
-                                        className={inputCls}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs text-slate-600 mb-1">Telefon</label>
-                                    <input
-                                        value={form.telefon ?? ""}
-                                        onChange={(e) => setForm({ ...form, telefon: e.target.value })}
-                                        className={inputCls}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs text-slate-600 mb-1">E-posta</label>
-                                    <input
-                                        type="email"
-                                        value={form.eposta ?? ""}
-                                        onChange={(e) => setForm({ ...form, eposta: e.target.value })}
-                                        className={inputCls}
-                                    />
-                                </div>
-
-                                {/* Görsel seçimi: file picker + önizleme */}
-                                <div className="md:col-span-2">
-                                    <label className="block text-xs text-slate-600 mb-1">Resim</label>
-                                    <div className="flex items-center gap-3">
-                                        {form.resimUrl && (
-                                            <img
-                                                src={form.resimUrl}
-                                                alt="preview"
-                                                className="w-14 h-14 rounded-full object-cover ring-1 ring-slate-200"
-                                            />
-                                        )}
-                                        <input
-                                            id={fileInputId}
-                                            type="file"
-                                            accept="image/*"
-                                            className="hidden"
-                                            onChange={async (e) => {
-                                                const f = e.target.files?.[0];
-                                                if (!f) return;
-                                                try {
-                                                    setUploading(true);
-                                                    const url = await uploadImage(f);
-                                                    setForm((p) => ({ ...p, resimUrl: url }));
-                                                } catch (er) {
-                                                    alert("Görsel yüklenemedi. Lütfen tekrar deneyin.");
-                                                } finally {
-                                                    setUploading(false);
-                                                }
-                                            }}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => document.getElementById(fileInputId)?.click()}
-                                            className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50"
-                                        >
-                                            {uploading ? "Yükleniyor…" : form.resimUrl ? "Değiştir" : "Resim Seç"}
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="md:col-span-2">
-                                    <label className="block text-xs text-slate-600 mb-1">
-                                        Konum (adres veya "41.0,29.0")
-                                    </label>
-                                    <input
-                                        value={form.konum ?? ""}
-                                        onChange={(e) => setForm({ ...form, konum: e.target.value })}
-                                        className={inputCls}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-end gap-2 pt-2">
-                                <button onClick={closeModal} className="rounded-xl px-4 py-2 hover:bg-slate-100">
-                                    Vazgeç
-                                </button>
-                                {modalOpen === "edit" ? (
-                                    <button
-                                        onClick={handleUpdate}
-                                        disabled={pending}
-                                        className="rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-60"
-                                    >
-                                        {pending ? "Kaydediliyor…" : "Güncelle"}
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={handleCreate}
-                                        disabled={pending}
-                                        className="rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-60"
-                                    >
-                                        {pending ? "Kaydediliyor…" : "Kaydet"}
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
