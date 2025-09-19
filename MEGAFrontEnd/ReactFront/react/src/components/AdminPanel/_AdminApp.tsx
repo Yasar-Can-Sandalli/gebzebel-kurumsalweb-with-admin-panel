@@ -19,12 +19,15 @@ import KurumsalMudurluklerEditPage from "./sayfalar/kurumsal/KurumsalMudurlukler
 import GebzeLayout from "./sayfalar/gebze/_LayoutGebze";
 import GebzeTarihcePage from "./sayfalar/gebze/GebzeTarihcePage";
 import GebzeYonetimPage from "./sayfalar/gebze/GebzeYonetimPage";
+import GebzeYonetimYeniPage from "./sayfalar/gebze/GebzeYonetimYeniPage";
+import GebzeYonetimEditPage from "./sayfalar/gebze/GebzeYonetimEditPage";
 import GebzeSanalTurPage from "./sayfalar/gebze/GebzeSanalTurPage";
 
 // --- Diğer modüller
 import HaberlerPage from "./sayfalar/HaberlerPage";
 import HaberlerYeniPage from "./sayfalar/HaberlerYeniPage.tsx"
 import HizmetlerPage from "./sayfalar/HizmetlerPage";
+import HizmetlerYeniPage from "./sayfalar/HizmetlerYeniPage";
 import EtkinliklerPage from "./sayfalar/EtkinliklerPage";
 import EtkinlikYeniPage from "./sayfalar/EtkinlikYeniPage";
 import EditPage from "./sayfalar/EditPage";
@@ -79,6 +82,8 @@ export default function AdminPanelApp() {
                         <Route index element={<Navigate to="tarihce" replace />} />
                         <Route path="tarihce" element={<GebzeTarihcePage />} />
                         <Route path="yonetim" element={<GebzeYonetimPage />} />
+                        <Route path="yonetim/duzenle/:id" element={<GebzeYonetimEditPage />} />
+                        <Route path="yonetim/yeni" element={<GebzeYonetimYeniPage />} />
                         <Route path="sanal-tur" element={<GebzeSanalTurPage />} />
                     </Route>
 
@@ -87,7 +92,7 @@ export default function AdminPanelApp() {
                     <Route path="haberler/yeni" element={<HaberlerYeniPage />} />
                     <Route path="haberler/duzenle/:id" element={<EditPage />} />
                     <Route path="hizmetler" element={<HizmetlerPage />} />
-                    <Route path="hizmetler/yeni" element={<HizmetlerPage />} />
+                    <Route path="hizmetler/yeni" element={<HizmetlerYeniPage />} />
                     <Route path="hizmetler/:id/duzenle" element={<EditPage />} />
                     <Route path="etkinlikler" element={<EtkinliklerPage />} />
                     <Route path="etkinlikler/yeni" element={<EtkinlikYeniPage />} />
