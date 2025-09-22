@@ -116,7 +116,12 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         >
             {/* Logo + profil */}
             <div className="p-4 border-b border-transparent">
-                <div className="flex items-center gap-3">
+                <Link
+                    to="/panel/mainPage"
+                    onClick={handleNavClick}        // Sidebar içindeyse: mobilde kapatır
+                    className="flex items-center gap-3"
+                    aria-label="Anasayfa"
+                >
                     <img
                         src={gebzeLogo}
                         alt="Gebze Belediyesi"
@@ -124,7 +129,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         height={28}
                         className="block h-auto w-auto object-contain"
                     />
-                </div>
+                </Link>
+
 
                 <div className="mt-4 rounded-xl p-4 text-center bg-white shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
                     <div className="w-16 h-16 mx-auto rounded-full bg-slate-200 overflow-hidden">

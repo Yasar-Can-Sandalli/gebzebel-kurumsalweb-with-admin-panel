@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { apiGet, apiDelete, apiPost, apiPut } from "../../services/apiService";
-import { Search, Mail, Phone, User, X, Check } from "lucide-react";
+import {Search, Mail, Phone, User, X, Check, RefreshCw, Settings} from "lucide-react";
 
 // Backend modeline uygun tip (entity alan adları)
 type MudurlukBE = {
@@ -303,10 +303,14 @@ export default function KurumsalMudurluklerPage() {
                                     <td className="px-4 py-3 align-top">
                                         <div className="relative inline-block">
                                             <button
-                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
+                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 text-sky-600"
                                                 onClick={() => toggleRowMenu(e.id!)}
+                                                aria-label="İşlemler"
                                             >
-                                                📝 ▾
+                                                    <span className="relative inline-block h-5 w-5">
+                                                      <RefreshCw className="absolute inset-0 h-5 w-5" strokeWidth={1.5} />
+                                                      <Settings  className="absolute inset-0 m-auto h-3.5 w-3.5" strokeWidth={1.5} />
+                                                    </span>
                                             </button>
                                             {rowMenuOpenId === e.id && (
                                                 <div className="absolute z-20 mt-1 w-32 rounded-md border bg-white shadow-lg">
