@@ -1,17 +1,19 @@
 package com.kocaeli.bel.model.gebze;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "GEBZE_MAHALLEMUHTARLARI")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MuhtarlarEntity {
+
+
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "muhtarlar_seq_gen")
+    @SequenceGenerator(name = "muhtarlar_seq_gen", sequenceName = "MUHTARLAR_SEQ_GEN", allocationSize = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
