@@ -41,14 +41,12 @@ export default function KurumsalMudurluklerEditPage() {
                     return;
                 }
                 const numId = Number(id);
-                const tryFetch = async (p: string) => {
-                    try { return await apiGet<Mudurluk>(p); } catch { return null; }
-                };
+                const tryFetch = async (p: string) => { try { return await apiGet<Mudurluk>(p); } catch { return null; } };
                 let data: Mudurluk | null = null;
                 if (Number.isFinite(numId)) {
-                    data = await tryFetch(API_GET_V1(numId)) ||
-                        await tryFetch(API_GET_V2(numId)) ||
-                        await tryFetch(API_GET_V3(numId));
+                    data = await tryFetch(API_GET_V1(numId))
+                        || await tryFetch(API_GET_V2(numId))
+                        || await tryFetch(API_GET_V3(numId));
                 }
                 if (!data) {
                     const list = (await apiGet<any>(API_LIST)) as any;
@@ -109,8 +107,7 @@ export default function KurumsalMudurluklerEditPage() {
             });
             nav("/panel/kurumsal/mudurlukler");
         } catch (err: any) {
-            const msg =
-                err?.response?.data?.message || err?.message || "Güncelleme hatası";
+            const msg = err?.response?.data?.message || err?.message || "Güncelleme hatası";
             setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
         } finally { setSaving(false); }
     };
@@ -186,11 +183,12 @@ export default function KurumsalMudurluklerEditPage() {
                             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPick}/>
                         </div>
 
+                        {/* YALNIZCA OKUNUR: elle yazmayı kapattık */}
                         <input
                             className={input}
                             placeholder="/images/resimler/..."
                             value={form.imageUrl || ""}
-                            onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                            readOnly
                         />
 
                         <div className="rounded-xl border border-slate-200 bg-slate-50 p-2">

@@ -73,8 +73,7 @@ export default function KurumsalMudurluklerYeniPage() {
             });
             nav("/panel/kurumsal/mudurlukler");
         } catch (err: any) {
-            const msg =
-                err?.response?.data?.message || err?.message || "Ekleme hatası";
+            const msg = err?.response?.data?.message || err?.message || "Ekleme hatası";
             setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
         } finally {
             setSaving(false);
@@ -156,11 +155,12 @@ export default function KurumsalMudurluklerYeniPage() {
                             />
                         </div>
 
+                        {/* YALNIZCA OKUNUR: elle yazmayı kapattık */}
                         <input
                             className={input}
                             placeholder="/images/resimler/..."
                             value={form.imageUrl}
-                            onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                            readOnly
                         />
 
                         <div className="rounded-xl border border-slate-200 bg-slate-50 p-2">

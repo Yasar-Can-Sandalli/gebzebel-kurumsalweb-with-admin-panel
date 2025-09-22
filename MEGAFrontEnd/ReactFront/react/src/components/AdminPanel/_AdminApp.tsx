@@ -32,7 +32,7 @@ import EtkinliklerPage from "./sayfalar/EtkinliklerPage";
 import EtkinlikYeniPage from "./sayfalar/EtkinlikYeniPage";
 import EditPage from "./sayfalar/EditPage";
 import YayinlarPage from "./sayfalar/YayinlarPage";
-import IletisimPage from "./sayfalar/IletisimPage";
+import DuyuruPage from "./sayfalar/DuyuruPage.tsx";
 
 // --- Kullanıcı sayfaları
 // NOT: Dosyan senin örneğinde `src/sayfalar/kurumsal/UsersPage.tsx` altında.
@@ -87,8 +87,8 @@ export default function AdminPanelApp() {
                     </Route>
 
                     {/* Diğer modüller (relative path'ler) */}
-                    <Route path="haberler/list" element={<HaberlerPage />} />
-                    <Route path="haberler/list/yeni" element={<HaberlerYeniPage />} />
+                    <Route path="haberler" element={<HaberlerPage />} />
+                    <Route path="haberler/yeni" element={<HaberlerYeniPage />} />
                     <Route path="haberler/duzenle/:id" element={<EditPage />} />
                     <Route path="hizmetler" element={<HizmetlerPage />} />
                     <Route path="hizmetler/yeni" element={<HizmetlerYeniPage />} />
@@ -97,7 +97,7 @@ export default function AdminPanelApp() {
                     <Route path="etkinlikler/yeni" element={<EtkinlikYeniPage />} />
                     <Route path="etkinlikler/:id/duzenle" element={<EditPage />} />
                     <Route path="yayinlar" element={<YayinlarPage />} />
-                    <Route path="iletisim" element={<IletisimPage />} />
+                    <Route path="duyurular" element={<DuyuruPage />} />
 
                     {/* 404 */}
                     <Route path="*" element={<div className="p-6">Bulunamadı</div>} />

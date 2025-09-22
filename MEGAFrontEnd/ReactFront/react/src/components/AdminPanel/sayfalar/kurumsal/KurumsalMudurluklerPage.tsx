@@ -1,36 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
-import { apiGet, apiDelete, apiPost, apiPut } from "../../services/apiService";
-import {Search, Mail, Phone, User, X, Check, RefreshCw, Settings} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { apiGet, apiDelete } from "../../services/apiService";
+import {Mail, MoreVertical, RefreshCw, Settings} from "lucide-react";
 
-// Backend modeline uygun tip (entity alan adları)
 type MudurlukBE = {
     id?: number;
-    name: string;          // MUDURLUKISIM
-    managerName: string;   // AD
-    email: string;         // EMAIL
-    imageUrl?: string;     // IMG_URL
-    [key: string]: any;    // ekstra alanlar
+    name: string;
+    managerName: string;
+    email: string;
+    imageUrl?: string;
+    [key: string]: any;
 };
 
-// UI tipi
 type MudurlukUI = {
     id?: number;
     MUDURLUKISIM: string;
     AD: string;
     EMAIL: string;
     IMG_URL?: string;
-    __raw?: MudurlukBE; // güncelleme için orijinal
+    __raw?: MudurlukBE;
 };
 
 const inputCls =
     "rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
 
-// Controller base
 const API_BASE = "/rest/api/mudurlukler";
 const API_LIST = `${API_BASE}/list`;
-const API_CREATE = `${API_BASE}/create`;
 const API_DELETE_ONE = (id: number) => `${API_BASE}/delete/${id}`;
-const API_UPDATE_ONE = (id: number) => `${API_BASE}/update/${id}`;
 
 const mapToUI = (r: MudurlukBE): MudurlukUI => ({
     id: r.id,
@@ -42,51 +38,28 @@ const mapToUI = (r: MudurlukBE): MudurlukUI => ({
 });
 
 const toArray = (d: any): MudurlukBE[] => {
-    if (Array.isArray(d)) return d as MudurlukBE[];
-    if (Array.isArray(d?.content)) return d.content as MudurlukBE[]; // pageable
-    if (Array.isArray(d?.data)) return d.data as MudurlukBE[];       // wrapper
+    if (Array.isArray(d)) return d;
+    if (Array.isArray(d?.content)) return d.content;
+    if (Array.isArray(d?.data)) return d.data;
     return [];
 };
 
 export default function KurumsalMudurluklerPage() {
+    const nav = useNavigate();
     const [items, setItems] = useState<MudurlukUI[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [pending, setPending] = useState(false);
     const [q, setQ] = useState("");
     const [selected, setSelected] = useState<number[]>([]);
-
-    // Dinamik ekstra alanlar
-    const [extraKeys, setExtraKeys] = useState<string[]>([]);
-
-    // Ekle/Düzenle modal
-    const [addOpen, setAddOpen] = useState(false);
-    const [editOpen, setEditOpen] = useState(false);
-    const [editingId, setEditingId] = useState<number | null>(null);
-    const [creating, setCreating] = useState(false);
-    const [form, setForm] = useState<any>({ name: "", managerName: "", email: "", imageUrl: "" });
-    const isEmail = (v: string) => !v || v.includes("@");
-
-    // Satır menüsü (combobox) state
-    const [rowMenuOpenId, setRowMenuOpenId] = useState<number | null>(null);
-    const toggleRowMenu = (id: number) =>
-        setRowMenuOpenId((cur) => (cur === id ? null : id));
+    const [openMenu, setOpenMenu] = useState<number | null>(null); // combobox
 
     const fetchData = async () => {
         setError(null);
         setLoading(true);
         try {
             const res = await apiGet<any>(API_LIST);
-            const arrBE = toArray(res);
-            // listeden dinamik alanları çıkar
-            const keys = new Set<string>();
-            if (arrBE[0]) {
-                Object.keys(arrBE[0]).forEach((k) => {
-                    if (!["id", "name", "managerName", "email", "imageUrl"].includes(k)) keys.add(k);
-                });
-            }
-            setExtraKeys(Array.from(keys));
-            setItems(arrBE.map(mapToUI));
+            setItems(toArray(res).map(mapToUI));
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Liste yüklenemedi";
             setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
@@ -94,8 +67,13 @@ export default function KurumsalMudurluklerPage() {
             setLoading(false);
         }
     };
-
     useEffect(() => { fetchData(); }, []);
+
+    useEffect(() => {
+        const onEsc = (e: KeyboardEvent) => e.key === "Escape" && setOpenMenu(null);
+        window.addEventListener("keydown", onEsc);
+        return () => window.removeEventListener("keydown", onEsc);
+    }, []);
 
     const filtered = useMemo(() => {
         const term = q.trim().toLowerCase();
@@ -108,21 +86,10 @@ export default function KurumsalMudurluklerPage() {
         );
     }, [items, q]);
 
-    const toggleOne = (id: number) =>
-        setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
-    const allIds = filtered.map((x) => x.id!).filter(Boolean);
-    const allChecked = allIds.length > 0 && allIds.every((id) => selected.includes(id));
-    const toggleAll = () =>
-        setSelected((p) =>
-            allChecked ? p.filter((id) => !allIds.includes(id)) : Array.from(new Set([...p, ...allIds]))
-        );
-
-    // TOPLU SİL (yalnızca seçili varsa gösterilecek)
     const bulkDelete = async () => {
         if (selected.length === 0) return;
         if (!confirm(`${selected.length} kayıt silinsin mi?`)) return;
         setPending(true);
-        setError(null);
         try {
             await Promise.all(selected.map((id) => apiDelete<boolean>(API_DELETE_ONE(id))));
             setItems((prev) => prev.filter((e) => !selected.includes(e.id!)));
@@ -133,263 +100,128 @@ export default function KurumsalMudurluklerPage() {
         } finally { setPending(false); }
     };
 
-    // Tek satır sil
-    const deleteOne = async (id: number) => {
-        if (!confirm(`Bu kaydı silmek istiyor musun?`)) return;
-        try {
-            await apiDelete<boolean>(API_DELETE_ONE(id));
-            setItems((prev) => prev.filter((x) => x.id !== id));
-            setSelected((prev) => prev.filter((x) => x !== id));
-        } catch (err: any) {
-            const msg = err?.response?.data?.message || err?.message || "Silme hatası";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
-        }
-    };
-
-    // Modal aç/kapat & preload
-    const openAdd = () => {
-        const extrasInit = Object.fromEntries(extraKeys.map((k) => [k, ""]));
-        setForm({ name: "", managerName: "", email: "", imageUrl: "", ...extrasInit });
-        setEditingId(null);
-        setAddOpen(true);
-        setRowMenuOpenId(null);
-    };
-    const openEdit = (row: MudurlukUI) => {
-        const raw = row.__raw || {};
-        const extrasInit: any = {};
-        extraKeys.forEach((k) => (extrasInit[k] = raw[k] ?? ""));
-        setForm({
-            name: raw.name ?? "",
-            managerName: raw.managerName ?? "",
-            email: raw.email ?? "",
-            imageUrl: raw.imageUrl ?? "",
-            ...extrasInit,
-        });
-        setEditingId(row.id ?? null);
-        setEditOpen(true);
-        setRowMenuOpenId(null);
-    };
-    const closeModals = () => { setAddOpen(false); setEditOpen(false); setEditingId(null); };
-
-    // CREATE
-    const handleCreate = async () => {
-        if (!form.name?.trim() || !form.managerName?.trim()) return alert("Müdürlük ismi ve Ad Soyad zorunlu");
-        if (form.email && !isEmail(form.email)) return alert("Geçerli bir e-posta girin");
-        setCreating(true); setError(null);
-        try {
-            await apiPost(API_CREATE, form);
-            closeModals();
-            await fetchData();
-        } catch (err: any) {
-            const msg = err?.response?.data?.message || err?.message || "Ekleme hatası";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
-        } finally { setCreating(false); }
-    };
-
-    // UPDATE
-    const handleUpdate = async () => {
-        if (editingId == null) return;
-        if (!form.name?.trim() || !form.managerName?.trim()) return alert("Müdürlük ismi ve Ad Soyad zorunlu");
-        if (form.email && !isEmail(form.email)) return alert("Geçerli bir e-posta girin");
-        setCreating(true); setError(null);
-        try {
-            await apiPut(API_UPDATE_ONE(editingId), form);
-            closeModals();
-            await fetchData();
-        } catch (err: any) {
-            const msg = err?.response?.data?.message || err?.message || "Güncelleme hatası";
-            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
-        } finally { setCreating(false); }
-    };
-
     if (loading) return <div className="p-6">Yükleniyor…</div>;
 
     return (
         <div className="space-y-5">
             <h1 className="text-2xl font-semibold text-slate-800">Müdürlükler</h1>
 
-            <div className="bg-white rounded-2xl shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60 overflow-hidden flex flex-col">
-                {/* Üst bar */}
-                <div className="sticky top-0 z-10 bg-white">
-                    <div className="p-4 border-b">
-                        <div className="grid gap-3 md:grid-cols-[1fr,auto] md:items-center">
-                            <div className="grid gap-3 md:grid-cols-2">
-                                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="İsim / E-posta ara…" className={inputCls} />
-                                <button onClick={() => setQ("")} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">Temizle</button>
-                            </div>
-                            <div className="flex items-center gap-2 justify-end">
-                                {/* Sil butonu sadece seçili varsa görünsün */}
-                                {selected.length > 0 && (
-                                    <button
-                                        onClick={bulkDelete}
-                                        disabled={pending}
-                                        className="px-3 py-2 rounded-lg bg-red-500 text-white disabled:opacity-60"
-                                    >
-                                        Sil
-                                    </button>
-                                )}
-                                <button
-                                    onClick={openAdd}
-                                    className="px-3 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg shadow-blue-500/20 hover:brightness-110"
-                                >
-                                    + Ekle
-                                </button>
-                            </div>
+            <div className="bg-white rounded-2xl shadow-md ring-1 ring-slate-200/60 overflow-hidden">
+                <div className="p-4 border-b">
+                    <div className="grid gap-3 md:grid-cols-[1fr,auto] md:items-center">
+                        <div className="grid gap-3 md:grid-cols-2">
+                            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="İsim / E-posta ara…" className={inputCls} />
+                            <button onClick={() => setQ("")} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">Temizle</button>
                         </div>
-                        {error && <div className="mt-3 text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">{error}</div>}
+                        <div className="flex items-center gap-2 justify-end">
+                            {selected.length > 0 && (
+                                <button onClick={bulkDelete} disabled={pending} className="px-3 py-2 rounded-lg bg-red-500 text-white disabled:opacity-60">Sil</button>
+                            )}
+                            <Link
+                                to="yeni"
+                                className="px-3 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg"
+                            >
+                                + Ekle
+                            </Link>
+                        </div>
                     </div>
+                    {error && <div className="mt-3 text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">{error}</div>}
                 </div>
 
-                {/* Tablo */}
                 <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
                         <thead className="bg-slate-50 text-slate-700">
                         <tr className="text-left">
-                            <th className="px-4 py-3 w-10"><input type="checkbox" checked={allChecked} onChange={toggleAll} /></th>
+                            <th className="px-4 py-3 w-10"></th>
                             <th className="px-4 py-3 w-28">Resim</th>
                             <th className="px-4 py-3">Müdürlük</th>
                             <th className="px-4 py-3">Yönetici</th>
-                            <th className="px-4 py-3">E-posta︎</th>
-                            <th className="px-4 py-3 w-36">İşlemler</th>
+                            <th className="px-4 py-3">E-posta</th>
+                            <th className="px-4 py-3 w-40">İşlemler</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                         {filtered.length === 0 ? (
                             <tr><td colSpan={6} className="px-4 py-6 text-center text-slate-500">Kayıt bulunamadı.</td></tr>
-                        ) : (
-                            filtered.map((e) => (
-                                <tr key={e.id} className="hover:bg-slate-50/60 transition-colors">
-                                    <td className="px-4 py-3 align-top">
-                                        {e.id !== undefined && (
-                                            <input
-                                                type="checkbox"
-                                                checked={selected.includes(e.id!)}
-                                                onChange={() =>
-                                                    setSelected((p) =>
-                                                        p.includes(e.id!) ? p.filter((x) => x !== e.id!) : [...p, e.id!]
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                    </td>
-                                    <td className="px-4 py-3 align-top">
-                                        {e.IMG_URL && (
-                                            <img
-                                                src={e.IMG_URL}
-                                                alt={e.AD}
-                                                className="w-16 h-16 object-cover rounded-full ring-1 ring-slate-200"
-                                                onError={(ev) => ((ev.currentTarget as HTMLImageElement).src = "/images/placeholder-avatar.jpg")}
-                                            />
-                                        )}
-                                    </td>
-                                    <td className="px-4 py-3 font-medium text-slate-800 align-top">{e.MUDURLUKISIM}</td>
-                                    <td className="px-4 py-3 text-slate-600 align-top">{e.AD}</td>
-                                    <td className="px-4 py-3 text-slate-600 align-top">
-                                        {e.EMAIL ? (
-                                            <div className="flex items-start gap-1 text-slate-600">
-                                                <Mail size={12} className="mt-0.5 flex-shrink-0" />
-                                                <a
-                                                    href={`mailto:${e.EMAIL}`}
-                                                    className="text-sm break-all leading-tight hover:underline"
-                                                    title={e.EMAIL}
-                                                >
-                                                    {e.EMAIL}
-                                                </a>
-                                            </div>
-                                        ) : (
-                                            <span className="text-slate-400 text-sm">-</span>
-                                        )}
-                                    </td>
-                                    <td className="px-4 py-3 align-top">
-                                        <div className="relative inline-block">
-                                            <button
-                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 text-sky-600"
-                                                onClick={() => toggleRowMenu(e.id!)}
-                                                aria-label="İşlemler"
-                                            >
-                                                    <span className="relative inline-block h-5 w-5">
-                                                      <RefreshCw className="absolute inset-0 h-5 w-5" strokeWidth={1.5} />
-                                                      <Settings  className="absolute inset-0 m-auto h-3.5 w-3.5" strokeWidth={1.5} />
-                                                    </span>
-                                            </button>
-                                            {rowMenuOpenId === e.id && (
-                                                <div className="absolute z-20 mt-1 w-32 rounded-md border bg-white shadow-lg">
-                                                    <button
-                                                        className="w-full px-3 py-2 text-left hover:bg-slate-50"
-                                                        onClick={() => openEdit(e)}
-                                                    >
-                                                        Güncelle
-                                                    </button>
-                                                    <button
-                                                        className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
-                                                        onClick={() => deleteOne(e.id!)}
-                                                    >
-                                                        Sil
-                                                    </button>
-                                                </div>
-                                            )}
+                        ) : filtered.map((e) => (
+                            <tr key={e.id} className="hover:bg-slate-50/60">
+                                <td className="px-4 py-3 align-top">
+                                    <input
+                                        type="checkbox"
+                                        checked={selected.includes(e.id!)}
+                                        onChange={() =>
+                                            setSelected((p) => p.includes(e.id!) ? p.filter((x) => x !== e.id!) : [...p, e.id!])
+                                        }
+                                    />
+                                </td>
+                                <td className="px-4 py-3 align-top">
+                                    {e.IMG_URL ? (
+                                        <img
+                                            src={e.IMG_URL}
+                                            alt={e.AD}
+                                            className="w-16 h-16 object-cover rounded-full ring-1 ring-slate-200"
+                                            onError={(ev) => ((ev.currentTarget as HTMLImageElement).src = "/images/placeholder-avatar.jpg")}
+                                        />
+                                    ) : <div className="w-16 h-16 rounded-full bg-slate-100 ring-1 ring-slate-200" />}
+                                </td>
+                                <td className="px-4 py-3 font-medium text-slate-800 align-top">{e.MUDURLUKISIM}</td>
+                                <td className="px-4 py-3 text-slate-600 align-top">{e.AD}</td>
+                                <td className="px-4 py-3 text-slate-600 align-top">
+                                    {e.EMAIL ? (
+                                        <div className="flex items-start gap-1 text-slate-600">
+                                            <Mail size={12} className="mt-0.5" />
+                                            <a href={`mailto:${e.EMAIL}`} className="text-sm break-all hover:underline">{e.EMAIL}</a>
                                         </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
+                                    ) : <span className="text-slate-400 text-sm">-</span>}
+                                </td>
+
+                                {/* İŞLEMLER COMBOBOX — eski görünüm (tek düğme, açılır menü) */}
+                                <td className="px-4 py-3 align-top relative">
+                                    <button
+                                        className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 text-sky-600"
+                                        onClick={() => setOpenMenu(e.id!)}
+                                        aria-label="İşlemler"
+                                    >
+  <span className="relative inline-block h-5 w-5">
+    <RefreshCw className="absolute inset-0 h-5 w-5" strokeWidth={1.5} />
+    <Settings  className="absolute inset-0 m-auto h-3.5 w-3.5" strokeWidth={1.5} />
+  </span>
+                                    </button>
+
+                                    {openMenu === e.id && (
+                                        <div
+                                            className="absolute z-10 mt-2 w-36 rounded-lg border border-slate-200 bg-white shadow-lg"
+                                            onMouseLeave={() => setOpenMenu(null)}
+                                        >
+                                            <Link
+                                                to={`duzenle/${e.id}`}
+                                                className="block w-full text-left px-3 py-2 text-slate-700 hover:bg-slate-50"
+                                                onClick={() => setOpenMenu(null)}
+                                                state={{}} // tam sayfa
+                                            >
+                                                Güncelle
+                                            </Link>
+                                            <button
+                                                className="block w-full text-left px-3 py-2 text-red-600 hover:bg-red-50"
+                                                onClick={async () => {
+                                                    setOpenMenu(null);
+                                                    if (!confirm("Bu kaydı silmek istiyor musun?")) return;
+                                                    await apiDelete<boolean>(API_DELETE_ONE(e.id!));
+                                                    setItems((prev) => prev.filter((x) => x.id !== e.id));
+                                                    setSelected((prev) => prev.filter((x) => x !== e.id));
+                                                }}
+                                            >
+                                                Sil
+                                            </button>
+                                        </div>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            {/* EKLE & DÜZENLE MODAL */}
-            {(addOpen || editOpen) && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-black/30" onClick={closeModals} />
-                    <div className="relative z-10 w-full max-w-2xl rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200">
-                        <div className="flex items-center justify-between border-b px-5 py-3">
-                            <h3 className="text-lg font-semibold">{editingId ? "Müdürlük Düzenle" : "Yeni Müdürlük"}</h3>
-                            <button onClick={closeModals} className="rounded-md p-1 hover:bg-slate-100">✕</button>
-                        </div>
-                        <div className="px-5 py-5 space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs text-slate-600 mb-1">Müdürlük İsmi *</label>
-                                    <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Örn. Bilgi İşlem" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs text-slate-600 mb-1">Ad Soyad *</label>
-                                    <input value={form.managerName} onChange={(e) => setForm({ ...form, managerName: e.target.value })} className={inputCls} placeholder="Örn. Ali Veli" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs text-slate-600 mb-1">E-posta</label>
-                                    <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} placeholder="ornek@domain.com" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs text-slate-600 mb-1">Resim URL</label>
-                                    <input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className={inputCls} placeholder="/images/personel.jpg" />
-                                </div>
-
-                                {extraKeys.map((k) => (
-                                    <div key={k} className="md:col-span-1">
-                                        <label className="block text-xs text-slate-600 mb-1">{k}</label>
-                                        <input value={form[k] ?? ""} onChange={(e) => setForm({ ...form, [k]: e.target.value })} className={inputCls} />
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="flex items-center justify-end gap-2 pt-2">
-                                <button onClick={closeModals} className="rounded-xl px-4 py-2 hover:bg-slate-100">Vazgeç</button>
-                                {editingId ? (
-                                    <button onClick={handleUpdate} disabled={creating} className="rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-60">
-                                        {creating ? "Kaydediliyor…" : "Güncelle"}
-                                    </button>
-                                ) : (
-                                    <button onClick={handleCreate} disabled={creating} className="rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-60">
-                                        {creating ? "Kaydediliyor…" : "Kaydet"}
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

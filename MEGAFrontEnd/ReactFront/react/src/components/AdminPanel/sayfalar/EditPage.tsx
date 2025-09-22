@@ -3,7 +3,13 @@ import {useParams, useNavigate, useLocation} from "react-router-dom";
 import {ArrowLeft, Save, X, AlertCircle, Eye} from "lucide-react";
 import {BaskanAPI} from "../services/pageService";
 import {apiGet, apiPut} from "../services/apiService";
-import {apiPostForm} from "../services/apiService2"; // <-- eklendi
+import { getAllYayinCategories } from "../services/yayinlarService";
+import type { YayinCategorySummary } from "../types/yayinlar";
+import { getHaberById, updateHaber, getAllHaberCategories } from "../services/haberlerService";
+import type { HaberCategorySummary } from "../types/haberler";
+
+// 🚀 YÜKLEME İÇİN eklendi:
+import { apiPostForm } from "../services/apiService2";
 
 /* ------------------------- Basit Layout ------------------------- */
 const SimpleLayout: React.FC<{ children: React.ReactNode }> = ({children}) => (
@@ -20,6 +26,7 @@ const DebugInfo: React.FC<{ data: any }> = ({data}) => (
     </pre>
     </div>
 );
+
 
 // herhangi bir objeden güvenli ID çek
 const extractId = (obj: any) =>
@@ -130,8 +137,7 @@ const CATEGORY_TO_TABLE: Record<string, string> = {
     eskibaskan: "KURUMSAL_MECLIS_ESKIBASKANLAR",
     yonetim: "kurumsal_yonetim_semasi",
 };
-
-// --- Hizmetler ---
+// --- HİZMETLER ---
 const HIZMETLER_CONFIG: TableConfig = {
     tableName: "HIZMETLER",
     displayName: "Hizmet",
@@ -148,20 +154,20 @@ const HIZMETLER_CONFIG: TableConfig = {
     ],
 };
 
-// --- Yayınlar ---
+/* --- YAYINLAR --- */
 const YAYINLAR_CONFIG: TableConfig = {
     tableName: "YAYINLAR",
     displayName: "Yayın",
     apiEndpoint: "/api/yayinlar",
     fields: [
-        {name: "yayinBaslik", label: "Yayın Başlık", type: "text", required: true},
-        {name: "yayinUrl", label: "Yayın URL", type: "text", required: true},
-        {name: "description", label: "Açıklama", type: "textarea"},
-        {name: "categoryId", label: "Kategori ID", type: "number", required: true},
+        { name: "yayinBaslik", label: "Yayın Başlık", type: "text", required: true },
+        { name: "yayinUrl",    label: "Yayın URL",    type: "text", required: true },
+        { name: "description", label: "Açıklama",     type: "textarea" },
+        { name: "categoryId",  label: "Kategori ID",  type: "select", required: true },
     ],
 };
 
-// --- Raporlar ---
+/* --- RAPORLAR --- */
 const RAPORLAR_CONFIG: TableConfig = {
     tableName: "RAPORLAR",
     displayName: "Rapor",
@@ -178,18 +184,19 @@ const RAPORLAR_CONFIG: TableConfig = {
 // --- Haberler ---
 const HABERLER_CONFIG: TableConfig = {
     tableName: "HABERLER",
-    displayName: "Haberler",
+    displayName: "Haber",
     apiEndpoint: "/api/haberler",
     fields: [
-        {name: "tarih", label: "Tarih", type: "date", required: true},
-        {name: "aciklama", label: "Açıklama", type: "textarea"},
-        {name: "resim1", label: "Resim 1 URL", type: "text"},
-        {name: "resim2", label: "Resim 2 URL", type: "text"},
-        {name: "kategoriId", label: "Kategori ID", type: "number"},
+        {name: "haberBaslik",   label: "Başlık",          type: "text", required: true},
+        {name: "haberTarih",    label: "Tarih",           type: "date", required: true},
+        {name: "haberAciklama", label: "Açıklama",        type: "textarea"},
+        {name: "haberResim1",   label: "Resim 1 URL",     type: "text"},
+        {name: "haberResim2",   label: "Resim 2 URL",     type: "text"},
+        {name: "categoryId",    label: "Kategori",        type: "select", required: true},
     ],
 };
 
-// --- Etkinlikler ---
+/* -------------------------- ETKİNLİK KONFİG -------------------------- */
 const EVENT_CONFIG: TableConfig = {
     tableName: "ETKINLIKLER",
     displayName: "Etkinlik",
@@ -201,13 +208,6 @@ const EVENT_CONFIG: TableConfig = {
         {name: "aciklama", label: "Açıklama", type: "textarea"},
     ],
 };
-
-/* =============================== Upload Yardımcıları =============================== */
-const UPLOAD_URL = "/api/files/upload";
-const toPublicPath = (fileName: string) =>
-    fileName.startsWith("/images/resimler/")
-        ? fileName
-        : `/images/resimler/${fileName}`;
 
 /* =============================== KOMPONENT =============================== */
 const DynamicEditPageForm: React.FC = () => {
@@ -250,43 +250,89 @@ const DynamicEditPageForm: React.FC = () => {
     const lastFocusedRef = React.useRef<string | null>(null);
     const rememberFocus = (name: string) => () => { lastFocusedRef.current = name; };
 
-    // --- Upload state: her görsel alanı için input ref & yükleme durumu
+    const [haberCategories, setHaberCategories] = useState<HaberCategorySummary[]>([]);
+    const [yayinCategories, setYayinCategories] = useState<YayinCategorySummary[]>([]);
+
+    // 🔁 Upload için eklendi:
     const fileInputRefs = React.useRef<Record<string, HTMLInputElement | null>>({});
     const [uploading, setUploading] = useState<Record<string, boolean>>({});
+    const UPLOAD_URL = "/api/files/upload";
+    const toPublicPath = (name: string) =>
+        name.startsWith("/images/resimler/") ? name : `/images/resimler/${name}`;
 
-    // formData değişince odağı geri ver
+    const openPicker = (field: string) => fileInputRefs.current[field]?.click();
+    const onPicked = async (field: string, e: React.ChangeEvent<HTMLInputElement>) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        try {
+            setError(null);
+            setUploading((u) => ({ ...u, [field]: true }));
+            const fd = new FormData();
+            fd.append("file", f);
+            const res = await apiPostForm<any>(UPLOAD_URL, fd);
+            const fileName = (res as any)?.fileName as string | undefined;
+            if (!fileName) throw new Error((res as any)?.message || "Yükleme başarısız");
+            const url = toPublicPath(fileName);
+            setFormData((p) => ({ ...p, [field]: url }));
+        } catch (er: any) {
+            setError(er?.message || "Resim yüklenemedi");
+        } finally {
+            setUploading((u) => ({ ...u, [field]: false }));
+            if (fileInputRefs.current[field]) fileInputRefs.current[field]!.value = "";
+        }
+    };
+
+    // kategoriler
+    useEffect(() => {
+        if (isHaberMode) {
+            (async () => {
+                try {
+                    const data = await getAllHaberCategories();
+                    setHaberCategories(data || []);
+                } catch (e) { /* noop */ }
+            })();
+        }
+        if (!isYayinMode) return;
+        (async () => {
+            try {
+                const data = await getAllYayinCategories();
+                setYayinCategories(data);
+            } catch (e) { /* noop */ }
+        })();
+    }, [isHaberMode, isYayinMode]);
+
+    // caret/odak koruma
     useEffect(() => {
         const name = caretRef.current?.name ?? lastFocusedRef.current;
         if (!name) return;
         const el = fieldRefs.current[name];
         if (el) {
-            el.focus({preventScroll: true});
+            el.focus({ preventScroll: true });
             if (caretRef.current && "setSelectionRange" in el) {
-                const {start, end} = caretRef.current;
+                const { start, end } = caretRef.current;
                 try { (el as HTMLInputElement | HTMLTextAreaElement).setSelectionRange(start, end); } catch {}
             }
         }
         caretRef.current = null;
     }, [formData]);
 
-    // textarea için change handler (imleç konumunu koru)
     const handleTextAreaChange = (field: string) =>
         (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            const {selectionStart, selectionEnd, value} = e.target;
+            const { selectionStart, selectionEnd, value } = e.target;
             caretRef.current = {
                 name: field,
                 start: selectionStart ?? value.length,
                 end: selectionEnd ?? value.length,
             };
-            setFormData((p) => ({...p, [field]: value}));
+            setFormData((p) => ({ ...p, [field]: value }));
         };
 
     useEffect(() => {
         if (!caretRef.current) return;
-        const {name, start, end} = caretRef.current;
+        const { name, start, end } = caretRef.current;
         const el = fieldRefs.current[name];
         if (el && document.activeElement !== el) {
-            el.focus({preventScroll: true});
+            el.focus({ preventScroll: true });
             try { el.setSelectionRange(start, end); } catch {}
         }
         caretRef.current = null;
@@ -300,7 +346,6 @@ const DynamicEditPageForm: React.FC = () => {
         url && url.trim() !== "" ? url : "/images/placeholder-16x9.jpg";
 
     const THUMB_HEIGHT = "h-40";
-
     const renderImageThumb = (url?: string) => (
         <div className="mt-2">
             <div className={`w-full ${THUMB_HEIGHT} rounded-xl overflow-hidden bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center`}>
@@ -314,31 +359,6 @@ const DynamicEditPageForm: React.FC = () => {
         </div>
     );
 
-    // Dosya seçtir
-    const openPicker = (field: string) => fileInputRefs.current[field]?.click();
-
-    // Seçilen dosyayı yükle ve URL'i forma yaz
-    const onPicked = async (field: string, e: React.ChangeEvent<HTMLInputElement>) => {
-        const f = e.target.files?.[0];
-        if (!f) return;
-        try {
-            setError(null);
-            setUploading((u) => ({...u, [field]: true}));
-            const fd = new FormData();
-            fd.append("file", f);
-            const res = await apiPostForm<any>(UPLOAD_URL, fd);
-            const fileName = (res as any)?.fileName as string | undefined;
-            if (!fileName) throw new Error((res as any)?.message || "Yükleme başarısız");
-            const publicUrl = toPublicPath(fileName);
-            setFormData((p) => ({...p, [field]: publicUrl}));
-        } catch (er: any) {
-            setError(er?.message || "Resim yüklenemedi");
-        } finally {
-            setUploading((u) => ({...u, [field]: false}));
-            if (fileInputRefs.current[field]) fileInputRefs.current[field]!.value = "";
-        }
-    };
-
     /* ------------------------------ Fetch ------------------------------ */
     const fetchData = useCallback(
         async (recordId: string) => {
@@ -349,25 +369,18 @@ const DynamicEditPageForm: React.FC = () => {
 
                 // HABERLER
                 if (isHaberMode) {
-                    let data: any;
-                    try {
-                        data = await apiGet<any>(`${HABERLER_CONFIG.apiEndpoint}/${numericId}`);
-                    } catch {
-                        const all = await apiGet<any[]>(HABERLER_CONFIG.apiEndpoint);
-                        data = all.find((x) => x.id === numericId);
-                    }
-                    if (!data) throw new Error("Record not found");
+                    const data = await getHaberById(numericId);
+                    if (!data) throw new Error("Haber kaydı bulunamadı");
 
                     setTableConfig(HABERLER_CONFIG);
                     setFormData({
-                        id: data.id ?? "",
-                        baslik: data.baslik ?? "",
-                        tarih: data.tarih ?? "",
-                        aciklama: data.aciklama ?? "",
-                        resim1: data.resim1 ?? "",
-                        resim2: data.resim2 ?? "",
-                        kategoriId: data.kategori?.id ?? "",
-                        kategori: data.kategori ?? null,
+                        haberlerId: data.haberlerId,
+                        haberBaslik: data.haberBaslik ?? "",
+                        haberTarih: (data.haberTarih ?? "").slice(0, 10),
+                        haberAciklama: data.haberAciklama ?? "",
+                        haberResim1: data.haberResim1 ?? "",
+                        haberResim2: data.haberResim2 ?? "",
+                        categoryId: data.categoryId ?? null,
                     });
                     setHasLoaded(true);
                     return;
@@ -377,13 +390,10 @@ const DynamicEditPageForm: React.FC = () => {
                 if (isYayinMode) {
                     const cfg = YAYINLAR_CONFIG;
                     let data: any;
-
-                    try {
-                        data = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`);
-                    } catch {
-                        try {
-                            data = await apiGet<any>(`${cfg.apiEndpoint}/find/${numericId}`);
-                        } catch {
+                    try { data = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`); }
+                    catch {
+                        try { data = await apiGet<any>(`${cfg.apiEndpoint}/find/${numericId}`); }
+                        catch {
                             const all = await apiGet<any[]>(`${cfg.apiEndpoint}/list`).catch(() => apiGet<any[]>(cfg.apiEndpoint));
                             data = all.find((x) => extractId(x) === numericId);
                         }
@@ -405,9 +415,8 @@ const DynamicEditPageForm: React.FC = () => {
                 // RAPORLAR
                 if (isRaporMode) {
                     let data: any;
-                    try {
-                        data = await apiGet<any>(`${RAPORLAR_CONFIG.apiEndpoint}/find/${numericId}`);
-                    } catch {
+                    try { data = await apiGet<any>(`${RAPORLAR_CONFIG.apiEndpoint}/find/${numericId}`); }
+                    catch {
                         try {
                             const all = await apiGet<any[]>(`${RAPORLAR_CONFIG.apiEndpoint}/list`);
                             data = all.find((x) => extractId(x) === numericId);
@@ -435,9 +444,8 @@ const DynamicEditPageForm: React.FC = () => {
                 // ETKİNLİK
                 if (isEventMode) {
                     let data: any;
-                    try {
-                        data = await apiGet<any>(`/api/etkinlikler/${numericId}`);
-                    } catch {
+                    try { data = await apiGet<any>(`/api/etkinlikler/${numericId}`); }
+                    catch {
                         const all = await apiGet<any[]>("/api/etkinlikler");
                         data = all.find((x) => x.id === numericId);
                     }
@@ -458,9 +466,8 @@ const DynamicEditPageForm: React.FC = () => {
                 // HİZMETLER
                 if (isHizmetMode) {
                     let data: any;
-                    try {
-                        data = await apiGet<any>(`${HIZMETLER_CONFIG.apiEndpoint}/${numericId}`);
-                    } catch {
+                    try { data = await apiGet<any>(`${HIZMETLER_CONFIG.apiEndpoint}/${numericId}`); }
+                    catch {
                         const all = await apiGet<any[]>(HIZMETLER_CONFIG.apiEndpoint);
                         data = all.find((x) => x.id === numericId);
                     }
@@ -486,12 +493,10 @@ const DynamicEditPageForm: React.FC = () => {
                 if (isYonetimMode) {
                     const cfg = TABLE_CONFIGS["kurumsal_yonetim_semasi"];
                     let data: any;
-                    try {
-                        data = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`);
-                    } catch {
-                        try {
-                            data = await apiGet<any>(`${cfg.apiEndpoint}/find/${numericId}`);
-                        } catch {
+                    try { data = await apiGet<any>(`${cfg.apiEndpoint}/${numericId}`); }
+                    catch {
+                        try { data = await apiGet<any>(`${cfg.apiEndpoint}/find/${numericId}`); }
+                        catch {
                             const all = await apiGet<any[]>(`${cfg.apiEndpoint}/list`).catch(() => apiGet<any[]>(cfg.apiEndpoint));
                             data = all.find((x) => extractId(x) === numericId);
                         }
@@ -598,9 +603,9 @@ const DynamicEditPageForm: React.FC = () => {
                 if (!idForPut) throw new Error("Yayın ID bulunamadı");
                 const payload = {
                     yayinBaslik: (formData.yayinBaslik ?? "").trim(),
-                    yayinUrl: (formData.yayinUrl ?? "").trim(),
+                    yayinUrl:    (formData.yayinUrl ?? "").trim(),
                     description: (formData.description ?? "").toString(),
-                    categoryId: Number(formData.categoryId) || 0,
+                    categoryId:  Number(formData.categoryId) || 0,
                 };
                 try { await apiPut(`/api/yayinlar/${idForPut}`, payload); }
                 catch { await apiPut(`/api/yayinlar/update/${idForPut}`, payload); }
@@ -623,15 +628,16 @@ const DynamicEditPageForm: React.FC = () => {
 
             if (isHaberMode) {
                 const payload = {
-                    baslik: (formData.baslik ?? "").trim(),
-                    tarih: (formData.tarih ?? "").trim(),
-                    aciklama: formData.aciklama ?? "",
-                    resim1: formData.resim1 ?? "",
-                    resim2: formData.resim2 ?? "",
-                    ...(formData.kategoriId ? { kategori: { id: Number(formData.kategoriId) } } : {}),
+                    haberBaslik:   (formData.haberBaslik ?? "").trim(),
+                    haberTarih:    (formData.haberTarih ?? "").trim(),
+                    haberAciklama: formData.haberAciklama ?? "",
+                    haberResim1:   formData.haberResim1 ?? "",
+                    haberResim2:   formData.haberResim2 ?? "",
+                    categoryId:    Number(formData.categoryId),
                 };
-                await apiPut(`/api/haberler/update/${formData.id}`, payload);
-                alert("Haberler güncellendi!");
+                await updateHaber(formData.haberlerId, payload);
+                alert("Haber güncellendi!");
+                navigate(goBackToList(), { replace: true });
                 return;
             }
 
@@ -672,7 +678,7 @@ const DynamicEditPageForm: React.FC = () => {
     };
 
     /* ---------------------------- Form Fields ---------------------------- */
-    const handleInputChange = (field: string, value: any) =>
+    const handleInputChangerenderImageInput = (field: string, value: any) =>
         setFormData((p) => ({...p, [field]: value}));
 
     const handleCancel = () => {
@@ -681,7 +687,7 @@ const DynamicEditPageForm: React.FC = () => {
         }
     };
 
-    // Tek noktadan “görsel alanı” render’ı (metin + dosya seç + önizleme)
+    // 🔧 Resim alanları için: metin + Dosya Seç + gizli file input + önizleme
     const renderImageInput = (field: string, value: string, placeholder = "Görsel URL") => {
         const common =
             "w-full border border-slate-200/80 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent bg-white/80";
@@ -690,12 +696,12 @@ const DynamicEditPageForm: React.FC = () => {
         return (
             <>
                 <div className="flex items-center gap-2">
+                    {/* ARTIK SADECE OKUNUR: el ile yazılamaz */}
                     <input
                         ref={(el) => (fieldRefs.current[field] = el)}
                         type="text"
                         value={value || ""}
-                        onChange={(e) => handleInputChange(field, e.target.value)}
-                        onFocus={rememberFocus(field)}
+                        readOnly
                         className={common + " flex-1"}
                         placeholder={placeholder}
                     />
@@ -725,7 +731,7 @@ const DynamicEditPageForm: React.FC = () => {
         const common =
             "w-full border border-slate-200/80 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent bg-white/80";
 
-        // “resimUrl, imgUrl, imageUrl …” gibi adlara sahip TEXT alanlarını da dosya yükler yap
+        // 🔁 Görsel benzeri text alanları
         if (field.type === "text" && isImageLike(field.name)) {
             return renderImageInput(field.name, value, field.placeholder || "Görsel URL");
         }
@@ -770,6 +776,39 @@ const DynamicEditPageForm: React.FC = () => {
                     />
                 );
             case "select":
+                if (isHaberMode && field.name === "categoryId") {
+                    return (
+                        <select
+                            value={formData.categoryId ?? ""}
+                            onChange={(e) => handleInputChange(field.name, e.target.value === "" ? "" : Number(e.target.value))}
+                            className={common}
+                            required={field.required}
+                        >
+                            <option value="">— Kategori Seçiniz —</option>
+                            {haberCategories.map((cat) => (
+                                <option key={cat.categoryId} value={cat.categoryId}>
+                                    {cat.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    );
+                }
+                if (isYayinMode && field.name === "categoryId") {
+                    return (
+                        <select
+                            value={formData.categoryId ?? ""}
+                            onChange={(e) => handleInputChange(field.name, e.target.value === "" ? "" : Number(e.target.value))}
+                            className={common}
+                        >
+                            <option value="">Kategori Seçiniz</option>
+                            {yayinCategories.map((cat) => (
+                                <option key={cat.categoryId} value={cat.categoryId}>
+                                    {cat.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    );
+                }
                 return (
                     <select
                         value={value}
@@ -806,7 +845,7 @@ const DynamicEditPageForm: React.FC = () => {
                     />
                 );
             case "image":
-                // IMAGE tipinde tanımlıysa da aynı mimari
+                // tip: "image" için de aynı mimari
                 return renderImageInput(field.name, value, "Görsel URL");
             default:
                 return (
@@ -906,6 +945,23 @@ const DynamicEditPageForm: React.FC = () => {
                     </button>
                 </div>
             </div>
+
+            {debugMode && (
+                <DebugInfo
+                    data={{
+                        urlParams: {id},
+                        mode: isEventMode ? "event"
+                            : isHaberMode ? "haber"
+                                : isHizmetMode ? "hizmet"
+                                    : isRaporMode ? "rapor"
+                                        : isYayinMode ? "yayin"
+                                            : isKurumsalBMVIMode ? "kurumsal_bmvi"
+                                                : "unknown",
+                        tableConfig: tableConfig?.tableName,
+                        formData,
+                    }}
+                />
+            )}
 
             {/* Gövde */}
             <div className="rounded-2xl p-6 bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)]">

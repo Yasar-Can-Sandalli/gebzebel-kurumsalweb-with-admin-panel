@@ -13,7 +13,7 @@ import {
     Mail,
     Users,
     Settings,
-    ChevronRight,
+    ChevronRight, Megaphone,
 } from "lucide-react";
 import { useCurrentUser } from "./hooks/useCurrentUser";
 import { useAuthStore } from "./store/authStore";
@@ -232,10 +232,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
                     {/* Haberler */}
                     <Item
-                        to="/panel/haberler/list"
+                        to="/panel/haberler"
                         label="Haberler"
                         icon={<FileText size={16} />}
-                        active={pathname.startsWith("/panel/haberler/list")}
+                        active={pathname.startsWith("/panel/haberler")}
                         onNavigate={handleNavClick}
                     />
 
@@ -291,9 +291,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         onNavigate={handleNavClick}
                     />
                     <Item
-                        to="/panel/iletisim"
-                        label="İletişim"
-                        icon={<Mail size={16} />}
+                        to="/panel/duyurular"
+                        label="Duyurular"
+                        icon={<Megaphone size={16} />}
                         active={pathname.startsWith("/panel/iletisim")}
                         onNavigate={handleNavClick}
                     />

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createHaber, getAllHaberCategories } from "../services/haberlerService";
 import type { HaberCategorySummary } from "../types/haberler";
-import { apiPostForm } from "../services/apiService2"; // <- YÜKLEME İÇİN
+import { apiPostForm } from "../services/apiService2";
 
 type FormState = {
     haberBaslik: string;
@@ -33,11 +33,13 @@ export default function HaberYeniPage() {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // --- YÜKLEME DURUMLARI & INPUT REFLERİ ---
     const [uploading1, setUploading1] = useState(false);
     const [uploading2, setUploading2] = useState(false);
     const fileRef1 = useRef<HTMLInputElement>(null);
     const fileRef2 = useRef<HTMLInputElement>(null);
+
+    const [preview1, setPreview1] = useState<string>("");
+    const [preview2, setPreview2] = useState<string>("");
 
     useEffect(() => {
         (async () => {
@@ -52,10 +54,10 @@ export default function HaberYeniPage() {
         })();
     }, []);
 
-    const inputCls =
-        "rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
+    const inputBase =
+        "w-full rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
+    const card = "rounded-2xl bg-white ring-1 ring-slate-200/70 shadow-md shadow-blue-500/5";
 
-    // --- TEK DOSYA YÜKLE ---
     const uploadOne = async (file: File) => {
         const fd = new FormData();
         fd.append("file", file);
@@ -65,34 +67,36 @@ export default function HaberYeniPage() {
         return toPublicPath(fileName);
     };
 
-    // --- RESİM 1 SEÇ ---
     const onPick1 = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const f = e.target.files?.[0];
         if (!f) return;
         try {
             setError(null);
             setUploading1(true);
+            setPreview1(URL.createObjectURL(f));
             const url = await uploadOne(f);
             setForm((p) => ({ ...p, haberResim1: url }));
         } catch (er: any) {
             setError(er?.message || "Resim 1 yüklenemedi");
+            setPreview1("");
         } finally {
             setUploading1(false);
             if (fileRef1.current) fileRef1.current.value = "";
         }
     };
 
-    // --- RESİM 2 SEÇ ---
     const onPick2 = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const f = e.target.files?.[0];
         if (!f) return;
         try {
             setError(null);
             setUploading2(true);
+            setPreview2(URL.createObjectURL(f));
             const url = await uploadOne(f);
             setForm((p) => ({ ...p, haberResim2: url }));
         } catch (er: any) {
             setError(er?.message || "Resim 2 yüklenemedi");
+            setPreview2("");
         } finally {
             setUploading2(false);
             if (fileRef2.current) fileRef2.current.value = "";
@@ -101,19 +105,14 @@ export default function HaberYeniPage() {
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         if (!form.categoryId) {
             setError("Lütfen bir kategori seçiniz.");
             return;
         }
-
         setError(null);
         setSaving(true);
         try {
-            await createHaber({
-                ...form,
-                categoryId: form.categoryId,
-            });
+            await createHaber({ ...form, categoryId: form.categoryId });
             navigate("..", { replace: true, relative: "path" });
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.response?.data || err?.message || "Kaydetme hatası";
@@ -123,8 +122,75 @@ export default function HaberYeniPage() {
         }
     };
 
+    const ImageCard = ({
+                           title,
+                           urlValue,
+                           preview,
+                           busy,
+                           onPick,
+                           fileRef,
+                       }: {
+        title: string;
+        urlValue: string;
+        preview?: string;
+        busy: boolean;
+        onPick: (e: React.ChangeEvent<HTMLInputElement>) => void;
+        fileRef: React.RefObject<HTMLInputElement>;
+    }) => (
+        <div className={card}>
+            <div className="flex items-center justify-between px-4 pt-4">
+                <div className="text-sm font-medium text-slate-700">{title}</div>
+                <div className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={() => fileRef.current?.click()}
+                        disabled={busy}
+                        className="rounded-md px-3 py-1.5 text-xs ring-1 ring-slate-200 hover:bg-slate-50"
+                    >
+                        {busy ? "Yükleniyor…" : "Dosya Seç"}
+                    </button>
+                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPick} />
+                </div>
+            </div>
+
+            {/* Preview */}
+            <div className="px-4 pb-4">
+                <div className="mt-3 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-slate-50">
+                    <div className="aspect-video w-full">
+                        {preview || urlValue ? (
+                            <img
+                                src={preview || urlValue}
+                                alt="Önizleme"
+                                className="h-full w-full object-contain bg-white"
+                                onError={(e) => ((e.target as HTMLImageElement).style.visibility = "hidden")}
+                            />
+                        ) : (
+                            <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
+                                Önizleme yok
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* URL (readOnly) */}
+                <div className="mt-3">
+                    <input
+                        className={inputBase + " text-sm"}
+                        placeholder="/images/resimler/…"
+                        value={urlValue}
+                        readOnly
+                    />
+                    <p className="mt-1 text-[11px] text-slate-500">
+                        URL otomatik doldurulur. Görseli değiştirmek için tekrar “Dosya Seç”e basın.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div className="space-y-4">
+            {/* Üst bar */}
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-semibold text-slate-800">Yeni Haber</h1>
                 <Link to=".." relative="path" className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">
@@ -134,97 +200,101 @@ export default function HaberYeniPage() {
 
             {error && <div className="text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">{error}</div>}
 
-            <form onSubmit={submit} className="mx-auto max-w-2xl bg-white rounded-xl p-5 shadow-md ring-1 ring-slate-200/60">
-                <div className="grid grid-cols-2 gap-3">
-                    <input
-                        type="text"
-                        placeholder="Başlık"
-                        className={inputCls}
-                        value={form.haberBaslik}
-                        onChange={(e) => setForm({ ...form, haberBaslik: e.target.value })}
-                        required
-                    />
-
-                    <input
-                        type="date"
-                        className={inputCls}
-                        value={form.haberTarih}
-                        onChange={(e) => setForm({ ...form, haberTarih: e.target.value })}
-                        required
-                    />
-
-                    <select
-                        className={inputCls}
-                        value={form.categoryId ?? ""}
-                        required
-                        disabled={loadingCats}
-                        onChange={(e) => setForm({ ...form, categoryId: e.target.value ? Number(e.target.value) : null })}
-                    >
-                        <option value="">{loadingCats ? "Kategoriler yükleniyor…" : "— Kategori Seç —"}</option>
-                        {kategoriler.map((k) => (
-                            <option key={k.categoryId} value={k.categoryId}>
-                                {k.categoryName}
-                            </option>
-                        ))}
-                    </select>
-
-                    {/* Resim 1 URL + Dosya Seç */}
-                    <div className="flex items-center gap-2">
+            <form onSubmit={submit} className={card + " mx-auto max-w-5xl p-5"}>
+                {/* Üst 3’lü satır */}
+                <div className="grid gap-4 md:grid-cols-3">
+                    <div>
+                        <label className="mb-1 block text-sm font-medium text-slate-700">Başlık</label>
                         <input
                             type="text"
-                            placeholder="Resim 1 URL"
-                            className={inputCls + " flex-1"}
-                            value={form.haberResim1}
-                            onChange={(e) => setForm({ ...form, haberResim1: e.target.value })}
+                            className={inputBase}
+                            value={form.haberBaslik}
+                            onChange={(e) => setForm({ ...form, haberBaslik: e.target.value })}
+                            required
+                            placeholder="Haber başlığı"
                         />
-                        <button
-                            type="button"
-                            onClick={() => fileRef1.current?.click()}
-                            disabled={uploading1}
-                            className="rounded-md px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50 text-xs"
-                        >
-                            {uploading1 ? "Yükleniyor…" : "Dosya Seç"}
-                        </button>
-                        <input ref={fileRef1} type="file" accept="image/*" className="hidden" onChange={onPick1} />
                     </div>
 
-                    {/* Resim 2 URL + Dosya Seç (geniş satırdaki yapıyı bozmayalım diye col-span-2 korundu) */}
-                    <div className="flex items-center gap-2 col-span-2">
+                    <div>
+                        <label className="mb-1 block text-sm font-medium text-slate-700">Tarih</label>
                         <input
-                            type="text"
-                            placeholder="Resim 2 URL"
-                            className={inputCls + " flex-1"}
-                            value={form.haberResim2}
-                            onChange={(e) => setForm({ ...form, haberResim2: e.target.value })}
+                            type="date"
+                            className={inputBase}
+                            value={form.haberTarih}
+                            onChange={(e) => setForm({ ...form, haberTarih: e.target.value })}
+                            required
                         />
-                        <button
-                            type="button"
-                            onClick={() => fileRef2.current?.click()}
-                            disabled={uploading2}
-                            className="rounded-md px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50 text-xs"
-                        >
-                            {uploading2 ? "Yükleniyor…" : "Dosya Seç"}
-                        </button>
-                        <input ref={fileRef2} type="file" accept="image/*" className="hidden" onChange={onPick2} />
                     </div>
 
-                    <textarea
-                        placeholder="Açıklama / İçerik"
-                        rows={3}
-                        className={inputCls + " col-span-2"}
-                        value={form.haberAciklama}
-                        onChange={(e) => setForm({ ...form, haberAciklama: e.target.value })}
+                    <div>
+                        <label className="mb-1 block text-sm font-medium text-slate-700">Kategori</label>
+                        <select
+                            className={inputBase}
+                            value={form.categoryId ?? ""}
+                            required
+                            disabled={loadingCats}
+                            onChange={(e) => setForm({ ...form, categoryId: e.target.value ? Number(e.target.value) : null })}
+                        >
+                            <option value="">{loadingCats ? "Kategoriler yükleniyor…" : "— Kategori Seç —"}</option>
+                            {kategoriler.map((k) => (
+                                <option key={k.categoryId} value={k.categoryId}>
+                                    {k.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                {/* Görsel Kartları */}
+                <div className="mt-5 grid gap-5 lg:grid-cols-2">
+                    <ImageCard
+                        title="Kapak Görseli (Resim 1)"
+                        urlValue={form.haberResim1}
+                        preview={preview1}
+                        busy={uploading1}
+                        onPick={onPick1}
+                        fileRef={fileRef1}
+                    />
+
+                    <ImageCard
+                        title="İçerik Görseli (Resim 2)"
+                        urlValue={form.haberResim2}
+                        preview={preview2}
+                        busy={uploading2}
+                        onPick={onPick2}
+                        fileRef={fileRef2}
                     />
                 </div>
 
-                <div className="flex gap-3 mt-4">
+                {/* Açıklama */}
+                <div className="mt-5">
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Açıklama / İçerik</label>
+                    <textarea
+                        rows={5}
+                        className={inputBase}
+                        value={form.haberAciklama}
+                        onChange={(e) => setForm({ ...form, haberAciklama: e.target.value })}
+                        placeholder="Haberin kısa özeti veya içerik metni…"
+                    />
+                </div>
+
+                {/* Aksiyonlar */}
+                <div className="mt-6 flex items-center gap-3">
                     <button
                         type="submit"
                         disabled={saving}
-                        className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg disabled:opacity-60"
+                        className="px-5 py-2.5 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-md disabled:opacity-60"
                     >
                         {saving ? "Kaydediliyor..." : "Kaydet"}
                     </button>
+
+                    <Link
+                        to=".."
+                        relative="path"
+                        className="rounded-lg px-4 py-2 ring-1 ring-slate-200 hover:bg-slate-50 text-slate-700"
+                    >
+                        İptal
+                    </Link>
                 </div>
             </form>
         </div>
