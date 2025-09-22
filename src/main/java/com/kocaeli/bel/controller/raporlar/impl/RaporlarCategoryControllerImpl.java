@@ -1,9 +1,9 @@
-package com.kocaeli.bel.controller.raporlar;
+package com.kocaeli.bel.controller.raporlar.impl;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.kocaeli.bel.DTO.raporlar.RaporlarCategoryResponse;
 import com.kocaeli.bel.DTO.raporlar.RaporlarCategoryResponseBasic;
-import com.kocaeli.bel.controller.raporlar.impl.IRaporlarCategoryController;
+import com.kocaeli.bel.controller.raporlar.IRaporlarCategoryController;
 import com.kocaeli.bel.model.raporlar.RaporlarCategory;
 import com.kocaeli.bel.service.raporlar.IRaporlarCategoryService;
 import lombok.RequiredArgsConstructor;

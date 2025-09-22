@@ -19,17 +19,19 @@ import KurumsalMudurluklerEditPage from "./sayfalar/kurumsal/KurumsalMudurlukler
 import GebzeLayout from "./sayfalar/gebze/_LayoutGebze";
 import GebzeTarihcePage from "./sayfalar/gebze/GebzeTarihcePage";
 import GebzeYonetimPage from "./sayfalar/gebze/GebzeYonetimPage";
+import GebzeYonetimYeniPage from "./sayfalar/gebze/GebzeYonetimYeniPage";
+import GebzeYonetimEditPage from "./sayfalar/gebze/GebzeYonetimEditPage";
 import GebzeSanalTurPage from "./sayfalar/gebze/GebzeSanalTurPage";
 
 // --- Diğer modüller
 import HaberlerPage from "./sayfalar/HaberlerPage";
 import HaberlerYeniPage from "./sayfalar/HaberlerYeniPage.tsx"
 import HizmetlerPage from "./sayfalar/HizmetlerPage";
+import HizmetlerYeniPage from "./sayfalar/HizmetlerYeniPage";
 import EtkinliklerPage from "./sayfalar/EtkinliklerPage";
 import EtkinlikYeniPage from "./sayfalar/EtkinlikYeniPage";
 import EditPage from "./sayfalar/EditPage";
 import YayinlarPage from "./sayfalar/YayinlarPage";
-import YayinlarYeniPage  from "./sayfalar/YayinlarYeniPage.tsx";
 import IletisimPage from "./sayfalar/IletisimPage";
 
 // --- Kullanıcı sayfaları
@@ -41,6 +43,7 @@ import AddUserPage from "./users/AddUserPage";
 
 // --- Ayarlar sayfası
 import SettingsPage from "./settings/SettingsPage";
+//import RaporEditPage from "./sayfalar/kurumsal/RaporEditPage";
 
 export default function AdminPanelApp() {
     return (
@@ -67,7 +70,6 @@ export default function AdminPanelApp() {
                         <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
                         <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
-                        <Route path="raporlar/:id/edit" element={<EditPage />} />
                         <Route path="komisyonlar" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler/yeni" element={<KurumsalMudurluklerYeniPage />} />
@@ -79,6 +81,8 @@ export default function AdminPanelApp() {
                         <Route index element={<Navigate to="tarihce" replace />} />
                         <Route path="tarihce" element={<GebzeTarihcePage />} />
                         <Route path="yonetim" element={<GebzeYonetimPage />} />
+                        <Route path="yonetim/duzenle/:id" element={<GebzeYonetimEditPage />} />
+                        <Route path="yonetim/yeni" element={<GebzeYonetimYeniPage />} />
                         <Route path="sanal-tur" element={<GebzeSanalTurPage />} />
                     </Route>
 
@@ -87,13 +91,12 @@ export default function AdminPanelApp() {
                     <Route path="haberler/list/yeni" element={<HaberlerYeniPage />} />
                     <Route path="haberler/duzenle/:id" element={<EditPage />} />
                     <Route path="hizmetler" element={<HizmetlerPage />} />
+                    <Route path="hizmetler/yeni" element={<HizmetlerYeniPage />} />
                     <Route path="hizmetler/:id/duzenle" element={<EditPage />} />
                     <Route path="etkinlikler" element={<EtkinliklerPage />} />
                     <Route path="etkinlikler/yeni" element={<EtkinlikYeniPage />} />
                     <Route path="etkinlikler/:id/duzenle" element={<EditPage />} />
                     <Route path="yayinlar" element={<YayinlarPage />} />
-                    <Route path="yayinlar/yeni" element={<YayinlarYeniPage />} />
-                    <Route path="yayinlar/duzenle/:id" element={<EditPage />} />
                     <Route path="iletisim" element={<IletisimPage />} />
 
                     {/* 404 */}

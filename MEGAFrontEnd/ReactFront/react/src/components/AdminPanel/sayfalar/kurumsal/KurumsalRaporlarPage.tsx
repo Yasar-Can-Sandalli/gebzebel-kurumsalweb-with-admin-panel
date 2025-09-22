@@ -40,6 +40,9 @@ const Badge = ({ children, tone = "slate" }: { children: React.ReactNode; tone?:
     );
 };
 
+
+
+
 export default function KurumsalRaporlarPage() {
     const nav = useNavigate();
 
@@ -119,6 +122,7 @@ export default function KurumsalRaporlarPage() {
         };
     }, []);
 
+
     // Seçili kategori raporlarını çek
     const refresh = React.useCallback(async (categoryId: number) => {
         if (!Number.isFinite(categoryId)) {
@@ -137,6 +141,7 @@ export default function KurumsalRaporlarPage() {
             setLoading(false);
         }
     }, []);
+
 
     React.useEffect(() => {
         refresh(activeId);

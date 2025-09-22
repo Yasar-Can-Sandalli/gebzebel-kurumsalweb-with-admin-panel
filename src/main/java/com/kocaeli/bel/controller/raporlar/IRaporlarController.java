@@ -1,4 +1,4 @@
-package com.kocaeli.bel.controller.raporlar.impl;
+package com.kocaeli.bel.controller.raporlar;
 
 import com.kocaeli.bel.DTO.raporlar.CreateRaporRequest;
 import com.kocaeli.bel.DTO.raporlar.RaporlarResponse;

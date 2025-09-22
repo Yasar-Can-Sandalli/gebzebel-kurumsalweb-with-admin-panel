@@ -1,9 +1,8 @@
-package com.kocaeli.bel.controller.raporlar;
+package com.kocaeli.bel.controller.raporlar.impl;
 
 import com.kocaeli.bel.DTO.raporlar.CreateRaporRequest;
 import com.kocaeli.bel.DTO.raporlar.RaporlarResponse;
-import com.kocaeli.bel.controller.raporlar.impl.IRaporlarController;
-import com.kocaeli.bel.model.raporlar.Raporlar;
+import com.kocaeli.bel.controller.raporlar.IRaporlarController;
 import com.kocaeli.bel.service.raporlar.IRaporlarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
