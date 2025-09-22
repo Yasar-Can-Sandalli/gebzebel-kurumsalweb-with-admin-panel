@@ -43,7 +43,7 @@ public class HizmetlerController {
         return new ResponseEntity<>(hizmetler, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<HizmetlerDTO> createHizmet(@RequestBody HizmetlerDTO hizmetlerDTO) {
         HizmetlerDTO createdHizmet = hizmetlerService.createHizmet(hizmetlerDTO);
         return new ResponseEntity<>(createdHizmet, HttpStatus.CREATED);
