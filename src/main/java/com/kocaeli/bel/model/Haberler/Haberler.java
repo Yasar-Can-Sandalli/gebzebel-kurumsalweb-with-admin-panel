@@ -20,7 +20,7 @@ import java.time.LocalDate;
 public class Haberler {
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "haberler_seq_gen")
-    @SequenceGenerator(name = "haberler_seq_gen", sequenceName = "HABERLER_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "haberler_seq_gen", sequenceName = "HABERLER_SEQ_GEN", allocationSize = 1)
     @Id
     @Column(name = "ID")
     //@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,9 +8,10 @@ import lombok.Data;
 @Data
 public class Mudurlukler {
 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mudurlukler_seq_gen")
+    @SequenceGenerator(name = "mudurlukler_seq_gen", sequenceName = "MUDURLUKLER_SEQ_GEN", allocationSize = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Adjust based on your DB sequence strategy
-    @Column(name = "ID") // Make sure the column name matches in the DB
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "MUDURLUKISIM", nullable = false) // Department name

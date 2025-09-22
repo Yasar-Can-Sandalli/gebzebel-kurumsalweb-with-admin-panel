@@ -99,6 +99,7 @@ export default function AdminPanelApp() {
                     <Route path="etkinlikler/:id/duzenle" element={<EditPage />} />
                     <Route path="yayinlar" element={<YayinlarPage />} />
                     <Route path="yayinlar/yeni" element={<YayinlarYeniPage />} />
+                    <Route path="yayinlar/duzenle/:id" element={<EditPage />} />
                     <Route path="duyurular" element={<DuyuruPage />} />
 
                     {/* 404 */}

@@ -106,7 +106,7 @@ export default function KurumsalMudurluklerPage() {
         <div className="space-y-5">
             <h1 className="text-2xl font-semibold text-slate-800">Müdürlükler</h1>
 
-            <div className="bg-white rounded-2xl shadow-md ring-1 ring-slate-200/60 overflow-hidden">
+            <div className="sticky top-0 z-10 bg-white">
                 <div className="p-4 border-b">
                     <div className="grid gap-3 md:grid-cols-[1fr,auto] md:items-center">
                         <div className="grid gap-3 md:grid-cols-2">
@@ -128,7 +128,10 @@ export default function KurumsalMudurluklerPage() {
                     {error && <div className="mt-3 text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">{error}</div>}
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="overflow-y-auto" style={{ maxHeight: "70vh" }}>
+                    <div className="overflow-x-auto">
+                        {/* tablo/list */}
+                    </div>
                     <table className="min-w-full text-sm">
                         <thead className="bg-slate-50 text-slate-700">
                         <tr className="text-left">

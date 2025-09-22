@@ -678,7 +678,7 @@ const DynamicEditPageForm: React.FC = () => {
     };
 
     /* ---------------------------- Form Fields ---------------------------- */
-    const handleInputChangerenderImageInput = (field: string, value: any) =>
+    const handleInputChange = (field: string, value: any) =>
         setFormData((p) => ({...p, [field]: value}));
 
     const handleCancel = () => {

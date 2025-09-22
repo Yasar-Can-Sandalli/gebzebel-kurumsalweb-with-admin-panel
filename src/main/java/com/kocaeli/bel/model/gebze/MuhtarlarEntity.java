@@ -10,8 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MuhtarlarEntity {
+
+
+
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "muhtarlar_seq_gen")
+    @SequenceGenerator(name = "muhtarlar_seq_gen", sequenceName = "MUHTARLAR_SEQ_GEN", allocationSize = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 

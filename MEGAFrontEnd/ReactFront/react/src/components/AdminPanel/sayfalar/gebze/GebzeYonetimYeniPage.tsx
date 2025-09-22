@@ -72,7 +72,7 @@ export default function GebzeYonetimYeniPage() {
                 ...form,
                 resimUrl: (form.resimUrl || "").trim(), // /images/resimler/<ad>
             });
-            nav("/panel/kurumsal/gebze-yonetim");
+            nav("/panel/gebze/yonetim");
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Ekleme hatası";
             setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
@@ -92,7 +92,7 @@ export default function GebzeYonetimYeniPage() {
                     </div>
                     <div className="flex gap-2">
                         <Link
-                            to="/panel/kurumsal/gebze-yonetim"
+                            to="/panel/gebze/yonetim"
                             className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50"
                         >
                             İptal

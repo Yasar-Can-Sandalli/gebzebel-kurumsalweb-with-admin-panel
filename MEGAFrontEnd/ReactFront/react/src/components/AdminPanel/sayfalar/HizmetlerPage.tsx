@@ -184,7 +184,10 @@ export default function HizmetlerPage() {
                 </div>
 
                 {/* TABLO */}
-                <div className="overflow-x-auto">
+                <div className="overflow-y-auto" style={{ maxHeight: "70vh" }}>
+                    <div className="overflow-x-auto">
+                        {/* tablo/list bileşenin  tamamı (İÇERİĞE DOKUNMA) */}
+                    </div>
                     <table className="min-w-full text-sm">
                         <thead className="bg-slate-50 text-slate-700">
                         <tr className="text-left">

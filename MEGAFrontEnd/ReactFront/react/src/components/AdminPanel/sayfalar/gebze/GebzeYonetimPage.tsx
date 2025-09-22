@@ -187,7 +187,10 @@ export default function GebzeYonetimPage() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="overflow-y-auto" style={{ maxHeight: "70vh" }}>
+                    <div className="overflow-x-auto">
+                        {/* tablo/list */}
+                    </div>
                     <table className="min-w-full text-sm">
                         <thead className="bg-slate-50 text-slate-700">
                         <tr className="text-left">
