@@ -91,7 +91,7 @@ export default function HizmetlerYeniPage() {
                     </div>
                     <div className="flex gap-2">
                         <Link
-                            to=""
+                            to="/panel/hizmetler"
                             relative="path"
                             className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50"
                         >

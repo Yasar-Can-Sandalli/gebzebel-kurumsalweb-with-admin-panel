@@ -159,7 +159,7 @@ export default function GebzeYonetimEditPage() {
                     </div>
                     <div className="flex gap-2">
                         <Link
-                            to="/panel/kurumsal/gebze-yonetim"
+                            to="/panel/gebze/yonetim"
                             className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50"
                         >
                             İptal

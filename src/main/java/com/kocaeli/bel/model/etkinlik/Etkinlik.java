@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "etkinlikler")
 @Data
-public class EtkinlikEntity {
+public class Etkinlik {
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "etkinlik_seq_gen")
     @SequenceGenerator(name = "etkinlik_seq_gen", sequenceName = "ETKINLIK_SEQ_GEN", allocationSize = 1)
