@@ -255,7 +255,7 @@ export default function BlogLayout() {
         {
             id: 4,
             image: "/images/Haberler/habergörselleri/sosyalyardımvehizmetler/sosyal1-2.jpeg",
-            category: "Haber",
+            category: "Haberler",
             categoryClass: "bg-blue-600", // Same as SOSYAL YARDIM
             title: "Başkanımızdan Sosyal Yardım Destekleri",
             date: "5 Mayıs 2025",
@@ -741,7 +741,7 @@ export default function BlogLayout() {
                         )}
                         <br/>
 
-                        {/* Haber Kartları */}
+                        {/* Haberler Kartları */}
                         <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'}`}>
                             <AnimatePresence mode="wait">
                                 {paginatedNews.map((news) => (

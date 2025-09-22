@@ -19,6 +19,7 @@ public class Duyuru {
     @Column(name = "BASLIK", length = 300)
     private String baslik;
 
+    @Lob
     @Column(name = "OZET", length = 350)
     private String ozet;
 

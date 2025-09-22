@@ -46,7 +46,7 @@ export default function HomePanel() {
                     yonetimResponse,
                     raporlarResponse
                 ] = await Promise.allSettled([
-                    apiGet('/api/haberler'),
+                    apiGet('/api/haberler/list'),
                     apiGet('/api/etkinlikler'),
                     apiGet('/api/hizmetler'),
                     apiGet('/api/kurumsal/yonetimsemasi'),
@@ -88,14 +88,14 @@ export default function HomePanel() {
     }, []);
 
     const statsData = [
-        { title: 'Toplam Haber', value: stats.totalHaberler.toString(), icon: Newspaper, color: 'bg-blue-500' },
+        { title: 'Toplam Haberler', value: stats.totalHaberler.toString(), icon: Newspaper, color: 'bg-blue-500' },
         { title: 'Aktif Etkinlikler', value: stats.totalEtkinlikler.toString(), icon: Calendar, color: 'bg-green-500' },
         { title: 'Hizmetler', value: stats.totalHizmetler.toString(), icon: Building, color: 'bg-purple-500' },
         { title: 'Yönetim Üyeleri', value: stats.totalYonetim.toString(), icon: Users, color: 'bg-orange-500' }
     ];
 
     const quickActions = [
-        { title: 'Haber Yönetimi', icon: Newspaper, color: 'bg-blue-500', href: '/panel/haberler' },
+        { title: 'Haberler Yönetimi', icon: Newspaper, color: 'bg-blue-500', href: '/panel/haberler' },
         { title: 'Etkinlik Yönetimi', icon: Calendar, color: 'bg-green-500', href: '/panel/etkinlikler' },
         { title: 'Hizmet Yönetimi', icon: Building, color: 'bg-purple-500', href: '/panel/hizmetler' },
         { title: 'Kurumsal Raporlar', icon: FileText, color: 'bg-orange-500', href: '/panel/kurumsal/raporlar' }

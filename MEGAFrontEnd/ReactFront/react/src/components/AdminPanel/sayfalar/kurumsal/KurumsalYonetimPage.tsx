@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../loader.tsx";
 import { fetchYonetimRows, YonetimRow } from "../../services/pageService.tsx";
-import { Search, Mail, Phone, User, X, Check } from "lucide-react";
+import { Search, Mail, Phone, User, X, Check, RefreshCw, Settings } from "lucide-react";
 
 export default function KurumsalYonetimPage() {
     const [rows, setRows] = useState<YonetimRow[]>([]);
@@ -207,11 +207,16 @@ export default function KurumsalYonetimPage() {
                             <td className="px-4 py-3 align-center">
                                 <div className="relative inline-block" data-row-menu-root>
                                     <button
-                                        className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
-                                        onClick={() => toggleRowMenu(r.id!)}
+                                        className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 text-sky-600"
+                                        onClick={() => toggleRowMenu(r.id)}
+                                        aria-label="İşlemler"
                                     >
-                                        📝 ▾
+                                    <span className="relative inline-block h-5 w-5">
+                                      <RefreshCw className="absolute inset-0 h-5 w-5" strokeWidth={1.5} />
+                                      <Settings  className="absolute inset-0 m-auto h-3.5 w-3.5" strokeWidth={1.5} />
+                                    </span>
                                     </button>
+
                                     {rowMenuOpenId === r.id && (
                                         <div className="absolute z-20 mt-1 w-32 rounded-md border bg-white shadow-lg">
                                             <button

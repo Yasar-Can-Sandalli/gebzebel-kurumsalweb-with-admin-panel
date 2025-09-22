@@ -1,7 +1,8 @@
 // src/sayfalar/EtkinliklerPage.tsx
-import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiGet, apiDelete } from "../services/apiService";
+import {useEffect, useMemo, useState} from "react";
+import { RefreshCw, Settings } from "lucide-react";
+import {Link} from "react-router-dom";
+import {apiGet, apiDelete} from "../services/apiService";
 
 export interface Etkinlik {
     id?: number;
@@ -135,7 +136,8 @@ export default function EtkinliklerPage() {
             <h1 className="text-2xl font-semibold text-slate-800">Etkinlikler</h1>
 
             {/* Kart: Sticky üst şerit + scroll’lu liste */}
-            <div className="bg-white rounded-2xl shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60 overflow-hidden flex flex-col">
+            <div
+                className="bg-white rounded-2xl shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60 overflow-hidden flex flex-col">
                 {/* STICKY ÜST BAR (filtreler + aksiyonlar) */}
                 <div className="sticky top-0 z-10 bg-white">
                     <div className="p-4 border-b">
@@ -205,13 +207,13 @@ export default function EtkinliklerPage() {
                 </div>
 
                 {/* SCROLLABLE LIST AREA */}
-                <div className="overflow-y-auto" style={{ maxHeight: "70vh" }}>
+                <div className="overflow-y-auto" style={{maxHeight: "70vh"}}>
                     <div className="overflow-x-auto">
                         <table className="min-w-full text-sm">
                             <thead className="bg-slate-50 text-slate-700">
                             <tr className="text-left">
                                 <th className="px-4 py-3 w-10">
-                                    <input type="checkbox" checked={allChecked} onChange={toggleAll} />
+                                    <input type="checkbox" checked={allChecked} onChange={toggleAll}/>
                                 </th>
                                 <th className="px-4 py-3 w-28">Afiş</th>
                                 <th className="px-4 py-3">Başlık</th>
@@ -255,23 +257,30 @@ export default function EtkinliklerPage() {
                                             {new Date(e.tarih).toLocaleDateString("tr-TR")}
                                         </td>
                                         <td className="px-4 py-3 max-w-[520px] text-slate-700 align-top">
-                        <span className="line-clamp-2" title={e.aciklama}>
-                          {e.aciklama}
-                        </span>
+                                         <span className="line-clamp-2" title={e.aciklama}>
+                                           {e.aciklama}
+                                         </span>
                                         </td>
 
                                         {/* İşlemler — istenen tasarım: 📝 ▾ butonu + altında menü */}
                                         <td className="px-4 py-3 align-top">
                                             <div className="relative inline-block" data-row-menu-root>
                                                 <button
-                                                    className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
+                                                    className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 text-sky-600"
                                                     onClick={() => toggleRowMenu(e.id!)}
+                                                    aria-label="İşlemler"
                                                 >
-                                                    📝 ▾
+                                                    <span className="relative inline-block h-5 w-5">
+                                                      <RefreshCw className="absolute inset-0 h-5 w-5" strokeWidth={1.5} />
+                                                      <Settings  className="absolute inset-0 m-auto h-3.5 w-3.5" strokeWidth={1.5} />
+                                                    </span>
                                                 </button>
 
+
+
                                                 {rowMenuOpenId === e.id && (
-                                                    <div className="absolute left-0 top-full mt-1 w-32 rounded-md border bg-white shadow-lg z-20">
+                                                    <div
+                                                        className="absolute left-0 top-full mt-1 w-32 rounded-md border bg-white shadow-lg z-20">
                                                         <Link
                                                             to={`${e.id}/duzenle`}
                                                             className="block w-full px-3 py-2 text-left hover:bg-slate-50"

@@ -1,6 +1,6 @@
 package com.kocaeli.bel.service.etkinlik;
 
-import com.kocaeli.bel.model.etkinlik.EtkinlikEntity;
+import com.kocaeli.bel.model.etkinlik.Etkinlik;
 import com.kocaeli.bel.repository.etkinlik.EtkinlikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,20 +18,20 @@ public class EtkinlikService {
         this.etkinlikRepository = etkinlikRepository;
     }
 
-    public List<EtkinlikEntity> getAllEtkinlikler() {
+    public List<Etkinlik> getAllEtkinlikler() {
         return etkinlikRepository.findAll();
     }
 
-    public EtkinlikEntity createEtkinlik(EtkinlikEntity etkinlik) {
+    public Etkinlik createEtkinlik(Etkinlik etkinlik) {
         return  etkinlikRepository.save(etkinlik);
     }
 
 
-    public boolean updateEtkinlikById(Long id,EtkinlikEntity etkinlik){
-        Optional<EtkinlikEntity> existingEtkinlik = etkinlikRepository.findById(id);
+    public boolean updateEtkinlikById(Long id, Etkinlik etkinlik){
+        Optional<Etkinlik> existingEtkinlik = etkinlikRepository.findById(id);
 
         if (existingEtkinlik.isPresent()) {
-            EtkinlikEntity entity = existingEtkinlik.get();
+            Etkinlik entity = existingEtkinlik.get();
             entity.setBaslik(etkinlik.getBaslik());
             entity.setAciklama(etkinlik.getAciklama());
             entity.setTarih(etkinlik.getTarih());
@@ -50,7 +50,7 @@ public class EtkinlikService {
 
 
     public boolean deleteEtkinlikById(Long id){
-        Optional<EtkinlikEntity> existingEtkinlik = etkinlikRepository.findById(id);
+        Optional<Etkinlik> existingEtkinlik = etkinlikRepository.findById(id);
 
         if (existingEtkinlik.isPresent()) {
             etkinlikRepository.deleteById(id);

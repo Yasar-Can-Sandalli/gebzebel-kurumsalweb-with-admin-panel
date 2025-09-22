@@ -643,7 +643,7 @@ export default function BlogLayout() {
                         )}
                         <br/>
 
-                        {/* Haber Kartları */}
+                        {/* Haberler Kartları */}
                         <div
                             className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'}`}>
                             <AnimatePresence mode="wait">

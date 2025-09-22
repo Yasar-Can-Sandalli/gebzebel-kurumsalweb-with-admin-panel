@@ -178,7 +178,7 @@ const RAPORLAR_CONFIG: TableConfig = {
 // --- Haberler ---
 const HABERLER_CONFIG: TableConfig = {
     tableName: "HABERLER",
-    displayName: "Haber",
+    displayName: "Haberler",
     apiEndpoint: "/api/haberler",
     fields: [
         {name: "tarih", label: "Tarih", type: "date", required: true},
@@ -631,7 +631,7 @@ const DynamicEditPageForm: React.FC = () => {
                     ...(formData.kategoriId ? { kategori: { id: Number(formData.kategoriId) } } : {}),
                 };
                 await apiPut(`/api/haberler/update/${formData.id}`, payload);
-                alert("Haber güncellendi!");
+                alert("Haberler güncellendi!");
                 return;
             }
 

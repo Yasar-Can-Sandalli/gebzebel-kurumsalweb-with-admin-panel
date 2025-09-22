@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiGet, apiPut } from "../services/apiService";
-import type { Haber } from "../types/Haber";
+import type { Haberler } from "../types/haberler.ts";
 
 export default function HaberDuzenlePage() {
     const { id } = useParams();
     const rid = Number(id);
     const navigate = useNavigate();
-    const [form, setForm] = useState<Haber | null>(null);
+    const [form, setForm] = useState<Haberler | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -16,7 +16,7 @@ export default function HaberDuzenlePage() {
     useEffect(() => {
         (async () => {
             try {
-                const data = await apiGet<Haber>(`/api/haberler/${rid}`);
+                const data = await apiGet<Haberler>(`/api/haberler/${rid}`);
                 setForm(data);
             } catch (e: any) {
                 setError(e?.message || "Yüklenemedi");
