@@ -37,20 +37,20 @@ public class MuhtarlarController {
         return new ResponseEntity<>(muhtarlar, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<MuhtarlarDTO> createMuhtar(@RequestBody MuhtarlarDTO muhtarDTO) {
         MuhtarlarDTO createdMuhtar = muhtarlarService.saveMuhtar(muhtarDTO);
         return new ResponseEntity<>(createdMuhtar, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<MuhtarlarDTO> updateMuhtar(@PathVariable("id") Long id, @RequestBody MuhtarlarDTO muhtarDTO) {
         muhtarDTO.setId(id);
         MuhtarlarDTO updatedMuhtar = muhtarlarService.updateMuhtar(muhtarDTO);
         return new ResponseEntity<>(updatedMuhtar, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteMuhtar(@PathVariable("id") Long id) {
         muhtarlarService.deleteMuhtar(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

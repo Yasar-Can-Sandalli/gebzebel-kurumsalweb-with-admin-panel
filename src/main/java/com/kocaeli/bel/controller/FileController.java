@@ -18,7 +18,7 @@ import java.util.UUID;
 @CrossOrigin(origins = "*")
 public class FileController {
 
-    private static final String UPLOAD_DIR = "MEGAFrontEnd/ReactFront/react/src/assets/user_images/";
+    private static final String UPLOAD_DIR = "MEGAFrontEnd/ReactFront/react/public/images/resimler/";
 
 
     @PostMapping("/upload")

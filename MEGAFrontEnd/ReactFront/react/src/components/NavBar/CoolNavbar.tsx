@@ -1,523 +1,393 @@
-import {useEffect, useRef, useState} from 'react';
-import {kurumsal, gebze, hizmetler, eBelediye, yayinlarimiz} from '../_SayfaBilgileri/Sayfalar.tsx';
-import {motion, AnimatePresence, useAnimation} from 'framer-motion';
-import './NavBar.css';
-import {Link, useNavigate} from 'react-router-dom';
-import {DropdownItem} from '../_SayfaBilgileri/types.tsx';
-import {FiChevronDown, FiChevronUp, FiMenu, FiX} from 'react-icons/fi';
-import {useClickOutside} from '../useClickOutside.tsx';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { kurumsal, gebze, hizmetler, eBelediye, yayinlarimiz } from "../_SayfaBilgileri/Sayfalar";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { DropdownItem } from "../_SayfaBilgileri/types";
+import { FiChevronDown, FiChevronUp, FiChevronRight, FiMenu, FiX } from "react-icons/fi";
+import { useClickOutside } from "../useClickOutside";
+import "./NavBar.css";
 
-const Navbar = () => {
+/**
+ * Desktop (>=1280px): Üst navbar + mega dropdownlar (ilk gönderdiğin yapı)
+ * Mobile (<1280px): Üst navbar yok; sol üstte TEK toggle (hamburger ⇄ X),
+ *                   soldan SLIDE DRAWER. Toggle butonu drawer açılınca sağ kenarı takip eder.
+ */
 
-    const navigate = useNavigate();
-    const handleNavigation = (path: string) => {
-        navigate(path);
-    };
-
-    // State to track which dropdown is open
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [scrollPosition, setScrollPosition] = useState(0);
-    const [isNavbarFixed] = useState(false);
-    const [lastScrollPosition, setLastScrollPosition] = useState(0);
-    const navbarControls = useAnimation();
-    const desktopDropdownRef = useRef<HTMLDivElement | null>(null);
-    const mobileDropdownRef = useRef<HTMLDivElement | null>(null);
-
-    // Apply useClickOutside to desktop ref only but not to mobile menu
-    useClickOutside(desktopDropdownRef, () => {
-        // useClickOutside hook'u sadece desktop dropdown için çalıştır
-        if (!mobileMenuOpen) {
-            setOpenDropdown(null);
-        }
-    });
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollPos = window.scrollY;
-
-            // Determine scroll direction
-            if (currentScrollPos > 100) {
-                if (currentScrollPos > lastScrollPosition) {
-                    // Scrolling down
-                    navbarControls.start({
-                        y: -100,
-                        opacity: 0.7,
-                        transition: {duration: 0.3}
-                    });
-
-                    // Close all dropdowns when scrolling down
-                    setOpenDropdown(null);
-                } else {
-                    // Scrolling up
-                    navbarControls.start({
-                        y: 0,
-                        opacity: 1,
-                        transition: {duration: 0.3}
-                    });
-                }
-            }
-
-            setLastScrollPosition(currentScrollPos);
-            setScrollPosition(currentScrollPos);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [lastScrollPosition, navbarControls]);
-
-
-    // Render dropdown menu items
-    const toggleDropdown = (name: string) => {
-        setOpenDropdown(openDropdown === name ? null : name);
-    };
-
-    const toggleMobileMenu = () => {
-        setMobileMenuOpen(!mobileMenuOpen);
-        if (mobileMenuOpen) setOpenDropdown(null); // Close all dropdowns when closing mobile menu
-    };
-
-
-    const renderDropdownItems = (items: DropdownItem[]) => {
-        return (
-            <motion.div
-                initial={{opacity: 0, y: -20}}
-                animate={{opacity: 1, y: 0}}
-                exit={{opacity: 0, y: -20}}
-                transition={{duration: 0.3}}
-                className="fixed left-0 right-0 top-0 bg-white rounded-md shadow-lg z-30
-                py-2 grid grid-cols-4 gap-2 max-w-[90%] w-full mx-auto"
-                style={{
-                    top: scrollPosition > 100 ? '8rem' : '10rem',
-                    transformOrigin: 'top center'
+// === Desktop mega menü içeriklerini render ===
+const renderMegaItems = (
+    items: DropdownItem[],
+    navigate: (to: string) => void,
+    close: () => void,
+    top: string
+) => (
+    <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.25 }}
+        className="fixed left-0 right-0 bg-white rounded-md shadow-lg z-30 py-2 grid grid-cols-4 gap-2 max-w-[90%] w-full mx-auto"
+        style={{ top, transformOrigin: "top center" }}
+    >
+        {items.map((item, index) => (
+            <motion.button
+                key={index}
+                type="button"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="p-2 flex items-center hover:bg-gray-100 rounded-md cursor-pointer text-left"
+                onClick={() => {
+                    if (item.path) navigate(item.path);
+                    close();
                 }}
             >
-                {items.map((item, index) => (
-                    <motion.div
-                        key={index}
-                        whileHover={{scale: 1.02}}
-                        whileTap={{scale: 0.98}}
-                        className="p-2 flex items-center hover:bg-gray-100 rounded-md cursor-pointer"
-                        onClick={() => {
-                            handleNavigation(item.path || '/');
-                            setOpenDropdown(null);
-                        }}
-                    >
-                        <motion.div
-                            className="p-2 bg-gray-100 text-gray-800 rounded-md mr-3"
-                            whileHover={{rotate: 5}}
-                        >
-                            {item.icon}
-                        </motion.div>
-                        <div>
-                            <div className="font-medium text-sm">
-                                {item.title}
-                                {item.isEN && <span className="text-gray-500 text-xs ml-1">(EN)</span>}
-                            </div>
-                            <div className="text-gray-500 text-sm">{item.description}</div>
-                        </div>
-                    </motion.div>
-                ))}
-            </motion.div>
-        );
-    };
+                <motion.div className="p-2 bg-gray-100 text-gray-800 rounded-md mr-3" whileHover={{ rotate: 5 }}>
+                    {item.icon}
+                </motion.div>
+                <div>
+                    <div className="font-medium text-sm">
+                        {item.title}
+                        {item.isEN && <span className="text-gray-500 text-xs ml-1">(EN)</span>}
+                    </div>
+                    {item.description && <div className="text-gray-500 text-sm">{item.description}</div>}
+                </div>
+            </motion.button>
+        ))}
+    </motion.div>
+);
 
-    // Function to handle mobile dropdown item clicks
-    const handleMobileItemClick = (path: string) => {
-        // Önce navigasyonu yap, sonra menüyü kapat
-        setTimeout(() => {
-            navigate(path);
-        }, 10);
-        setOpenDropdown(null);
-        setMobileMenuOpen(false);
-    };
+const Navbar = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const pathname = location.pathname;
 
-    return (
-        <motion.nav
-            animate={navbarControls}
-            initial={{
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 100
-            }}
-            className={`
-                ${window.location.pathname === "/" 
-                    ? "fixed"
-                    : "relative"}
-                ${
-                    window.location.pathname === "/" // sadece ana sayfada opacity ve z-index
-                        ? (scrollPosition > 100
-                            ? 'bg-[#022842]/90 z-[20]'
-                            : 'bg-[#022842]/60 z-[20]')
-                        : 'bg-[#022842]'
+    // ortak state
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null); // desktop & mobile accordion
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const [lastScrollPosition, setLastScrollPosition] = useState(0);
+    const [isNavbarFixed] = useState(false);
+    const navbarControls = useAnimation();
+
+    // mobile drawer
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [drawerWidth, setDrawerWidth] = useState<number>(Math.min(window.innerWidth * 0.75, 320)); // 75vw, max 320px
+
+    const desktopDropdownRef = useRef<HTMLDivElement | null>(null);
+    useClickOutside(desktopDropdownRef, () => setOpenDropdown(null)); // sadece desktop
+
+    // scroll davranışı (desktop bar için)
+    useEffect(() => {
+        const onScroll = () => {
+            const y = window.scrollY;
+            if (y > 100) {
+                if (y > lastScrollPosition) {
+                    navbarControls.start({ y: -100, opacity: 0.85, transition: { duration: 0.22 } });
+                    setOpenDropdown(null);
+                } else {
+                    navbarControls.start({ y: 0, opacity: 1, transition: { duration: 0.22 } });
                 }
-                border-b border-gray-200
-                ${scrollPosition > 100 ? 'shadow-md' : ''}
-            `}
-            style={{ pointerEvents: "auto" }}
-        >
-            <div className={`mx-auto px-4 ${window.location.pathname === "/" ? "pr-5" : ""}`}>
-                <div className="flex justify-between h-35">
-                    {/* Desktop menu items - hidden on mobile, 1165px ve üstü */}
-                    <div
-                        ref={desktopDropdownRef}
-                        className="hidden [@media(min-width:1280px)]:flex items-center justify-center w-full"
-                    >
-                        {/* Logo */}
-                        <div className="flex-shrink-0 flex items-center"
-                             style={{
-                                 marginRight: "2vw",
-                                 transition: "margin 0.2s"
-                             }}
-                        >
-                            <Link to={"/"}>
-                                <motion.img
-                                    initial={{opacity: 1}}
-                                    animate={{
-                                        y: isNavbarFixed ? -15 : 0,
-                                        opacity: isNavbarFixed ? 0.8 : 1
-                                    }}
-                                    transition={{duration: 0.3}}
-                                    src={"/2logoyatay.png"}
-                                    id={"logo"}
-                                    alt="Gebze Belediyesi"
-                                    className="cursor-pointer h-7 md:h-8 lg:h-9"
-                                    style={{
-                                        maxHeight: "2.2rem",
-                                        width: "auto"
-                                    }}
-                                />
-                            </Link>
-                        </div>
-                        {/* Main navbar items */}
-                        <div
-                            className="flex gap-2 md:gap-3 lg:gap-4 flex-1 flex-wrap items-center justify-center"
-                            style={{
-                                marginLeft: "0.5vw",
-                                transition: "margin 0.2s"
-                            }}
-                        >
-                            {/* Kurumsal Dropdown */}
-                            <div className="relative flex justify-center">
-                                <motion.button
-                                    whileHover={{scale: 1.05}}
-                                    whileTap={{scale: 0.95}}
-                                    className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase"
-                                    onClick={() => toggleDropdown('kurumsal')}
-                                >
-                                    KURUMSAL
-                                    {openDropdown === 'kurumsal' ? <FiChevronUp className="ml-1"/> :
-                                        <FiChevronDown className="ml-1"/>}
-                                </motion.button>
-                                <AnimatePresence>
-                                    {openDropdown === 'kurumsal' && renderDropdownItems(kurumsal)}
-                                </AnimatePresence>
+            }
+            setLastScrollPosition(y);
+            setScrollPosition(y);
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, [lastScrollPosition, navbarControls]);
+
+    // rota değişince mobil drawer ve akordeonları kapat
+    useEffect(() => {
+        setMobileOpen(false);
+        setOpenDropdown(null);
+    }, [pathname]);
+
+    // ESC ile drawer kapat
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setMobileOpen(false);
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, []);
+
+    // drawer açıkken body scroll kilidi
+    useEffect(() => {
+        if (!mobileOpen) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, [mobileOpen]);
+
+    // drawer genişliği (toggle'ın takibi için)
+    useEffect(() => {
+        const calc = () => setDrawerWidth(Math.min(window.innerWidth * 0.75, 320));
+        calc();
+        window.addEventListener("resize", calc);
+        return () => window.removeEventListener("resize", calc);
+    }, []);
+
+    const megaTop = scrollPosition > 100 ? "8rem" : "10rem";
+    const isHome = pathname === "/";
+    const bgClass = isHome
+        ? scrollPosition > 100
+            ? "bg-[#022842]/90 z-[20]"
+            : "bg-[#022842]/60 z-[20]"
+        : "bg-[#022842]";
+
+    const mobileSections = useMemo(
+        () => [
+            { key: "kurumsal-mobile", title: "KURUMSAL", data: kurumsal },
+            { key: "gebze-mobile", title: "GEBZE", data: gebze },
+            { key: "hizmetler-mobile", title: "HİZMETLER", data: hizmetler },
+            { key: "yayinlarimiz-mobile", title: "YAYINLAR", data: yayinlarimiz },
+            { key: "ebelediye-mobile", title: "EBELEDİYE", data: eBelediye },
+        ],
+        []
+    );
+
+    // --- RENDER ---
+    return (
+        <>
+            {/* ================= DESKTOP NAVBAR (>=1280px) ================= */}
+            <motion.nav
+                animate={navbarControls}
+                initial={{ top: 0, left: 0, right: 0, zIndex: 100 }}
+                className={`hidden [@media(min-width:1280px)]:block ${isHome ? "fixed" : "relative"} ${bgClass} border-b border-gray-200 ${
+                    scrollPosition > 100 ? "shadow-md" : ""
+                }`}
+                style={{ pointerEvents: "auto" }}
+            >
+                <div className={`mx-auto px-4 ${isHome ? "pr-5" : ""}`}>
+                    <div className="flex justify-between h-35">
+                        {/* Desktop menu items - (ilk kodundaki gibi) */}
+                        <div ref={desktopDropdownRef} className="flex items-center justify-center w-full">
+                            {/* Logo */}
+                            <div
+                                className="flex-shrink-0 flex items-center"
+                                style={{ marginRight: "2vw", transition: "margin 0.2s" }}
+                            >
+                                <Link to={"/"}>
+                                    <motion.img
+                                        initial={{ opacity: 1 }}
+                                        animate={{ y: isNavbarFixed ? -15 : 0, opacity: isNavbarFixed ? 0.8 : 1 }}
+                                        transition={{ duration: 0.3 }}
+                                        src={"/2logoyatay.png"}
+                                        id={"logo"}
+                                        alt="Gebze Belediyesi"
+                                        className="cursor-pointer h-7 md:h-8 lg:h-9"
+                                        style={{ maxHeight: "2.2rem", width: "auto" }}
+                                    />
+                                </Link>
                             </div>
-                            {/* Gebze link */}
-                            <div className="relative flex justify-center">
-                                <motion.button
-                                    whileHover={{scale: 1.05}}
-                                    whileTap={{scale: 0.95}}
-                                    className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase"
-                                    onClick={() => toggleDropdown('gebze')}
-                                >
-                                    GEBZE
-                                    {openDropdown === 'gebze' ? <FiChevronUp className="ml-1"/> :
-                                        <FiChevronDown className="ml-1"/>}
-                                </motion.button>
-                                <AnimatePresence>
-                                    {openDropdown === 'gebze' && renderDropdownItems(gebze)}
-                                </AnimatePresence>
-                            </div>
-                            {/* Hizmetler Dropdown */}
-                            <div className="relative flex justify-center">
-                                <motion.button
-                                    whileHover={{scale: 1.05}}
-                                    whileTap={{scale: 0.95}}
-                                    className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase"
-                                    onClick={() => toggleDropdown('hizmetler')}
-                                >
-                                    HİZMETLER
-                                    {openDropdown === 'hizmetler' ? <FiChevronUp className="ml-1"/> :
-                                        <FiChevronDown className="ml-1"/>}
-                                </motion.button>
-                                <AnimatePresence>
-                                    {openDropdown === 'hizmetler' && renderDropdownItems(hizmetler)}
-                                </AnimatePresence>
-                            </div>
-                            {/* YAYINLAR Dropdown */}
-                            <div className="relative flex justify-center">
-                                <motion.button
-                                    whileHover={{scale: 1.05}}
-                                    whileTap={{scale: 0.95}}
-                                    className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase"
-                                    onClick={() => toggleDropdown('Yayınlarımız')}
-                                >
-                                    YAYINLAR
-                                    {openDropdown === 'Yayınlarımız' ? <FiChevronUp className="ml-1"/> :
-                                        <FiChevronDown className="ml-1"/>}
-                                </motion.button>
-                                <AnimatePresence>
-                                    {openDropdown === 'Yayınlarımız' && renderDropdownItems(yayinlarimiz)}
-                                </AnimatePresence>
-                            </div>
-                            <div className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase">
-                                <Link to={"/e-belediye"}>
+
+                            {/* Main navbar items */}
+                            <div
+                                className="flex gap-2 md:gap-3 lg:gap-4 flex-1 flex-wrap items-center justify-center"
+                                style={{ marginLeft: "0.5vw", transition: "margin 0.2s" }}
+                            >
+                                {/* Kurumsal */}
+                                <div className="relative flex justify-center">
+                                    <button
+                                        className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase"
+                                        onClick={() => setOpenDropdown((p) => (p === "kurumsal" ? null : "kurumsal"))}
+                                    >
+                                        KURUMSAL
+                                        {openDropdown === "kurumsal" ? <FiChevronUp className="ml-1" /> : <FiChevronDown className="ml-1" />}
+                                    </button>
+                                    <AnimatePresence>
+                                        {openDropdown === "kurumsal" &&
+                                            renderMegaItems(kurumsal, (to) => navigate(to), () => setOpenDropdown(null), megaTop)}
+                                    </AnimatePresence>
+                                </div>
+
+                                {/* Gebze */}
+                                <div className="relative flex justify-center">
+                                    <button
+                                        className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase"
+                                        onClick={() => setOpenDropdown((p) => (p === "gebze" ? null : "gebze"))}
+                                    >
+                                        GEBZE
+                                        {openDropdown === "gebze" ? <FiChevronUp className="ml-1" /> : <FiChevronDown className="ml-1" />}
+                                    </button>
+                                    <AnimatePresence>
+                                        {openDropdown === "gebze" &&
+                                            renderMegaItems(gebze, (to) => navigate(to), () => setOpenDropdown(null), megaTop)}
+                                    </AnimatePresence>
+                                </div>
+
+                                {/* Hizmetler */}
+                                <div className="relative flex justify-center">
+                                    <button
+                                        className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase"
+                                        onClick={() => setOpenDropdown((p) => (p === "hizmetler" ? null : "hizmetler"))}
+                                    >
+                                        HİZMETLER
+                                        {openDropdown === "hizmetler" ? <FiChevronUp className="ml-1" /> : <FiChevronDown className="ml-1" />}
+                                    </button>
+                                    <AnimatePresence>
+                                        {openDropdown === "hizmetler" &&
+                                            renderMegaItems(hizmetler, (to) => navigate(to), () => setOpenDropdown(null), megaTop)}
+                                    </AnimatePresence>
+                                </div>
+
+                                {/* Yayınlar */}
+                                <div className="relative flex justify-center">
+                                    <button
+                                        className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase"
+                                        onClick={() => setOpenDropdown((p) => (p === "yayinlar" ? null : "yayinlar"))}
+                                    >
+                                        YAYINLAR
+                                        {openDropdown === "yayinlar" ? <FiChevronUp className="ml-1" /> : <FiChevronDown className="ml-1" />}
+                                    </button>
+                                    <AnimatePresence>
+                                        {openDropdown === "yayinlar" &&
+                                            renderMegaItems(yayinlarimiz, (to) => navigate(to), () => setOpenDropdown(null), megaTop)}
+                                    </AnimatePresence>
+                                </div>
+
+                                {/* Düz linkler */}
+                                <Link className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase" to={"/e-belediye"}>
                                     EBELEDİYE
                                 </Link>
-                            </div>
-                            {/* Other links */}
-                            <div className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase">
-                                <Link to={"/etkinlikler"}>ETKİNLİKLER
+                                <Link className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase" to={"/etkinlikler"}>
+                                    ETKİNLİKLER
                                 </Link>
-                            </div>
-                            <div className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase">
-                                <Link to={"/haberler"}>HABERLER
+                                <Link className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase" to={"/haberler"}>
+                                    HABERLER
                                 </Link>
-                            </div>
-                            <div className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase">
-                                <Link to={"/iletisim"}>
+                                <Link className="inline-flex items-center px-1 pt-1 text-sm md:text-base lg:text-lg font-medium text-white justify-center uppercase" to={"/iletisim"}>
                                     İLETİŞİM
                                 </Link>
                             </div>
                         </div>
                     </div>
-                    {/* Mobile menu button and logo, 1165px altı */}
-                    <div className="flex [@media(min-width:1280px)]:hidden items-center w-full justify-between">
-                        {/* Logo */}
-                        <Link to={"/"}>
-                            <motion.img
-                                initial={{opacity: 1}}
-                                animate={{
-                                    y: isNavbarFixed ? -15 : 0,
-                                    opacity: isNavbarFixed ? 0.8 : 1
-                                }}
-                                transition={{duration: 0.3}}
-                                src={"/2logoyatay.png"}
-                                id={"logo"}
-                                alt="Gebze Belediyesi"
-                                className="cursor-pointer h-7"
-                            />
-                        </Link>
-                        {/* Menü butonu sadece mobilde gösterilecek */}
-                        <button
-                            type="button"
-                            aria-controls="mobile-menu"
-                            className="[@media(min-width:1280px)]:hidden items-center justify-center"
-                            aria-expanded={mobileMenuOpen}
-                            onClick={toggleMobileMenu}
-                        >
-                            {mobileMenuOpen ? <FiX className="h-7 w-7 text-white"/> :
-                                <FiMenu className="h-7 w-7 text-white"/>}
-                        </button>
-                    </div>
                 </div>
-            </div>
+            </motion.nav>
 
-            {/* Mobile menu, show/hide based on menu state */}
-            {(mobileMenuOpen) && (
-                <div
-                    ref={mobileDropdownRef}
-                    className="bg-[#022842] border-t border-gray-200 z-[100] rounded-b-lg"
-                    id="mobile-menu"
-                >
-                    <div className="pt-2 pb-4 space-y-1 flex flex-col items-center">
-                        {/* Kurumsal Dropdown */}
-                        <div className="w-full flex flex-col items-center">
-                            <button
-                                className="w-full flex justify-center items-center py-2 px-4 text-base font-medium text-white hover:bg-gray-700 hover:text-white uppercase"
-                                onClick={() => toggleDropdown('kurumsal-mobile')}
-                            >
-                                KURUMSAL
-                                {openDropdown === 'kurumsal-mobile' ? <FiChevronUp className="ml-1"/> :
-                                    <FiChevronDown className="ml-1"/>}
-                            </button>
-                            {openDropdown === 'kurumsal-mobile' && (
-                                <div className="pl-6 pr-4 py-2 space-y-2 bg-[#033152] flex flex-col items-center">
-                                    {kurumsal.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className="p-2 flex items-center justify-center hover:bg-[#044370] rounded-md cursor-pointer"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                handleMobileItemClick(item.path || '/');
-                                            }}
-                                        >
-                                            <div className="p-2 bg-[#022842] text-white rounded-md mr-3">{item.icon}</div>
-                                            <div className="text-center">
-                                                <div className="font-medium text-base text-white uppercase">
-                                                    {item.title}
-                                                    {item.isEN && <span className="text-gray-300 text-xs ml-1">(EN)</span>}
-                                                </div>
-                                                <div className="text-gray-300 text-xs">{item.description}</div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        {/* Gebze Dropdown */}
-                        <div className="w-full flex flex-col items-center">
-                            <button
-                                className="w-full flex justify-center items-center py-2 px-4 text-base font-medium text-white hover:bg-gray-700 hover:text-white uppercase"
-                                onClick={() => toggleDropdown('gebze-mobile')}
-                            >
-                                GEBZE
-                                {openDropdown === 'gebze-mobile' ? <FiChevronUp className="ml-1"/> :
-                                    <FiChevronDown className="ml-1"/>}
-                            </button>
-                            {openDropdown === 'gebze-mobile' && (
-                                <div className="pl-6 pr-4 py-2 space-y-2 bg-[#033152] flex flex-col items-center">
-                                    {gebze.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className="p-2 flex items-center justify-center hover:bg-[#044370] rounded-md cursor-pointer"
-                                            onClick={() => handleMobileItemClick(item.path || '/')}
-                                        >
-                                            <div className="p-2 bg-[#022842] text-white rounded-md mr-3">{item.icon}</div>
-                                            <div className="text-center">
-                                                <div className="font-medium text-base text-white uppercase">
-                                                    {item.title}
-                                                    {item.isEN && <span className="text-gray-300 text-xs ml-1">(EN)</span>}
-                                                </div>
-                                                <div className="text-gray-300 text-xs">{item.description}</div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        {/* Hizmetler Dropdown */}
-                        <div className="w-full flex flex-col items-center">
-                            <button
-                                className="w-full flex justify-center items-center py-2 px-4 text-base font-medium text-white hover:bg-gray-700 hover:text-white uppercase"
-                                onClick={() => toggleDropdown('hizmetler-mobile')}
-                            >
-                                HİZMETLER
-                                {openDropdown === 'hizmetler-mobile' ? <FiChevronUp className="ml-1"/> :
-                                    <FiChevronDown className="ml-1"/>}
-                            </button>
-                            {openDropdown === 'hizmetler-mobile' && (
-                                <div className="pl-6 pr-4 py-2 space-y-2 bg-[#033152] flex flex-col items-center">
-                                    {hizmetler.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className="p-2 flex items-center justify-center hover:bg-[#044370] rounded-md cursor-pointer"
-                                            onClick={() => handleMobileItemClick(item.path || '/')}
-                                        >
-                                            <div className="p-2 bg-[#022842] text-white rounded-md mr-3">{item.icon}</div>
-                                            <div className="text-center">
-                                                <div className="font-medium text-base text-white uppercase">
-                                                    {item.title}
-                                                    {item.isEN && <span className="text-gray-300 text-xs ml-1">(EN)</span>}
-                                                </div>
-                                                <div className="text-gray-300 text-xs">{item.description}</div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        {/* eBelediye Dropdown */}
-                        <div className="w-full flex flex-col items-center">
-                            <button
-                                className="w-full flex justify-center items-center py-2 px-4 text-base font-medium text-white hover:bg-gray-700 hover:text-white uppercase"
-                                onClick={() => toggleDropdown('eBelediye-mobile')}
-                            >
-                                EBELEDİYE
-                                {openDropdown === 'eBelediye-mobile' ? <FiChevronUp className="ml-1"/> :
-                                    <FiChevronDown className="ml-1"/>}
-                            </button>
-                            {openDropdown === 'eBelediye-mobile' && (
-                                <div className="pl-6 pr-4 py-2 space-y-2 bg-[#033152] flex flex-col items-center">
-                                    {eBelediye.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className="p-2 flex items-center justify-center hover:bg-[#044370] rounded-md cursor-pointer"
-                                            onClick={() => handleMobileItemClick(item.path || '/')}
-                                        >
-                                            <div className="p-2 bg-[#022842] text-white rounded-md mr-3">{item.icon}</div>
-                                            <div className="text-center">
-                                                <div className="font-medium text-base text-white uppercase">
-                                                    {item.title}
-                                                    {item.isEN && <span className="text-gray-300 text-xs ml-1">(EN)</span>}
-                                                </div>
-                                                <div className="text-gray-300 text-xs">{item.description}</div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        {/* Yayınlarımız Dropdown */}
-                        <div className="w-full flex flex-col items-center">
-                            <button
-                                className="w-full flex justify-center items-center py-2 px-4 text-base font-medium text-white hover:bg-gray-700 hover:text-white uppercase"
-                                onClick={() => toggleDropdown('yayinlarimiz-mobile')}
-                            >
-                                YAYINLAR
-                                {openDropdown === 'yayinlarimiz-mobile' ? <FiChevronUp className="ml-1" /> : <FiChevronDown className="ml-1" />}
-                            </button>
-                            {openDropdown === 'yayinlarimiz-mobile' && (
-                                <div className="pl-6 pr-4 py-2 space-y-2 bg-[#033152] flex flex-col items-center">
-                                    {yayinlarimiz.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className="p-2 flex items-center justify-center hover:bg-[#044370] rounded-md cursor-pointer"
-                                            onClick={() => handleMobileItemClick(item.path || '/')}
-                                        >
-                                            <div className="p-2 bg-[#022842] text-white rounded-md mr-3">{item.icon}</div>
-                                            <div className="text-center">
-                                                <div className="font-medium text-base text-white uppercase">
-                                                    {item.title}
-                                                    {item.isEN && <span className="text-gray-300 text-xs ml-1">(EN)</span>}
-                                                </div>
-                                                <div className="text-gray-300 text-xs">{item.description}</div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        {/* Diğer linkler */}
-                        <Link
-                            to={"/etkinlikler"}
-                            className="block py-2 px-4 text-base font-medium text-white hover:bg-gray-700 hover:text-white uppercase text-center"
-                            onClick={() => {
-                                setMobileMenuOpen(false);
-                                setOpenDropdown(null);
-                            }}
+            {/* ================= MOBILE: TEK TOGGLE + SLIDE DRAWER (<1280px) ================= */}
+            {/* Tek toggle: hem açar hem kapatır, drawer açıkken sağ kenarı takip eder */}
+            <button
+                type="button"
+                onClick={() => setMobileOpen((s) => !s)}
+                className="xl:hidden fixed top-3 z-[110] inline-flex items-center justify-center rounded-xl border border-white/20 bg-[#022842] text-white p-2 shadow-md"
+                aria-label="Menüyü aç/kapat"
+                style={{
+                    left: "0.75rem",
+                    transform: `translateX(${mobileOpen ? `${drawerWidth}px` : "0px"})`,
+                    transition: "transform 250ms ease",
+                }}
+            >
+                {mobileOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
+            </button>
+
+            {/* Overlay + Drawer */}
+            <AnimatePresence>
+                {mobileOpen && (
+                    <>
+                        {/* Overlay: tıklandığında kapatır */}
+                        <motion.div
+                            key="m-overlay"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="xl:hidden fixed inset-0 bg-black/40 z-[100]"
+                            onClick={() => setMobileOpen(false)}
+                        />
+
+                        {/* Drawer: w-[75vw] max-w-[320px] */}
+                        <motion.aside
+                            key="m-drawer"
+                            initial={{ x: "-100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "-100%" }}
+                            transition={{ type: "tween", duration: 0.25 }}
+                            className="xl:hidden fixed left-0 top-0 bottom-0 z-[105] w-[75vw] max-w-[320px] bg-[#022842] shadow-2xl ring-1 ring-black/10"
                         >
-                            ETKİNLİKLER
-                        </Link>
-                        <Link
-                            to={"/haberler"}
-                            className="block py-2 px-4 text-base font-medium text-white hover:bg-gray-700 hover:text-white uppercase text-center"
-                            onClick={() => {
-                                setMobileMenuOpen(false);
-                                setOpenDropdown(null);
-                            }}
-                        >
-                            HABERLER
-                        </Link>
-                        <Link
-                            to={"/iletisim"}
-                            className="block py-2 px-4 text-base font-medium text-white hover:bg-gray-700 hover:text-white uppercase text-center"
-                            onClick={() => {
-                                setMobileMenuOpen(false);
-                                setOpenDropdown(null);
-                            }}
-                        >
-                            İLETİŞİM
-                        </Link>
-                    </div>
-                </div>
-            )}
-        </motion.nav>
+                            {/* Drawer header (sadece logo; ekstra X yok artık) */}
+                            <div className="h-14 flex items-center px-4 border-b border-white/10">
+                                <Link
+                                    to="/"
+                                    className="inline-flex items-center gap-2"
+                                    onClick={() => setMobileOpen(false)}
+                                >
+                                    <img src="/2logoyatay.png" alt="Gebze Belediyesi" className="h-7 w-auto" />
+                                </Link>
+                            </div>
+
+                            {/* İçerik */}
+                            <div className="h-[calc(100%-56px)] overflow-y-auto">
+                                {/* Hızlı linkler */}
+                                <div className="px-3 pt-3 pb-2 grid grid-cols-1 gap-2">
+                                    {[
+                                        { to: "/etkinlikler", label: "ETKİNLİKLER" },
+                                        { to: "/haberler", label: "HABERLER" },
+                                        { to: "/iletisim", label: "İLETİŞİM" },
+                                    ].map((l) => (
+                                        <Link
+                                            key={l.to}
+                                            to={l.to}
+                                            onClick={() => setMobileOpen(false)}
+                                            className="w-full rounded-lg bg-white/5 hover:bg-white/10 active:bg-white/15 px-3 py-3 text-white uppercase text-center"
+                                        >
+                                            {l.label}
+                                        </Link>
+                                    ))}
+                                </div>
+
+                                {/* Akordeon bölümleri */}
+                                <nav className="mt-1">
+                                    {mobileSections.map((sec) => (
+                                        <div key={sec.key} className="border-t border-white/10">
+                                            <button
+                                                onClick={() => setOpenDropdown((p) => (p === sec.key ? null : sec.key))}
+                                                className="w-full flex items-center justify-between px-4 py-3 text-white uppercase tracking-wide"
+                                            >
+                                                <span className="font-medium">{sec.title}</span>
+                                                {openDropdown === sec.key ? <FiChevronUp /> : <FiChevronDown />}
+                                            </button>
+
+                                            <AnimatePresence initial={false}>
+                                                {openDropdown === sec.key && (
+                                                    <motion.ul
+                                                        initial={{ height: 0, opacity: 0 }}
+                                                        animate={{ height: "auto", opacity: 1 }}
+                                                        exit={{ height: 0, opacity: 0 }}
+                                                        className="overflow-hidden px-2 pb-2"
+                                                    >
+                                                        {sec.data.map((it, i) => (
+                                                            <li key={`${sec.key}-${i}`}>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        navigate(it.path || "/");
+                                                                        setMobileOpen(false);
+                                                                    }}
+                                                                    className="w-full flex items-center justify-between gap-3 px-3 py-3 rounded-lg text-left text-white hover:bg-white/10 active:bg-white/15"
+                                                                >
+                                  <span className="inline-flex items-center gap-3">
+                                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-[#033152]">
+                                      {it.icon}
+                                    </span>
+                                    <span className="text-base font-medium uppercase leading-5">{it.title}</span>
+                                  </span>
+                                                                    <FiChevronRight className="opacity-70" />
+                                                                </button>
+                                                            </li>
+                                                        ))}
+                                                    </motion.ul>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                    ))}
+                                </nav>
+
+                                <div className="h-4" />
+                            </div>
+                        </motion.aside>
+                    </>
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 

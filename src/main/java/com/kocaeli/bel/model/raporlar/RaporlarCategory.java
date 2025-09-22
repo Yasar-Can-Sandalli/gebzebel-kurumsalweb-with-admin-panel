@@ -16,7 +16,9 @@ import java.util.List;
 @Getter @Setter
 @ToString(exclude = "raporlarList")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class RaporlarCategory {
+public class
+
+RaporlarCategory {
 
     @Id
     @Column(name = "category_id")
