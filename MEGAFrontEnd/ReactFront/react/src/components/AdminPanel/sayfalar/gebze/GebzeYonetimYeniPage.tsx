@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiPost } from "../../services/apiService";
-import { apiPostForm } from "../../services/apiService2";
+import { apiPost, apiPostForm } from "../../services/apiService";
 
 type UploadOk = { success?: boolean; fileName?: string; message?: string };
 

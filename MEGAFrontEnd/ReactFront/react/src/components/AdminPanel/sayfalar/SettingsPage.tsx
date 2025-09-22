@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useCurrentUser } from '../hooks/useCurrentUser';
-import { useAuthStore } from '../store/authStore';
+import { useCurrentUser } from '../hooks/useCurrentUser.ts';
+import { useAuthStore } from '../store/authStore.ts';
 import { User, Save, Eye, EyeOff, Upload, X } from 'lucide-react';
 
 interface UserSettings {

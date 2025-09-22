@@ -42,7 +42,7 @@ import EditUserPage from "./users/EditUserPage";
 import AddUserPage from "./users/AddUserPage";
 
 // --- Ayarlar sayfası
-import SettingsPage from "./settings/SettingsPage";
+import SettingsPage from "./sayfalar/SettingsPage.tsx";
 //import RaporEditPage from "./sayfalar/kurumsal/RaporEditPage";
 
 export default function AdminPanelApp() {
@@ -97,6 +97,7 @@ export default function AdminPanelApp() {
                     <Route path="etkinlikler/yeni" element={<EtkinlikYeniPage />} />
                     <Route path="etkinlikler/:id/duzenle" element={<EditPage />} />
                     <Route path="yayinlar" element={<YayinlarPage />} />
+                    <Route path="yayinlar/duzenle/:id" element={<EditPage />} />
                     <Route path="iletisim" element={<IletisimPage />} />
 
                     {/* 404 */}
