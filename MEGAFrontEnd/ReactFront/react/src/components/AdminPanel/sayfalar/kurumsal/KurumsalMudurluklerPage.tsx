@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { apiGet, apiDelete, apiPost, apiPut } from "../../services/apiService";
+import { Search, Mail, Phone, User, X, Check } from "lucide-react";
 
 // Backend modeline uygun tip (entity alan adları)
 type MudurlukBE = {
@@ -66,6 +67,11 @@ export default function KurumsalMudurluklerPage() {
     const [form, setForm] = useState<any>({ name: "", managerName: "", email: "", imageUrl: "" });
     const isEmail = (v: string) => !v || v.includes("@");
 
+    // Satır menüsü (combobox) state
+    const [rowMenuOpenId, setRowMenuOpenId] = useState<number | null>(null);
+    const toggleRowMenu = (id: number) =>
+        setRowMenuOpenId((cur) => (cur === id ? null : id));
+
     const fetchData = async () => {
         setError(null);
         setLoading(true);
@@ -111,7 +117,7 @@ export default function KurumsalMudurluklerPage() {
             allChecked ? p.filter((id) => !allIds.includes(id)) : Array.from(new Set([...p, ...allIds]))
         );
 
-    // TOPLU SİL
+    // TOPLU SİL (yalnızca seçili varsa gösterilecek)
     const bulkDelete = async () => {
         if (selected.length === 0) return;
         if (!confirm(`${selected.length} kayıt silinsin mi?`)) return;
@@ -127,12 +133,26 @@ export default function KurumsalMudurluklerPage() {
         } finally { setPending(false); }
     };
 
+    // Tek satır sil
+    const deleteOne = async (id: number) => {
+        if (!confirm(`Bu kaydı silmek istiyor musun?`)) return;
+        try {
+            await apiDelete<boolean>(API_DELETE_ONE(id));
+            setItems((prev) => prev.filter((x) => x.id !== id));
+            setSelected((prev) => prev.filter((x) => x !== id));
+        } catch (err: any) {
+            const msg = err?.response?.data?.message || err?.message || "Silme hatası";
+            setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
+        }
+    };
+
     // Modal aç/kapat & preload
     const openAdd = () => {
         const extrasInit = Object.fromEntries(extraKeys.map((k) => [k, ""]));
         setForm({ name: "", managerName: "", email: "", imageUrl: "", ...extrasInit });
         setEditingId(null);
         setAddOpen(true);
+        setRowMenuOpenId(null);
     };
     const openEdit = (row: MudurlukUI) => {
         const raw = row.__raw || {};
@@ -147,6 +167,7 @@ export default function KurumsalMudurluklerPage() {
         });
         setEditingId(row.id ?? null);
         setEditOpen(true);
+        setRowMenuOpenId(null);
     };
     const closeModals = () => { setAddOpen(false); setEditOpen(false); setEditingId(null); };
 
@@ -197,8 +218,22 @@ export default function KurumsalMudurluklerPage() {
                                 <button onClick={() => setQ("")} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">Temizle</button>
                             </div>
                             <div className="flex items-center gap-2 justify-end">
-                                <button onClick={bulkDelete} disabled={selected.length === 0 || pending} className="px-3 py-2 rounded-lg bg-red-500 text-white disabled:opacity-60">Sil</button>
-                                <button onClick={openAdd} className="px-3 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg shadow-blue-500/20 hover:brightness-110">+ Ekle</button>
+                                {/* Sil butonu sadece seçili varsa görünsün */}
+                                {selected.length > 0 && (
+                                    <button
+                                        onClick={bulkDelete}
+                                        disabled={pending}
+                                        className="px-3 py-2 rounded-lg bg-red-500 text-white disabled:opacity-60"
+                                    >
+                                        Sil
+                                    </button>
+                                )}
+                                <button
+                                    onClick={openAdd}
+                                    className="px-3 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg shadow-blue-500/20 hover:brightness-110"
+                                >
+                                    + Ekle
+                                </button>
                             </div>
                         </div>
                         {error && <div className="mt-3 text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">{error}</div>}
@@ -213,8 +248,8 @@ export default function KurumsalMudurluklerPage() {
                             <th className="px-4 py-3 w-10"><input type="checkbox" checked={allChecked} onChange={toggleAll} /></th>
                             <th className="px-4 py-3 w-28">Resim</th>
                             <th className="px-4 py-3">Müdürlük</th>
-                            <th className="px-4 py-3">Ad Soyad</th>
-                            <th className="px-4 py-3">E-posta</th>
+                            <th className="px-4 py-3">Yönetici</th>
+                            <th className="px-4 py-3">E-posta︎</th>
                             <th className="px-4 py-3 w-36">İşlemler</th>
                         </tr>
                         </thead>
@@ -226,23 +261,70 @@ export default function KurumsalMudurluklerPage() {
                                 <tr key={e.id} className="hover:bg-slate-50/60 transition-colors">
                                     <td className="px-4 py-3 align-top">
                                         {e.id !== undefined && (
-                                            <input type="checkbox"
-                                                   checked={selected.includes(e.id!)}
-                                                   onChange={() => setSelected((p) => (p.includes(e.id!) ? p.filter((x) => x !== e.id!) : [...p, e.id!]))}/>
+                                            <input
+                                                type="checkbox"
+                                                checked={selected.includes(e.id!)}
+                                                onChange={() =>
+                                                    setSelected((p) =>
+                                                        p.includes(e.id!) ? p.filter((x) => x !== e.id!) : [...p, e.id!]
+                                                    )
+                                                }
+                                            />
                                         )}
                                     </td>
                                     <td className="px-4 py-3 align-top">
                                         {e.IMG_URL && (
-                                            <img src={e.IMG_URL} alt={e.AD}
-                                                 className="w-16 h-16 object-cover rounded-full ring-1 ring-slate-200"
-                                                 onError={(ev) => ((ev.currentTarget as HTMLImageElement).src = "/images/placeholder-avatar.jpg")} />
+                                            <img
+                                                src={e.IMG_URL}
+                                                alt={e.AD}
+                                                className="w-16 h-16 object-cover rounded-full ring-1 ring-slate-200"
+                                                onError={(ev) => ((ev.currentTarget as HTMLImageElement).src = "/images/placeholder-avatar.jpg")}
+                                            />
                                         )}
                                     </td>
                                     <td className="px-4 py-3 font-medium text-slate-800 align-top">{e.MUDURLUKISIM}</td>
                                     <td className="px-4 py-3 text-slate-600 align-top">{e.AD}</td>
-                                    <td className="px-4 py-3 text-slate-600 align-top"><a className="text-blue-700 underline" href={`mailto:${e.EMAIL}`}>{e.EMAIL}</a></td>
+                                    <td className="px-4 py-3 text-slate-600 align-top">
+                                        {e.EMAIL ? (
+                                            <div className="flex items-start gap-1 text-slate-600">
+                                                <Mail size={12} className="mt-0.5 flex-shrink-0" />
+                                                <a
+                                                    href={`mailto:${e.EMAIL}`}
+                                                    className="text-sm break-all leading-tight hover:underline"
+                                                    title={e.EMAIL}
+                                                >
+                                                    {e.EMAIL}
+                                                </a>
+                                            </div>
+                                        ) : (
+                                            <span className="text-slate-400 text-sm">-</span>
+                                        )}
+                                    </td>
                                     <td className="px-4 py-3 align-top">
-                                        <button onClick={() => openEdit(e)} className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50">Güncelle</button>
+                                        <div className="relative inline-block">
+                                            <button
+                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
+                                                onClick={() => toggleRowMenu(e.id!)}
+                                            >
+                                                📝 ▾
+                                            </button>
+                                            {rowMenuOpenId === e.id && (
+                                                <div className="absolute z-20 mt-1 w-32 rounded-md border bg-white shadow-lg">
+                                                    <button
+                                                        className="w-full px-3 py-2 text-left hover:bg-slate-50"
+                                                        onClick={() => openEdit(e)}
+                                                    >
+                                                        Güncelle
+                                                    </button>
+                                                    <button
+                                                        className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
+                                                        onClick={() => deleteOne(e.id!)}
+                                                    >
+                                                        Sil
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))

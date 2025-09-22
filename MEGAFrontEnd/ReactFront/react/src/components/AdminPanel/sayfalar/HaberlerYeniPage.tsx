@@ -1,20 +1,35 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiGet, apiPost } from "../services/apiService";
+// GÜNCELLENDİ: API servisleri yerine spesifik servis fonksiyonları import edildi
+import { createHaber, getAllHaberCategories } from "../services/haberlerService";
+// GÜNCELLENDİ: Doğru tip tanımı import edildi
+import type { HaberCategorySummary } from "../types/haberler";
 
-interface Kategori { id: number; ad: string }
-type HaberCreate = {
-    baslik: string; tarih: string; aciklama: string;
-    resim1?: string; resim2?: string; kategoriId: number | null;
+// GÜNCELLENDİ: Formun state'i için kullanılacak tip, createHaber'in beklediği payload ile eşleşiyor
+type FormState = {
+    haberBaslik: string;
+    haberTarih: string;
+    haberAciklama: string;
+    haberResim1: string;
+    haberResim2: string;
+    categoryId: number | null;
 };
 
 export default function HaberYeniPage() {
     const navigate = useNavigate();
 
-    const [form, setForm] = useState<HaberCreate>({
-        baslik: "", tarih: "", aciklama: "", resim1: "", resim2: "", kategoriId: null
+    // GÜNCELLENDİ: State'in alan adları backend DTO ile uyumlu hale getirildi
+    const [form, setForm] = useState<FormState>({
+        haberBaslik: "",
+        haberTarih: "",
+        haberAciklama: "",
+        haberResim1: "",
+        haberResim2: "",
+        categoryId: null,
     });
-    const [kategoriler, setKategoriler] = useState<Kategori[]>([]);
+
+    // GÜNCELLENDİ: Kategori tipi HaberCategorySummary olarak değiştirildi
+    const [kategoriler, setKategoriler] = useState<HaberCategorySummary[]>([]);
     const [loadingCats, setLoadingCats] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -22,7 +37,8 @@ export default function HaberYeniPage() {
     useEffect(() => {
         (async () => {
             try {
-                const data = await apiGet<Kategori[]>("/api/kategoriler"); // backend endpoint
+                // GÜNCELLENDİ: Kategori listesini çekmek için doğru servis fonksiyonu çağrıldı
+                const data = await getAllHaberCategories();
                 setKategoriler(data ?? []);
             } catch (e: any) {
                 setError(e?.response?.data?.message || e?.message || "Kategoriler yüklenemedi");
@@ -37,16 +53,19 @@ export default function HaberYeniPage() {
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!form.categoryId) {
+            setError("Lütfen bir kategori seçiniz.");
+            return;
+        }
+
         setError(null);
         setSaving(true);
         try {
-            await apiPost("/api/haberler/create", {
-                baslik: form.baslik,
-                tarih: (form.tarih || "").trim(),  // "yyyy-MM-dd"
-                aciklama: form.aciklama,
-                resim1: form.resim1 || null,
-                resim2: form.resim2 || null,
-                kategoriId: form.kategoriId,       // <-- STRING değil, sadece ID
+            // GÜNCELLENDİ: Yeni haber oluşturmak için doğru servis fonksiyonu ve payload kullanıldı
+            await createHaber({
+                ...form,
+                categoryId: form.categoryId, // Typescript'in null olmama durumunu anlaması için
             });
             navigate("..", { replace: true, relative: "path" });
         } catch (err: any) {
@@ -70,24 +89,26 @@ export default function HaberYeniPage() {
 
             <form onSubmit={submit} className="mx-auto max-w-2xl bg-white rounded-xl p-5 shadow-md ring-1 ring-slate-200/60">
                 <div className="grid grid-cols-2 gap-3">
+                    {/* GÜNCELLENDİ: Tüm form elemanları yeni state adlarına göre güncellendi */}
                     <input type="text" placeholder="Başlık" className={inputCls}
-                           value={form.baslik} onChange={(e) => setForm({ ...form, baslik: e.target.value })} required />
+                           value={form.haberBaslik} onChange={(e) => setForm({ ...form, haberBaslik: e.target.value })} required />
                     <input type="date" className={inputCls}
-                           value={form.tarih} onChange={(e) => setForm({ ...form, tarih: e.target.value })} required />
+                           value={form.haberTarih} onChange={(e) => setForm({ ...form, haberTarih: e.target.value })} required />
 
-                    <select className={inputCls} value={form.kategoriId ?? ""} required disabled={loadingCats}
-                            onChange={(e) => setForm({ ...form, kategoriId: e.target.value ? Number(e.target.value) : null })}>
+                    <select className={inputCls} value={form.categoryId ?? ""} required disabled={loadingCats}
+                            onChange={(e) => setForm({ ...form, categoryId: e.target.value ? Number(e.target.value) : null })}>
                         <option value="">{loadingCats ? "Kategoriler yükleniyor…" : "— Kategori Seç —"}</option>
-                        {kategoriler.map(k => <option key={k.id} value={k.id}>{k.ad}</option>)}
+                        {/* GÜNCELLENDİ: Kategori nesnesinin yeni alan adları (categoryId, categoryName) kullanıldı */}
+                        {kategoriler.map(k => <option key={k.categoryId} value={k.categoryId}>{k.categoryName}</option>)}
                     </select>
 
                     <input type="text" placeholder="Resim 1 URL" className={inputCls}
-                           value={form.resim1} onChange={(e) => setForm({ ...form, resim1: e.target.value })} />
+                           value={form.haberResim1} onChange={(e) => setForm({ ...form, haberResim1: e.target.value })} />
                     <input type="text" placeholder="Resim 2 URL" className={inputCls + " col-span-2"}
-                           value={form.resim2} onChange={(e) => setForm({ ...form, resim2: e.target.value })} />
+                           value={form.haberResim2} onChange={(e) => setForm({ ...form, haberResim2: e.target.value })} />
 
                     <textarea placeholder="Açıklama / İçerik" rows={3} className={inputCls + " col-span-2"}
-                              value={form.aciklama} onChange={(e) => setForm({ ...form, aciklama: e.target.value })} />
+                              value={form.haberAciklama} onChange={(e) => setForm({ ...form, haberAciklama: e.target.value })} />
                 </div>
 
                 <div className="flex gap-3 mt-4">
