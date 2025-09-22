@@ -1,26 +1,15 @@
-// src/sayfalar/HaberlerPage.tsx
-import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { apiGet, apiDelete } from "../services/apiService";
+import {useEffect, useMemo, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+// YENİ: Kategori servisini ve tipini import et
+import {getAllHaber, deleteHaber, getAllHaberCategories} from "../services/haberlerService";
 
-// --- Tipler ---
-export interface Kategori {
-    id: number;
-    ad: string;
-}
-export interface Haber {
-    id?: number;
-    baslik: string;
-    tarih: string;      // ISO/LocalDate string
-    aciklama: string;
-    resim1?: string;
-    resim2?: string;
-    kategori: Kategori | null;
-}
+// YENİ: Kategori tipini import et
+import type {Haber, HaberCategorySummary} from "../types/haberler.ts";
 
 export default function HaberlerPage() {
     // veri
     const [items, setItems] = useState<Haber[]>([]);
+    const [categories, setCategories] = useState<HaberCategorySummary[]>([]); // YENİ: Kategoriler için state
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [pending, setPending] = useState(false);
@@ -29,6 +18,7 @@ export default function HaberlerPage() {
     const [q, setQ] = useState("");
     const [from, setFrom] = useState<string>("");
     const [to, setTo] = useState<string>("");
+    const [selectedCategory, setSelectedCategory] = useState<string>(""); // YENİ: Seçili kategori için state
 
     // seçimler
     const [selected, setSelected] = useState<number[]>([]);
@@ -41,13 +31,18 @@ export default function HaberlerPage() {
     const inputCls =
         "rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
 
-    // --- Data fetch ---
+    // --- Data fetch (GÜNCELLENDİ) ---
     const fetchData = async () => {
         setError(null);
         setLoading(true);
         try {
-            const data = await apiGet<Haber[]>("/api/haberler");
-            setItems(data || []);
+            // YENİ: Hem haberleri hem de kategorileri aynı anda çek
+            const [haberData, categoryData] = await Promise.all([
+                getAllHaber(),
+                getAllHaberCategories()
+            ]);
+            setItems(haberData || []);
+            setCategories(categoryData || []);
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Liste yüklenemedi";
             setError(`${msg}${err?.response?.status ? ` (status: ${err.response.status})` : ""}`);
@@ -57,22 +52,24 @@ export default function HaberlerPage() {
     };
     useEffect(() => { fetchData(); }, []);
 
-    // --- Filtreleme ---
+    // --- Filtreleme (GÜNCELLENDİ) ---
     const filtered = useMemo(() => {
         const term = q.trim().toLowerCase();
         const f = from ? new Date(from) : null;
         const t = to ? new Date(to) : null;
         return items.filter((h) => {
-            const okQ = !term || h.baslik.toLowerCase().includes(term);
-            const d = new Date(h.tarih);
+            const okQ = !term || h.haberBaslik.toLowerCase().includes(term);
+            const d = new Date(h.haberTarih);
             const okFrom = !f || d >= f!;
             const okTo = !t || d <= t!;
-            return okQ && okFrom && okTo;
+            // YENİ: Kategori filtresi eklendi
+            const okCategory = !selectedCategory || h.categoryId === Number(selectedCategory);
+            return okQ && okFrom && okTo && okCategory;
         });
-    }, [items, q, from, to]);
+    }, [items, q, from, to, selectedCategory]); // YENİ: selectedCategory bağımlılık olarak eklendi
 
     // --- Seçim ---
-    const allIds = filtered.map((x) => x.id!).filter(Boolean);
+    const allIds = filtered.map((x) => x.haberlerId).filter(Boolean);
     const allChecked = allIds.length > 0 && allIds.every((id) => selected.includes(id));
     const toggleAll = () =>
         setSelected((prev) =>
@@ -86,19 +83,19 @@ export default function HaberlerPage() {
         setRowMenuOpenId((cur) => (cur === id ? null : id));
 
     const openEdit = (h: Haber) => {
-        navigate(`duzenle/${h.id}`);
+        navigate(`duzenle/${h.haberlerId}`);
         setRowMenuOpenId(null);
     };
 
     const deleteOne = async (id: number) => {
-        const rec = items.find((x) => x.id === id);
-        if (!confirm(`${rec?.baslik || id} kaydını silmek istiyor musunuz?`)) return;
+        const rec = items.find((x) => x.haberlerId === id);
+        if (!confirm(`${rec?.haberBaslik || id} kaydını silmek istiyor musunuz?`)) return;
 
         setPending(true);
         setError(null);
         try {
-            await apiDelete<boolean>(`/api/haberler/${id}`);
-            setItems((prev) => prev.filter((h) => h.id !== id));
+            await deleteHaber(id);
+            setItems((prev) => prev.filter((h) => h.haberlerId !== id));
             setSelected((prev) => prev.filter((x) => x !== id));
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Silme hatası";
@@ -116,8 +113,8 @@ export default function HaberlerPage() {
         setPending(true);
         setError(null);
         try {
-            await Promise.all(selected.map((id) => apiDelete<boolean>(`/api/haberler/${id}`)));
-            setItems((prev) => prev.filter((h) => !selected.includes(h.id!)));
+            await Promise.all(selected.map((id) => deleteHaber(id)));
+            setItems((prev) => prev.filter((h) => !selected.includes(h.haberlerId)));
             setSelected([]);
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Silme hatası";
@@ -153,12 +150,12 @@ export default function HaberlerPage() {
                                 <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Başlığa göre ara…" className={inputCls} />
                                 <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className={inputCls} />
                                 <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className={inputCls} />
-                                <button onClick={() => { setQ(""); setFrom(""); setTo(""); }} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">
+                                <button onClick={() => { setQ(""); setFrom(""); setTo(""); setSelectedCategory(""); }} className="rounded-lg px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50">
                                     Temizle
                                 </button>
                             </div>
 
-                            {/* Aksiyonlar (Toplu Sil sadece seçim varsa görünür) */}
+                            {/* Aksiyonlar (Toplu Sil sadece seçim varsa görünür) (GÜNCELLENDİ) */}
                             <div className="flex items-center gap-2 justify-end">
                                 {selected.length > 0 && (
                                     <button
@@ -170,6 +167,21 @@ export default function HaberlerPage() {
                                         Sil
                                     </button>
                                 )}
+
+                                {/* YENİ: Kategori Filtreleme Combobox'ı */}
+                                <select
+                                    value={selectedCategory}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    className={inputCls}
+                                >
+                                    <option value="">Tüm Kategoriler</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat.categoryId} value={cat.categoryId}>
+                                            {cat.categoryName}
+                                        </option>
+                                    ))}
+                                </select>
+
                                 <Link
                                     to="yeni"
                                     className="px-3 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg shadow-blue-500/20 hover:brightness-110"
@@ -214,23 +226,21 @@ export default function HaberlerPage() {
                                 </tr>
                             ) : (
                                 filtered.map((h) => (
-                                    <tr key={h.id} className="hover:bg-slate-50/60 transition-colors">
+                                    <tr key={h.haberlerId} className="hover:bg-slate-50/60 transition-colors">
                                         <td className="px-4 py-3 align-top">
-                                            {h.id !== undefined && (
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selected.includes(h.id)}
-                                                    onChange={() => toggleOne(h.id!)}
-                                                />
-                                            )}
+                                            <input
+                                                type="checkbox"
+                                                checked={selected.includes(h.haberlerId)}
+                                                onChange={() => toggleOne(h.haberlerId)}
+                                            />
                                         </td>
 
                                         {/* Afiş 1 */}
                                         <td className="px-4 py-3 align-top">
-                                            {h.resim1 && (
+                                            {h.haberResim1 && (
                                                 <img
-                                                    src={h.resim1}
-                                                    alt={`${h.baslik} - Afiş 1`}
+                                                    src={h.haberResim1}
+                                                    alt={`${h.haberBaslik} - Afiş 1`}
                                                     className="w-16 h-20 object-cover rounded-md ring-1 ring-slate-200"
                                                 />
                                             )}
@@ -238,31 +248,31 @@ export default function HaberlerPage() {
 
                                         {/* Afiş 2 */}
                                         <td className="px-4 py-3 align-top">
-                                            {h.resim2 && (
+                                            {h.haberResim2 && (
                                                 <img
-                                                    src={h.resim2}
-                                                    alt={`${h.baslik} - Afiş 2`}
+                                                    src={h.haberResim2}
+                                                    alt={`${h.haberBaslik} - Afiş 2`}
                                                     className="w-16 h-20 object-cover rounded-md ring-1 ring-slate-200"
                                                 />
                                             )}
                                         </td>
 
-                                        <td className="px-4 py-3 font-medium text-slate-800">{h.baslik}</td>
+                                        <td className="px-4 py-3 font-medium text-slate-800">{h.haberBaslik}</td>
                                         <td className="px-4 py-3 text-slate-600">
-                                            {new Date(h.tarih).toLocaleDateString("tr-TR")}
+                                            {new Date(h.haberTarih).toLocaleDateString("tr-TR")}
                                         </td>
-                                        <td className="px-4 py-3">{h.kategori?.ad || "-"}</td>
+                                        <td className="px-4 py-3">{h.categoryName || "-"}</td>
 
                                         {/* İşlemler — Kurumsal sayfadakiyle aynı (📝 ▾ + alt menü) */}
                                         <td className="px-4 py-3 align-center">
                                             <div className="relative inline-block" data-row-menu-root>
                                                 <button
                                                     className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
-                                                    onClick={() => toggleRowMenu(h.id!)}
+                                                    onClick={() => toggleRowMenu(h.haberlerId)}
                                                 >
                                                     📝 ▾
                                                 </button>
-                                                {rowMenuOpenId === h.id && (
+                                                {rowMenuOpenId === h.haberlerId && (
                                                     <div className="absolute z-20 mt-1 w-32 rounded-md border bg-white shadow-lg left-0 top-full">
                                                         <button
                                                             className="w-full px-3 py-2 text-left hover:bg-slate-50"
@@ -272,7 +282,7 @@ export default function HaberlerPage() {
                                                         </button>
                                                         <button
                                                             className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
-                                                            onClick={() => deleteOne(h.id!)}
+                                                            onClick={() => deleteOne(h.haberlerId)}
                                                         >
                                                             Sil
                                                         </button>

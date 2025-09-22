@@ -1,6 +1,5 @@
 package com.kocaeli.bel.model.yayınlar;
 
-import com.kocaeli.bel.model.raporlar.Raporlar;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

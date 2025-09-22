@@ -35,8 +35,8 @@ const mockSonHaberler = [
     },
 ];
 
-// Haber tipi tanımı
-interface Haber {
+// Haberler tipi tanımı
+interface Haberler {
     id: number;
     baslik: string;
     gorsel: string;
@@ -113,7 +113,7 @@ const SonHaberlerSlider = ({ haberler, navigate }: { haberler: Haber[], navigate
     );
 };
 
-// Haber detay tipi tanımı
+// Haberler detay tipi tanımı
 interface HaberDetayType {
     id: string | undefined;
     baslik: string;
@@ -237,7 +237,7 @@ const HaberDetay = () => {
                             <div className="relative w-full flex items-center justify-center">
                                 <img
                                     src={detayGorseller[selectedIndex]}
-                                    alt="Haber görseli"
+                                    alt="Haberler görseli"
                                     className="w-full max-h-[300px] sm:max-h-[400px] lg:max-h-[500px] object-cover rounded-lg shadow-md"
                                 />
                             </div>

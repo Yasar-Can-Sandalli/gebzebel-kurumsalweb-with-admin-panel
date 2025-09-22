@@ -83,8 +83,8 @@ export default function AdminPanelApp() {
                     </Route>
 
                     {/* Diğer modüller (relative path'ler) */}
-                    <Route path="haberler" element={<HaberlerPage />} />
-                    <Route path="haberler/yeni" element={<HaberlerYeniPage />} />
+                    <Route path="haberler/list" element={<HaberlerPage />} />
+                    <Route path="haberler/list/yeni" element={<HaberlerYeniPage />} />
                     <Route path="haberler/duzenle/:id" element={<EditPage />} />
                     <Route path="hizmetler" element={<HizmetlerPage />} />
                     <Route path="hizmetler/:id/duzenle" element={<EditPage />} />

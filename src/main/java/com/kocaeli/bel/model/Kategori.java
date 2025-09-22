@@ -1,9 +1,7 @@
 package com.kocaeli.bel.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.kocaeli.bel.model.Haberler.Haberler;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import jakarta.persistence.*;
@@ -22,9 +20,11 @@ public class Kategori {
     @Column(name = "AD", length = 255)
     private String ad;
 
+    /*
     @JsonIgnore
     @OneToMany(mappedBy = "kategori", cascade = CascadeType.ALL)
     private List<Haberler> haberler;
+     */
 
     @JsonIgnore
     @OneToMany(mappedBy = "kategori", cascade = CascadeType.ALL)
