@@ -355,7 +355,7 @@ export default function KurumsalRaporlarPage() {
                             </div>
 
                             <div className="text-xs text-slate-500">
-                                Kategori: <b>{cats.find((c) => c.id === activeId)?.label}</b> (id: {activeId})
+                                Kategori: <b>{cats.find((c) => c.id === activeId)?.label}</b>
                             </div>
 
                             <div className="flex justify-end gap-2 mt-2">

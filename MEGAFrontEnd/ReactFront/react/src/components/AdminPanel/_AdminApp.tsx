@@ -32,8 +32,7 @@ import EtkinliklerPage from "./sayfalar/EtkinliklerPage";
 import EtkinlikYeniPage from "./sayfalar/EtkinlikYeniPage";
 import EditPage from "./sayfalar/EditPage";
 import YayinlarPage from "./sayfalar/YayinlarPage";
-import YayinlarYeniPage from "./sayfalar/YayinlarYeniPage.tsx";
-import IletisimPage from "./sayfalar/IletisimPage";
+import DuyuruPage from "./sayfalar/DuyuruPage.tsx";
 
 // --- Kullanıcı sayfaları
 // NOT: Dosyan senin örneğinde `src/sayfalar/kurumsal/UsersPage.tsx` altında.
@@ -71,7 +70,6 @@ export default function AdminPanelApp() {
                         <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
                         <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
                         <Route path="raporlar" element={<KurumsalRaporlarPage />} />
-                        <Route path="raporlar/:id/edit" element={<EditPage />} />
                         <Route path="komisyonlar" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler/yeni" element={<KurumsalMudurluklerYeniPage />} />
@@ -99,9 +97,7 @@ export default function AdminPanelApp() {
                     <Route path="etkinlikler/yeni" element={<EtkinlikYeniPage />} />
                     <Route path="etkinlikler/:id/duzenle" element={<EditPage />} />
                     <Route path="yayinlar" element={<YayinlarPage />} />
-                    <Route path="yayinlar/yeni" element={<YayinlarYeniPage />} />
-                    <Route path="yayinlar/duzenle/:id" element={<EditPage />} />
-                    <Route path="iletisim" element={<IletisimPage />} />
+                    <Route path="duyurular" element={<DuyuruPage />} />
 
                     {/* 404 */}
                     <Route path="*" element={<div className="p-6">Bulunamadı</div>} />

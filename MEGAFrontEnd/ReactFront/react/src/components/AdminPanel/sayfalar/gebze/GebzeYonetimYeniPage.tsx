@@ -54,7 +54,7 @@ export default function GebzeYonetimYeniPage() {
         try {
             setError(null);
             const url = await uploadOne(f);
-            setForm((s) => ({ ...s, resimUrl: url }));
+            setForm((s) => ({ ...s, resimUrl: url })); // URL otomatik doluyor
         } catch (er: any) {
             setError(er?.message || "Resim yüklenemedi");
         }
@@ -165,11 +165,12 @@ export default function GebzeYonetimYeniPage() {
                             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPick}/>
                         </div>
 
+                        {/* Yalnızca okunur: kullanıcı yazamaz */}
                         <input
                             className={input}
                             placeholder="/images/resimler/..."
                             value={form.resimUrl}
-                            onChange={(e) => setForm({ ...form, resimUrl: e.target.value })}
+                            readOnly
                         />
 
                         <div className="rounded-xl border border-slate-200 bg-slate-50 p-2">

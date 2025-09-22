@@ -59,18 +59,29 @@ export default function GebzeYonetimEditPage() {
                     return;
                 }
                 const numId = Number(id);
-                const tryFetch = async (p: string) => { try { return await apiGet<Muhtar>(p); } catch { return null; } };
+                const tryFetch = async (p: string) => {
+                    try {
+                        return await apiGet<Muhtar>(p);
+                    } catch {
+                        return null;
+                    }
+                };
                 let data: Muhtar | null = null;
                 if (Number.isFinite(numId)) {
-                    data = await tryFetch(API_GET_V1(numId)) ||
-                        await tryFetch(API_GET_V2(numId)) ||
-                        await tryFetch(API_GET_V3(numId));
+                    data =
+                        (await tryFetch(API_GET_V1(numId))) ||
+                        (await tryFetch(API_GET_V2(numId))) ||
+                        (await tryFetch(API_GET_V3(numId)));
                 }
                 if (!data) {
                     const res = await apiGet<any>(API_LIST);
-                    const arr: Muhtar[] = Array.isArray(res?.content) ? res.content
-                        : Array.isArray(res?.data) ? res.data
-                            : Array.isArray(res) ? res : [];
+                    const arr: Muhtar[] = Array.isArray(res?.content)
+                        ? res.content
+                        : Array.isArray(res?.data)
+                            ? res.data
+                            : Array.isArray(res)
+                                ? res
+                                : [];
                     data = arr.find((x) => Number(x?.id) === numId) || null;
                 }
                 if (!data) throw new Error("Kayıt bulunamadı.");
@@ -107,7 +118,7 @@ export default function GebzeYonetimEditPage() {
         try {
             setError(null);
             const url = await uploadOne(f);
-            setForm((s) => ({ ...s, resimUrl: url }));
+            setForm((s) => ({ ...s, resimUrl: url })); // URL otomatik doluyor
         } catch (er: any) {
             setError(er?.message || "Resim yüklenemedi");
         }
@@ -221,11 +232,12 @@ export default function GebzeYonetimEditPage() {
                             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPick}/>
                         </div>
 
+                        {/* Yalnızca okunur: kullanıcı yazamaz */}
                         <input
                             className={input}
                             placeholder="/images/resimler/..."
                             value={form.resimUrl || ""}
-                            onChange={(e) => setForm({ ...form, resimUrl: e.target.value })}
+                            readOnly
                         />
 
                         <div className="rounded-xl border border-slate-200 bg-slate-50 p-2">

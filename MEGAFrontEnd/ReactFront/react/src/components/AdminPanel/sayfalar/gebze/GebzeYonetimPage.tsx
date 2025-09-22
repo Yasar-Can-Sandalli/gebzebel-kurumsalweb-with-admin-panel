@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiGet, apiDelete } from "../../services/apiService";
-import { Mail, Phone } from "lucide-react";
+import {Mail, Phone, RefreshCw, Settings} from "lucide-react";
 
 type MuhtarBE = {
     id?: number;
@@ -290,12 +290,14 @@ export default function GebzeYonetimPage() {
                                     <td className="px-4 py-3 align-center">
                                         <div className="relative inline-block" data-row-menu-root>
                                             <button
-                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
-                                                onClick={() =>
-                                                    setActionOpen(actionOpen === e.id ? null : (e.id ?? null))
-                                                }
+                                                className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 text-sky-600"
+                                                onClick={() => setActionOpen(e.id!)}
+                                                aria-label="İşlemler"
                                             >
-                                                📝 ▾
+  <span className="relative inline-block h-5 w-5">
+    <RefreshCw className="absolute inset-0 h-5 w-5" strokeWidth={1.5} />
+    <Settings  className="absolute inset-0 m-auto h-3.5 w-3.5" strokeWidth={1.5} />
+  </span>
                                             </button>
 
                                             {actionOpen === e.id && (

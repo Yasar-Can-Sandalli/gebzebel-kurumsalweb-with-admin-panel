@@ -6,7 +6,7 @@ import { apiPostForm } from "../services/apiService2";
 type UploadOk = { success?: boolean; fileName?: string; message?: string };
 
 const API_CREATE = "/api/hizmetler/create";          // POST
-const UPLOAD_URL = "/api/files/upload";       // POST multipart
+const UPLOAD_URL = "/api/files/upload";              // POST multipart
 const toPublicPath = (name: string) =>
     name.startsWith("/images/resimler/") ? name : `/images/resimler/${name}`;
 
@@ -54,7 +54,7 @@ export default function HizmetlerYeniPage() {
         try {
             setError(null);
             const url = await uploadOne(f);
-            setForm((s) => ({ ...s, imgUrl: url }));
+            setForm((s) => ({ ...s, imgUrl: url })); // URL otomatik doluyor
         } catch (er: any) {
             setError(er?.message || "Resim yüklenemedi");
         }
@@ -71,8 +71,7 @@ export default function HizmetlerYeniPage() {
                 ...form,
                 imgUrl: (form.imgUrl || "").trim(), // /images/resimler/<ad>
             });
-            // listeye dön (relative path güvenli)
-            nav("..", { replace: true });
+            nav("..", { replace: true }); // listeye dön
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Ekleme hatası";
             setError(`${msg} (status: ${err?.response?.status ?? "?"})`);
@@ -207,11 +206,12 @@ export default function HizmetlerYeniPage() {
                             />
                         </div>
 
+                        {/* YALNIZCA OKUNUR: elle yazmayı kapattık */}
                         <input
                             className={input}
                             placeholder="/images/resimler/..."
                             value={form.imgUrl}
-                            onChange={(e) => setForm({ ...form, imgUrl: e.target.value })}
+                            readOnly
                         />
 
                         <div className="rounded-xl border border-slate-200 bg-slate-50 p-2">

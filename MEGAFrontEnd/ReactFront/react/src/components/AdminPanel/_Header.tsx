@@ -11,7 +11,6 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
     return (
         <header className="sticky top-0 z-40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
-            {/* içerik */}
             <div className="h-14 grid grid-cols-[auto_1fr_auto] items-center gap-3 px-3 md:px-4">
                 <button
                     onClick={onToggleSidebar}
@@ -40,12 +39,22 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
                 {/* sağ ikonlar */}
                 <div className="flex items-center gap-2">
-                    <button className="p-2 rounded-md hover:bg-slate-100 transition">
+                    <button className="p-2 rounded-md hover:bg-slate-100 transition" aria-label="Bildirimler">
                         <Bell className="h-5 w-5" />
                     </button>
-                    <div className="p-2 rounded-full bg-gradient-to-br from-blue-500 to-sky-500 text-white shadow-lg shadow-blue-500/20">
+
+                    {/* Kullanıcı: doğrudan Ayarlar'a götür */}
+                    <button
+                        type="button"
+                        onClick={() => navigate("/panel/settings")}
+                        aria-label="Ayarlar"
+                        title="Ayarlar"
+                        className="p-2 rounded-full bg-gradient-to-br from-blue-500 to-sky-500 text-white shadow-lg shadow-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+                    >
                         <User className="h-4 w-4" />
-                    </div>
+                    </button>
+
+                    {/* Çıkış */}
                     <button
                         onClick={() => {
                             try {
@@ -65,7 +74,6 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                 </div>
             </div>
 
-            {/* neon alt çizgi */}
             <div className="h-0.5 w-full bg-gradient-to-r from-blue-500 via-sky-400 to-transparent opacity-80" />
         </header>
     );

@@ -1,10 +1,11 @@
 import {useEffect, useMemo, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 // YENİ: Kategori servisini ve tipini import et
-import {getAllHaber, deleteHaber, getAllHaberCategories, getHaberById} from "../services/haberlerService";
+import {getAllHaber, deleteHaber, getAllHaberCategories} from "../services/haberlerService";
 
 // YENİ: Kategori tipini import et
 import type {Haber, HaberCategorySummary} from "../types/haberler.ts";
+import {RefreshCw, Settings} from "lucide-react";
 
 export default function HaberlerPage() {
     // veri
@@ -267,10 +268,14 @@ export default function HaberlerPage() {
                                         <td className="px-4 py-3 align-center">
                                             <div className="relative inline-block" data-row-menu-root>
                                                 <button
-                                                    className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50"
+                                                    className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 text-sky-600"
                                                     onClick={() => toggleRowMenu(h.haberlerId)}
+                                                    aria-label="İşlemler"
                                                 >
-                                                    📝 ▾
+                                                    <span className="relative inline-block h-5 w-5">
+                                                      <RefreshCw className="absolute inset-0 h-5 w-5" strokeWidth={1.5} />
+                                                      <Settings  className="absolute inset-0 m-auto h-3.5 w-3.5" strokeWidth={1.5} />
+                                                    </span>
                                                 </button>
                                                 {rowMenuOpenId === h.haberlerId && (
                                                     <div className="absolute z-20 mt-1 w-32 rounded-md border bg-white shadow-lg left-0 top-full">

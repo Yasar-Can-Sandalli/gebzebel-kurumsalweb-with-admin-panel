@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiGet, apiDelete } from "../../services/apiService";
-import { Mail, MoreVertical } from "lucide-react";
+import {Mail, MoreVertical, RefreshCw, Settings} from "lucide-react";
 
 type MudurlukBE = {
     id?: number;
@@ -178,11 +178,14 @@ export default function KurumsalMudurluklerPage() {
                                 {/* İŞLEMLER COMBOBOX — eski görünüm (tek düğme, açılır menü) */}
                                 <td className="px-4 py-3 align-top relative">
                                     <button
-                                        className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 inline-flex items-center gap-1"
-                                        onClick={() => setOpenMenu(openMenu === e.id ? null : e.id!)}
-                                        type="button"
+                                        className="px-3 py-1.5 rounded-lg ring-1 ring-slate-200 hover:bg-slate-50 text-sky-600"
+                                        onClick={() => setOpenMenu(e.id!)}
+                                        aria-label="İşlemler"
                                     >
-                                        📝 ▾
+  <span className="relative inline-block h-5 w-5">
+    <RefreshCw className="absolute inset-0 h-5 w-5" strokeWidth={1.5} />
+    <Settings  className="absolute inset-0 m-auto h-3.5 w-3.5" strokeWidth={1.5} />
+  </span>
                                     </button>
 
                                     {openMenu === e.id && (
