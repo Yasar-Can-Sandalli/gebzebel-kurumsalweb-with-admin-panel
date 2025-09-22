@@ -298,13 +298,6 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                         active={pathname.startsWith("/panel/users")}
                         onNavigate={handleNavClick}
                     />
-                    <Item
-                        to="/panel/settings"
-                        label="Ayarlar"
-                        icon={<Settings size={16} />}
-                        active={pathname.startsWith("/panel/settings")}
-                        onNavigate={handleNavClick}
-                    />
                 </ul>
             </div>
 

@@ -1,6 +1,5 @@
 package com.kocaeli.bel.controller.raporlar;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kocaeli.bel.DTO.raporlar.RaporlarCategoryResponse;
 import com.kocaeli.bel.DTO.raporlar.RaporlarCategoryResponseBasic;
