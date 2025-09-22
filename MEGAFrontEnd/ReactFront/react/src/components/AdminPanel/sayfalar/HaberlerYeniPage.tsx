@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// GÜNCELLENDİ: API servisleri yerine spesifik servis fonksiyonları import edildi
 import { createHaber, getAllHaberCategories } from "../services/haberlerService";
-// GÜNCELLENDİ: Doğru tip tanımı import edildi
 import type { HaberCategorySummary } from "../types/haberler";
+import { apiPostForm } from "../services/apiService2"; // <- YÜKLEME İÇİN
 
-// GÜNCELLENDİ: Formun state'i için kullanılacak tip, createHaber'in beklediği payload ile eşleşiyor
 type FormState = {
     haberBaslik: string;
     haberTarih: string;
@@ -15,10 +13,12 @@ type FormState = {
     categoryId: number | null;
 };
 
+const toPublicPath = (name: string) =>
+    name.startsWith("/images/resimler/") ? name : `/images/resimler/${name}`;
+
 export default function HaberYeniPage() {
     const navigate = useNavigate();
 
-    // GÜNCELLENDİ: State'in alan adları backend DTO ile uyumlu hale getirildi
     const [form, setForm] = useState<FormState>({
         haberBaslik: "",
         haberTarih: "",
@@ -28,16 +28,20 @@ export default function HaberYeniPage() {
         categoryId: null,
     });
 
-    // GÜNCELLENDİ: Kategori tipi HaberCategorySummary olarak değiştirildi
     const [kategoriler, setKategoriler] = useState<HaberCategorySummary[]>([]);
     const [loadingCats, setLoadingCats] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // --- YÜKLEME DURUMLARI & INPUT REFLERİ ---
+    const [uploading1, setUploading1] = useState(false);
+    const [uploading2, setUploading2] = useState(false);
+    const fileRef1 = useRef<HTMLInputElement>(null);
+    const fileRef2 = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         (async () => {
             try {
-                // GÜNCELLENDİ: Kategori listesini çekmek için doğru servis fonksiyonu çağrıldı
                 const data = await getAllHaberCategories();
                 setKategoriler(data ?? []);
             } catch (e: any) {
@@ -51,6 +55,50 @@ export default function HaberYeniPage() {
     const inputCls =
         "rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
 
+    // --- TEK DOSYA YÜKLE ---
+    const uploadOne = async (file: File) => {
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await apiPostForm<any>("/api/files/upload", fd);
+        const fileName = (res as any)?.fileName as string | undefined;
+        if (!fileName) throw new Error((res as any)?.message || "Yükleme başarısız");
+        return toPublicPath(fileName);
+    };
+
+    // --- RESİM 1 SEÇ ---
+    const onPick1 = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        try {
+            setError(null);
+            setUploading1(true);
+            const url = await uploadOne(f);
+            setForm((p) => ({ ...p, haberResim1: url }));
+        } catch (er: any) {
+            setError(er?.message || "Resim 1 yüklenemedi");
+        } finally {
+            setUploading1(false);
+            if (fileRef1.current) fileRef1.current.value = "";
+        }
+    };
+
+    // --- RESİM 2 SEÇ ---
+    const onPick2 = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        try {
+            setError(null);
+            setUploading2(true);
+            const url = await uploadOne(f);
+            setForm((p) => ({ ...p, haberResim2: url }));
+        } catch (er: any) {
+            setError(er?.message || "Resim 2 yüklenemedi");
+        } finally {
+            setUploading2(false);
+            if (fileRef2.current) fileRef2.current.value = "";
+        }
+    };
+
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -62,10 +110,9 @@ export default function HaberYeniPage() {
         setError(null);
         setSaving(true);
         try {
-            // GÜNCELLENDİ: Yeni haber oluşturmak için doğru servis fonksiyonu ve payload kullanıldı
             await createHaber({
                 ...form,
-                categoryId: form.categoryId, // Typescript'in null olmama durumunu anlaması için
+                categoryId: form.categoryId,
             });
             navigate("..", { replace: true, relative: "path" });
         } catch (err: any) {
@@ -89,31 +136,93 @@ export default function HaberYeniPage() {
 
             <form onSubmit={submit} className="mx-auto max-w-2xl bg-white rounded-xl p-5 shadow-md ring-1 ring-slate-200/60">
                 <div className="grid grid-cols-2 gap-3">
-                    {/* GÜNCELLENDİ: Tüm form elemanları yeni state adlarına göre güncellendi */}
-                    <input type="text" placeholder="Başlık" className={inputCls}
-                           value={form.haberBaslik} onChange={(e) => setForm({ ...form, haberBaslik: e.target.value })} required />
-                    <input type="date" className={inputCls}
-                           value={form.haberTarih} onChange={(e) => setForm({ ...form, haberTarih: e.target.value })} required />
+                    <input
+                        type="text"
+                        placeholder="Başlık"
+                        className={inputCls}
+                        value={form.haberBaslik}
+                        onChange={(e) => setForm({ ...form, haberBaslik: e.target.value })}
+                        required
+                    />
 
-                    <select className={inputCls} value={form.categoryId ?? ""} required disabled={loadingCats}
-                            onChange={(e) => setForm({ ...form, categoryId: e.target.value ? Number(e.target.value) : null })}>
+                    <input
+                        type="date"
+                        className={inputCls}
+                        value={form.haberTarih}
+                        onChange={(e) => setForm({ ...form, haberTarih: e.target.value })}
+                        required
+                    />
+
+                    <select
+                        className={inputCls}
+                        value={form.categoryId ?? ""}
+                        required
+                        disabled={loadingCats}
+                        onChange={(e) => setForm({ ...form, categoryId: e.target.value ? Number(e.target.value) : null })}
+                    >
                         <option value="">{loadingCats ? "Kategoriler yükleniyor…" : "— Kategori Seç —"}</option>
-                        {/* GÜNCELLENDİ: Kategori nesnesinin yeni alan adları (categoryId, categoryName) kullanıldı */}
-                        {kategoriler.map(k => <option key={k.categoryId} value={k.categoryId}>{k.categoryName}</option>)}
+                        {kategoriler.map((k) => (
+                            <option key={k.categoryId} value={k.categoryId}>
+                                {k.categoryName}
+                            </option>
+                        ))}
                     </select>
 
-                    <input type="text" placeholder="Resim 1 URL" className={inputCls}
-                           value={form.haberResim1} onChange={(e) => setForm({ ...form, haberResim1: e.target.value })} />
-                    <input type="text" placeholder="Resim 2 URL" className={inputCls + " col-span-2"}
-                           value={form.haberResim2} onChange={(e) => setForm({ ...form, haberResim2: e.target.value })} />
+                    {/* Resim 1 URL + Dosya Seç */}
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="text"
+                            placeholder="Resim 1 URL"
+                            className={inputCls + " flex-1"}
+                            value={form.haberResim1}
+                            onChange={(e) => setForm({ ...form, haberResim1: e.target.value })}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => fileRef1.current?.click()}
+                            disabled={uploading1}
+                            className="rounded-md px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50 text-xs"
+                        >
+                            {uploading1 ? "Yükleniyor…" : "Dosya Seç"}
+                        </button>
+                        <input ref={fileRef1} type="file" accept="image/*" className="hidden" onChange={onPick1} />
+                    </div>
 
-                    <textarea placeholder="Açıklama / İçerik" rows={3} className={inputCls + " col-span-2"}
-                              value={form.haberAciklama} onChange={(e) => setForm({ ...form, haberAciklama: e.target.value })} />
+                    {/* Resim 2 URL + Dosya Seç (geniş satırdaki yapıyı bozmayalım diye col-span-2 korundu) */}
+                    <div className="flex items-center gap-2 col-span-2">
+                        <input
+                            type="text"
+                            placeholder="Resim 2 URL"
+                            className={inputCls + " flex-1"}
+                            value={form.haberResim2}
+                            onChange={(e) => setForm({ ...form, haberResim2: e.target.value })}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => fileRef2.current?.click()}
+                            disabled={uploading2}
+                            className="rounded-md px-3 py-2 ring-1 ring-slate-200 hover:bg-slate-50 text-xs"
+                        >
+                            {uploading2 ? "Yükleniyor…" : "Dosya Seç"}
+                        </button>
+                        <input ref={fileRef2} type="file" accept="image/*" className="hidden" onChange={onPick2} />
+                    </div>
+
+                    <textarea
+                        placeholder="Açıklama / İçerik"
+                        rows={3}
+                        className={inputCls + " col-span-2"}
+                        value={form.haberAciklama}
+                        onChange={(e) => setForm({ ...form, haberAciklama: e.target.value })}
+                    />
                 </div>
 
                 <div className="flex gap-3 mt-4">
-                    <button type="submit" disabled={saving}
-                            className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg disabled:opacity-60">
+                    <button
+                        type="submit"
+                        disabled={saving}
+                        className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg disabled:opacity-60"
+                    >
                         {saving ? "Kaydediliyor..." : "Kaydet"}
                     </button>
                 </div>
