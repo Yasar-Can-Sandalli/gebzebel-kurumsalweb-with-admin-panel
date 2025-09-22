@@ -2,14 +2,11 @@ import React, {useState, useEffect, useCallback} from "react";
 import {useParams, useNavigate, useLocation} from "react-router-dom";
 import {ArrowLeft, Save, X, AlertCircle, Eye} from "lucide-react";
 import {BaskanAPI} from "../services/pageService";
-import {apiGet, apiPut} from "../services/apiService";
+import {apiGet, apiPut, apiPostForm} from "../services/apiService";
 import { getAllYayinCategories } from "../services/yayinlarService";
 import type { YayinCategorySummary } from "../types/yayinlar";
 import { getHaberById, updateHaber, getAllHaberCategories } from "../services/haberlerService";
 import type { HaberCategorySummary } from "../types/haberler";
-
-// 🚀 YÜKLEME İÇİN eklendi:
-import { apiPostForm } from "../services/apiService2";
 
 /* ------------------------- Basit Layout ------------------------- */
 const SimpleLayout: React.FC<{ children: React.ReactNode }> = ({children}) => (

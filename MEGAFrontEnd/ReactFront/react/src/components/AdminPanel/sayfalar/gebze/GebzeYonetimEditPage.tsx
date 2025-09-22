@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { apiGet, apiPut } from "../../services/apiService";
-import { apiPostForm } from "../../services/apiService2";
+import { apiGet, apiPut, apiPostForm } from "../../services/apiService";
 
 type Muhtar = {
     id?: number;

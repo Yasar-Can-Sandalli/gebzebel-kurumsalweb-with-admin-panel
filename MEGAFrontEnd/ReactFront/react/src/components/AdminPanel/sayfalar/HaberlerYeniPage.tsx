@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createHaber, getAllHaberCategories } from "../services/haberlerService";
 import type { HaberCategorySummary } from "../types/haberler";
-import { apiPostForm } from "../services/apiService2";
+import { apiPostForm } from "../services/apiService";
 
 type FormState = {
     haberBaslik: string;

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
-import { apiGet, apiPut } from "../../services/apiService";
-import { apiPostForm } from "../../services/apiService2";
+import { apiGet, apiPut, apiPostForm } from "../../services/apiService";
 
 type Mudurluk = { id?: number; name: string; managerName: string; email: string; imageUrl?: string; [k: string]: any };
 type UploadOk = { success?: boolean; fileName?: string; message?: string };
