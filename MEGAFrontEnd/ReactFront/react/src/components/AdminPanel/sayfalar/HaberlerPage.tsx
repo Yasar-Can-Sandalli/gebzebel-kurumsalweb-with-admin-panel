@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 // YENİ: Kategori servisini ve tipini import et
-import {getAllHaber, deleteHaber, getAllHaberCategories} from "../services/haberlerService";
+import {getAllHaber, deleteHaber, getAllHaberCategories, getHaberById} from "../services/haberlerService";
 
 // YENİ: Kategori tipini import et
 import type {Haber, HaberCategorySummary} from "../types/haberler.ts";

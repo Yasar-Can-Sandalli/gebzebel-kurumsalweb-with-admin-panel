@@ -5,6 +5,8 @@ import {BaskanAPI} from "../services/pageService";
 import {apiGet, apiPut} from "../services/apiService";
 import { getAllYayinCategories } from "../services/yayinlarService";
 import type { YayinCategorySummary } from "../types/yayinlar";
+import { getHaberById, updateHaber, getAllHaberCategories } from "../services/haberlerService";
+import type { HaberCategorySummary } from "../types/haberler"; // 🔴 eklendi
 
 
 /* ------------------------- Basit Layout ------------------------- */
@@ -179,18 +181,18 @@ const RAPORLAR_CONFIG: TableConfig = {
     ],
 };
 
-// --- NEW: HABERLER ---
+// --- Haberler ---
 const HABERLER_CONFIG: TableConfig = {
     tableName: "HABERLER",
-    displayName: "Haberler",
+    displayName: "Haber",
     apiEndpoint: "/api/haberler",
     fields: [
-        {name: "tarih", label: "Tarih", type: "date", required: true},
-        {name: "aciklama", label: "Açıklama", type: "textarea"},
-        {name: "resim1", label: "Resim 1 URL", type: "text"},
-        {name: "resim2", label: "Resim 2 URL", type: "text"},
-        // Kategori listesini ileride select’e bağlayabiliriz; şimdilik ID ile güncelleyelim
-        {name: "kategoriId", label: "Kategori ID", type: "number"},
+        {name: "haberBaslik",   label: "Başlık",          type: "text", required: true},
+        {name: "haberTarih",    label: "Tarih",           type: "date", required: true},
+        {name: "haberAciklama", label: "Açıklama",        type: "textarea"},
+        {name: "haberResim1",   label: "Resim 1 URL",     type: "text"},
+        {name: "haberResim2",   label: "Resim 2 URL",     type: "text"},
+        {name: "categoryId",    label: "Kategori",        type: "select", required: true},
     ],
 };
 
@@ -251,8 +253,18 @@ const DynamicEditPageForm: React.FC = () => {
     // 🔴 yeni:
     const lastFocusedRef = React.useRef<string | null>(null);
     const rememberFocus = (name: string) => () => { lastFocusedRef.current = name; };
+    const [haberCategories, setHaberCategories] = useState<HaberCategorySummary[]>([]);
     const [yayinCategories, setYayinCategories] = useState<YayinCategorySummary[]>([]);
     useEffect(() => {
+        if (isHaberMode) { // 🔴 eklendi
+            (async () => {
+                try {
+                    const data = await getAllHaberCategories();
+                    setHaberCategories(data || []);
+                } catch (e) { console.error("Haber kategorileri yüklenemedi", e); }
+            })();
+        }
+
         if (!isYayinMode) return;
         (async () => {
             try {
@@ -262,7 +274,7 @@ const DynamicEditPageForm: React.FC = () => {
                 console.error("Yayın kategorileri yüklenemedi", e);
             }
         })();
-    }, [isYayinMode]);
+    }, [isHaberMode, isYayinMode]);
 
 
 // 🔁 formData her değiştiğinde odağı kesin olarak geri ver
@@ -339,27 +351,21 @@ const DynamicEditPageForm: React.FC = () => {
             try {
                 const numericId = parseInt(recordId, 10);
 
-                /* HABERLER */
+
+                /* HABERLER (🔴 GÜNCELLENDİ) */
                 if (isHaberMode) {
-                    let data: any;
-                    try {
-                        data = await apiGet<any>(`${HABERLER_CONFIG.apiEndpoint}/${numericId}`);
-                    } catch {
-                        const all = await apiGet<any[]>(HABERLER_CONFIG.apiEndpoint);
-                        data = all.find((x) => x.id === numericId);
-                    }
-                    if (!data) throw new Error("Record not found");
+                    const data = await getHaberById(numericId); // Servis kullanıldı
+                    if (!data) throw new Error("Haber kaydı bulunamadı");
 
                     setTableConfig(HABERLER_CONFIG);
                     setFormData({
-                        id: data.id ?? "",
-                        baslik: data.baslik ?? "",
-                        tarih: data.tarih ?? "",
-                        aciklama: data.aciklama ?? "",
-                        resim1: data.resim1 ?? "",
-                        resim2: data.resim2 ?? "",
-                        kategoriId: data.kategori?.id ?? "",
-                        kategori: data.kategori ?? null, // elde dursun
+                        haberlerId: data.haberlerId,
+                        haberBaslik: data.haberBaslik ?? "",
+                        haberTarih: (data.haberTarih ?? "").slice(0, 10), // Tarih formatı için
+                        haberAciklama: data.haberAciklama ?? "",
+                        haberResim1: data.haberResim1 ?? "",
+                        haberResim2: data.haberResim2 ?? "",
+                        categoryId: data.categoryId ?? null,
                     });
                     setHasLoaded(true);
                     return;
@@ -653,18 +659,17 @@ const DynamicEditPageForm: React.FC = () => {
             // HABERLER SAVE
             if (isHaberMode) {
                 const payload = {
-                    baslik: (formData.baslik ?? "").trim(),
-                    tarih: (formData.tarih ?? "").trim(),
-                    aciklama: formData.aciklama ?? "",
-                    resim1: formData.resim1 ?? "",
-                    resim2: formData.resim2 ?? "",
-                    // backend kategori objesi bekliyorsa:
-                    ...(formData.kategoriId ? {kategori: {id: Number(formData.kategoriId)}} : {}),
-                    // eğer backend kategoriId bekliyorsa üst satırı silip bunu kullan:
-                    // ...(formData.kategoriId ? { kategoriId: Number(formData.kategoriId) } : {}),
+                    haberBaslik:   (formData.haberBaslik ?? "").trim(),
+                    haberTarih:    (formData.haberTarih ?? "").trim(),
+                    haberAciklama: formData.haberAciklama ?? "",
+                    haberResim1:   formData.haberResim1 ?? "",
+                    haberResim2:   formData.haberResim2 ?? "",
+                    categoryId:    Number(formData.categoryId),
                 };
-                await apiPut(`/api/haberler/update/${formData.id}`, payload);
-                alert("Haberler güncellendi!");
+
+                await updateHaber(formData.haberlerId, payload); // Servis kullanıldı
+                alert("Haber güncellendi!");
+                navigate(goBackToList(), { replace: true }); // Kayıttan sonra listeye dön
                 return;
             }
 
@@ -814,6 +819,24 @@ const DynamicEditPageForm: React.FC = () => {
                     />
                 );
             case "select":
+                // 🔴 eklendi: HABERLER için dinamik kategori listesi
+                if (isHaberMode && field.name === "categoryId") {
+                    return (
+                        <select
+                            value={formData.categoryId ?? ""}
+                            onChange={(e) => handleInputChange(field.name, e.target.value === "" ? "" : Number(e.target.value))}
+                            className={common}
+                            required={field.required}
+                        >
+                            <option value="">— Kategori Seçiniz —</option>
+                            {haberCategories.map((cat) => (
+                                <option key={cat.categoryId} value={cat.categoryId}>
+                                    {cat.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    );
+                }
                 // YAYINLAR: dinamik kategori listesi
                 if (isYayinMode && field.name === "categoryId") {
                     return (

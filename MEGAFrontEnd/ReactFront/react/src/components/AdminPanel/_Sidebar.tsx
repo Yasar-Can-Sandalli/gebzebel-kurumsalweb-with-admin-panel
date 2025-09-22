@@ -226,10 +226,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
                     {/* Haberler */}
                     <Item
-                        to="/panel/haberler/list"
+                        to="/panel/haberler"
                         label="Haberler"
                         icon={<FileText size={16} />}
-                        active={pathname.startsWith("/panel/haberler/list")}
+                        active={pathname.startsWith("/panel/haberler")}
                         onNavigate={handleNavClick}
                     />
 
