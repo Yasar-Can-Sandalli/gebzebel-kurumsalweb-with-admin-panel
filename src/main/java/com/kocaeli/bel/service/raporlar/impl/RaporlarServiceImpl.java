@@ -10,6 +10,9 @@ import com.kocaeli.bel.service.raporlar.IRaporlarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 //YCS
 @Service
 @RequiredArgsConstructor
@@ -17,6 +20,13 @@ public class RaporlarServiceImpl implements IRaporlarService {
 
     private final RaporlarRepository raporlarRepository;
     private final RaporlarCategoryRepository categoryRepository;
+
+    @Transactional
+    @Override
+    public List<Raporlar> getRaporlar() {
+        List<Raporlar> rapor = raporlarRepository.findAll();
+        return rapor;
+    }
 
     @Transactional(readOnly = true)
     @Override

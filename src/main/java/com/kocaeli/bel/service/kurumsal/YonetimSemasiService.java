@@ -1,10 +1,12 @@
 package com.kocaeli.bel.service.kurumsal;
 
+import com.kocaeli.bel.model.Mudurlukler;
 import com.kocaeli.bel.model.kurumsal.YonetimSemasiEntity;
 import com.kocaeli.bel.repository.kurumsal.YonetimSemasiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,11 @@ public class YonetimSemasiService {
         return yonetimSemasiRepository.findBaskanDanismanlari();
     }
 
+    public ResponseEntity<YonetimSemasiEntity> createYonetim(YonetimSemasiEntity yonetim) {
+        YonetimSemasiEntity yonetimSemasi = yonetimSemasiRepository.save(yonetim);
+        return ResponseEntity.ok(yonetimSemasi);
+    }
+
     public Optional<YonetimSemasiEntity> getBaskanYardimcisiById(Long id) {
         return yonetimSemasiRepository.findById(id)
                 .filter(entity -> "Başkan Yardımcısı".equals(entity.getPozisyon()));
@@ -45,7 +52,7 @@ public class YonetimSemasiService {
     }
 
     public void deleteBaskanYardimcisi(Long id) {
-        yonetimSemasiRepository.deleteById(id);
+         yonetimSemasiRepository.deleteById(id);
     }
 
     public void deleteBaskanYardimcilari(List<Long> ids) {

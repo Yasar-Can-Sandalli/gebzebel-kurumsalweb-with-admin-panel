@@ -1,5 +1,6 @@
 package com.kocaeli.bel.controller.kurumsal;
 
+import com.kocaeli.bel.model.Mudurlukler;
 import com.kocaeli.bel.model.kurumsal.YonetimSemasiEntity;
 import com.kocaeli.bel.service.kurumsal.YonetimSemasiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class YonetimSemasiController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/yonetim/create")
+    public ResponseEntity<YonetimSemasiEntity> createYonetim(@RequestBody YonetimSemasiEntity yonetim) {
+        return yonetimSemasiService.createYonetim(yonetim);
+    }
+
     @GetMapping("/baskandanismanlari")
     public ResponseEntity<List<YonetimSemasiEntity>> getBaskanDanismanlari() {
         return ResponseEntity.ok(yonetimSemasiService.getBaskanDanismanlari());
@@ -48,5 +54,10 @@ public class YonetimSemasiController {
         updatedEntity.setId(id);
         YonetimSemasiEntity saved = yonetimSemasiService.save(updatedEntity);
         return ResponseEntity.ok(saved);
+    }
+
+    @DeleteMapping("/yonetim/delete/{id}")
+    public void deleteBaskanYardimcisi(@PathVariable(name = "id") Long id) {
+        yonetimSemasiService.deleteBaskanYardimcisi(id);
     }
 }
