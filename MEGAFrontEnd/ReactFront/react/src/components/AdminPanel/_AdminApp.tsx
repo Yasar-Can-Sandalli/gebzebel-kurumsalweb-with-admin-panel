@@ -35,7 +35,9 @@ import EtkinlikYeniPage from "./sayfalar/EtkinlikYeniPage";
 import EditPage from "./sayfalar/EditPage";
 import YayinlarPage from "./sayfalar/YayinlarPage";
 import YayinlarYeniPage from "./sayfalar/YayinlarYeniPage";
-import DuyuruPage from "./sayfalar/DuyuruPage.tsx";
+import DuyuruPage from "./sayfalar/DuyuruPage";
+import DuyuruYeniPage from "./sayfalar/DuyuruYeniPage";
+import DuyuruEditPage from "./sayfalar/DuyuruEditPage";
 
 // --- Kullanıcı sayfaları
 // NOT: Dosyan senin örneğinde `src/sayfalar/kurumsal/UsersPage.tsx` altında.
@@ -107,6 +109,8 @@ export default function AdminPanelApp() {
                     <Route path="yayinlar/yeni" element={<YayinlarYeniPage />} />
                     <Route path="yayinlar/duzenle/:id" element={<EditPage />} />
                     <Route path="duyurular" element={<DuyuruPage />} />
+                    <Route path="duyurular/yeni" element={<DuyuruYeniPage />} />
+                    <Route path="duyurular/edit/:id" element={<DuyuruEditPage />} />
 
 
                     {/* 404 */}

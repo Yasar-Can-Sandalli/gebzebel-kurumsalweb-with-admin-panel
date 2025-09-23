@@ -30,7 +30,7 @@ public class YonetimSemasiService {
     }
 
     public List<YonetimSemasiEntity> getBaskanDanismanlari() {
-        return yonetimSemasiRepository.findBaskanDanismanlari();
+        return yonetimSemasiRepository.findAll();
     }
 
     public ResponseEntity<YonetimSemasiEntity> createYonetim(YonetimSemasiEntity yonetim) {

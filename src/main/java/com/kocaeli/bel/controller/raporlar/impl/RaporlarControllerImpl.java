@@ -3,10 +3,8 @@ package com.kocaeli.bel.controller.raporlar.impl;
 import com.kocaeli.bel.DTO.raporlar.CreateRaporRequest;
 import com.kocaeli.bel.DTO.raporlar.RaporlarResponse;
 import com.kocaeli.bel.controller.raporlar.IRaporlarController;
-import com.kocaeli.bel.model.raporlar.Raporlar;
 import com.kocaeli.bel.service.raporlar.IRaporlarService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,18 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RaporlarControllerImpl implements IRaporlarController {
 
-    @Autowired
     private final IRaporlarService raporlarService;
-
-    @GetMapping()
-    public List<Raporlar> getRaporlar() {
-        return raporlarService.getRaporlar();
-    }
 
     @GetMapping("/find/{id}")
     public RaporlarResponse getRaporById(@PathVariable Integer id) {
         return raporlarService.getRaporById(id);
     }
+
 
     @PostMapping("/create")
     public RaporlarResponse saveRapor(@RequestBody CreateRaporRequest req) {

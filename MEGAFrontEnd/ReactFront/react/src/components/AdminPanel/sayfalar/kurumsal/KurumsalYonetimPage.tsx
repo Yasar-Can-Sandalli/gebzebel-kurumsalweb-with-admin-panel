@@ -1,10 +1,9 @@
-// src/sayfalar/kurumsal/KurumsalYonetimPage.tsx
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Loader from "../../../loader.tsx";
-import { fetchYonetimRows, YonetimRow } from "../../services/pageService.tsx";
+import { YonetimRow } from "../../services/pageService.tsx";
 import { Search, Mail, Phone, User, X, Check, RefreshCw, Settings } from "lucide-react";
-import { apiDelete } from "../../services/apiService"; // <-- silme için
+import { apiDelete, apiGet } from "../../services/apiService";
 
 export default function KurumsalYonetimPage() {
     const [rows, setRows] = useState<YonetimRow[]>([]);
@@ -14,22 +13,33 @@ export default function KurumsalYonetimPage() {
     const [rowMenuOpenId, setRowMenuOpenId] = useState<number | null>(null);
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const inputCls =
         "w-full rounded-lg px-3 py-2 bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500/60 outline-none";
 
-    useEffect(() => {
-        let on = true;
+    const load = async () => {
         setLoading(true);
         setError(null);
-        fetchYonetimRows()
-            .then((d) => on && setRows(d))
-            .catch((e) => on && setError(e?.message || "Yönetim listesi alınamadı"))
-            .finally(() => on && setLoading(false));
-        return () => {
-            on = false;
-        };
-    }, []);
+        try {
+            // 🔁 Liste artık buradan geliyor:
+            const d = await apiGet<YonetimRow[]>("/api/kurumsal/baskandanismanlari");
+            setRows(Array.isArray(d) ? d : []);
+        } catch (e: any) {
+            setError(e?.message || "Yönetim listesi alınamadı");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // İlk yükleme
+    useEffect(() => { load(); }, []);
+
+    // 🔁 Sayfaya geri dönüldüğünde / query değiştiğinde tekrar çek
+    useEffect(() => {
+        load();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.key, location.search, (location.state as any)?.refreshId]);
 
     const filtered = useMemo(() => {
         const q = search.toLowerCase().trim();
@@ -54,11 +64,9 @@ export default function KurumsalYonetimPage() {
         setRowMenuOpenId(null);
     };
 
-    // --- Silme (endpoint: /api/kurumsal/yonetim/delete/{id})
     const deleteOne = async (id: number) => {
         const rec = rows.find((x) => x.id === id);
         if (!confirm(`${rec?.isimSoyisim || id} kaydını silmek istiyor musunuz?`)) return;
-
         setError(null);
         try {
             await apiDelete<boolean>(`/api/kurumsal/yonetim/delete/${id}`);
@@ -83,7 +91,6 @@ export default function KurumsalYonetimPage() {
 
     return (
         <div className="space-y-5">
-            {/* Başlık + EKLE butonu */}
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-slate-800">Yönetim</h2>
                 <Link
@@ -94,12 +101,8 @@ export default function KurumsalYonetimPage() {
                 </Link>
             </div>
 
-            {/* Hata */}
-            {error && (
-                <div className="text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">{error}</div>
-            )}
+            {error && <div className="text-red-600 bg-red-50 rounded-lg px-4 py-2 ring-1 ring-red-200">{error}</div>}
 
-            {/* Arama */}
             <div className="bg-white rounded-xl p-4 shadow-md shadow-blue-500/5 ring-1 ring-slate-200/60">
                 <div className="relative max-w-md">
                     <input
