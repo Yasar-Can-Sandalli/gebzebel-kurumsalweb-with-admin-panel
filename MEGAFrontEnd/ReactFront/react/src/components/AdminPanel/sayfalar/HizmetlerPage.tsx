@@ -13,7 +13,7 @@ export interface Hizmet {
     buttonDetay: string;
     buttonKonum: string;
     mail: string;
-    kategori: string;
+    kategori: string; //**
 }
 
 export default function HizmetlerPage() {
