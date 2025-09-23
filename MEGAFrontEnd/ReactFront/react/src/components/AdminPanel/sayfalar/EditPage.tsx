@@ -7,6 +7,8 @@ import { getAllYayinCategories } from "../services/yayinlarService";
 import type { YayinCategorySummary } from "../types/yayinlar";
 import { getHaberById, updateHaber, getAllHaberCategories } from "../services/haberlerService";
 import type { HaberCategorySummary } from "../types/haberler";
+import { getAllRaporCategories } from "../services/raporlarService";
+import type { RaporCategorySummary } from "../types/raporlar";
 
 /* ------------------------- Basit Layout ------------------------- */
 const SimpleLayout: React.FC<{ children: React.ReactNode }> = ({children}) => (
@@ -172,7 +174,8 @@ const RAPORLAR_CONFIG: TableConfig = {
     fields: [
         {name: "raporBaslik", label: "Rapor Başlık", type: "text", required: true},
         {name: "raporUrl", label: "Rapor URL (PDF)", type: "text"},
-        {name: "categoryId", label: "Kategori ID", type: "number", required: true},
+        // 🟡 DEĞİŞTİ: Tipi 'number' dan 'select'e çeviriyoruz
+        {name: "categoryId", label: "Kategori", type: "select", required: true},
         {name: "raporDurum", label: "Durum (Aktif/Pasif)", type: "boolean"},
         {name: "raporTarihi", label: "Rapor Tarihi", type: "date"},
     ],
@@ -249,6 +252,8 @@ const DynamicEditPageForm: React.FC = () => {
 
     const [haberCategories, setHaberCategories] = useState<HaberCategorySummary[]>([]);
     const [yayinCategories, setYayinCategories] = useState<YayinCategorySummary[]>([]);
+// 🟢 EKLENDİ: Rapor kategorileri için yeni state
+    const [raporCategories, setRaporCategories] = useState<RaporCategorySummary[]>([]);
 
     // 🔁 Upload için eklendi:
     const fileInputRefs = React.useRef<Record<string, HTMLInputElement | null>>({});
@@ -286,17 +291,28 @@ const DynamicEditPageForm: React.FC = () => {
                 try {
                     const data = await getAllHaberCategories();
                     setHaberCategories(data || []);
-                } catch (e) { /* noop */ }
+                } catch (e) { console.error("Haber kategorileri yüklenemedi", e); }
             })();
         }
-        if (!isYayinMode) return;
-        (async () => {
-            try {
-                const data = await getAllYayinCategories();
-                setYayinCategories(data);
-            } catch (e) { /* noop */ }
-        })();
-    }, [isHaberMode, isYayinMode]);
+
+        if (isYayinMode) {
+            (async () => {
+                try {
+                    const data = await getAllYayinCategories();
+                    setYayinCategories(data || []);
+                } catch (e) { console.error("Yayın kategorileri yüklenemedi", e); }
+            })();
+        }
+
+        if (isRaporMode) {
+            (async () => {
+                try {
+                    const data = await getAllRaporCategories();
+                    setRaporCategories(data || []);
+                } catch (e) { console.error("Rapor kategorileri yüklenemedi", e); }
+            })();
+        }
+    }, [isHaberMode, isYayinMode, isRaporMode]); // 🟡 DEĞİŞTİ: Bağımlılıklara isRaporMode eklendi
 
     // caret/odak koruma
     useEffect(() => {
@@ -799,6 +815,24 @@ const DynamicEditPageForm: React.FC = () => {
                         >
                             <option value="">Kategori Seçiniz</option>
                             {yayinCategories.map((cat) => (
+                                <option key={cat.categoryId} value={cat.categoryId}>
+                                    {cat.categoryName}
+                                </option>
+                            ))}
+                        </select>
+                    );
+                }
+                // 🟢 EKLENDİ: Raporlar için dinamik kategori dropdown'ı
+                if (isRaporMode && field.name === "categoryId") {
+                    return (
+                        <select
+                            value={formData.categoryId ?? ""}
+                            onChange={(e) => handleInputChange(field.name, e.target.value === "" ? "" : Number(e.target.value))}
+                            className={common}
+                            required={field.required}
+                        >
+                            <option value="">— Rapor Kategorisi Seçiniz —</option>
+                            {raporCategories.map((cat) => (
                                 <option key={cat.categoryId} value={cat.categoryId}>
                                     {cat.categoryName}
                                 </option>

@@ -11,7 +11,7 @@ public class Mudurlukler {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mudurlukler_seq_gen")
     @SequenceGenerator(name = "mudurlukler_seq_gen", sequenceName = "MUDURLUKLER_SEQ_GEN", allocationSize = 1)
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID") // Make sure the column name matches in the DB
     private Long id;
 
     @Column(name = "MUDURLUKISIM", nullable = false) // Department name

@@ -14,3 +14,8 @@ export interface RaporCategory {
     categoryName: string;
     raporlar: Rapor[];
 }
+
+export interface RaporCategorySummary {
+    categoryId: number;
+    categoryName: string;
+}

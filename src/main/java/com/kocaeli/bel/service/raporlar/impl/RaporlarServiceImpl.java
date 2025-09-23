@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 //YCS
 @Service
@@ -20,13 +21,6 @@ public class RaporlarServiceImpl implements IRaporlarService {
 
     private final RaporlarRepository raporlarRepository;
     private final RaporlarCategoryRepository categoryRepository;
-
-    @Transactional
-    @Override
-    public List<Raporlar> getRaporlar() {
-        List<Raporlar> rapor = raporlarRepository.findAll();
-        return rapor;
-    }
 
     @Transactional(readOnly = true)
     @Override
@@ -83,6 +77,15 @@ public class RaporlarServiceImpl implements IRaporlarService {
         Raporlar r = raporlarRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rapor bulunamadı: " + id));
         raporlarRepository.delete(r);
+    }
+
+    // ⬇️ YENİ METODU EKLEYİN ⬇️
+    @Transactional(readOnly = true)
+    @Override
+    public List<RaporlarResponse> getAllRaporlar() {
+        return raporlarRepository.findAll().stream()
+                .map(this::toResponse) // Mevcut helper metodumuzu kullanıyoruz
+                .collect(Collectors.toList());
     }
 
     // --- Helper mapper ---

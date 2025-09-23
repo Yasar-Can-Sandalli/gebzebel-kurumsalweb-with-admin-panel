@@ -45,5 +45,10 @@ public class RaporlarControllerImpl implements IRaporlarController {
         raporlarService.deleteRapor(id);
     }
 
+    // ⬇️ 404 HATASINI ÇÖZECEK YENİ ENDPOINT'İ EKLEYİN ⬇️
+    @GetMapping("/list")
+    public List<RaporlarResponse> getAllRaporlar() {
+        return raporlarService.getAllRaporlar();
+    }
 
 }

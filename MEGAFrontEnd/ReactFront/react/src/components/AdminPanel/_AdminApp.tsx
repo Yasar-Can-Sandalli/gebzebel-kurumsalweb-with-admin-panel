@@ -12,6 +12,7 @@ import KurumsalYonetimPage from "./sayfalar/kurumsal/KurumsalYonetimPage.tsx";
 import KurumsalYonetimYeniPage from "./sayfalar/kurumsal/KurumsalYonetimYeniPage";
 import KurumsalBVMI from "./sayfalar/kurumsal/KurumsalBVMI.tsx";
 import KurumsalRaporlarPage from "./sayfalar/kurumsal/KurumsalRaporlarPage.tsx";
+import KurumsalRaporlarYeniPage from "./sayfalar/kurumsal/KurumsalRaporlarYeniPage.tsx"; // <-- Yeni sayfayı import edin
 import KurumsalMudurluklerPage from "./sayfalar/kurumsal/KurumsalMudurluklerPage.tsx";
 import KurumsalMudurluklerYeniPage from "./sayfalar/kurumsal/KurumsalMudurluklerYeniPage.tsx";
 import KurumsalMudurluklerEditPage from "./sayfalar/kurumsal/KurumsalMudurluklerEditPage.tsx";
@@ -72,8 +73,10 @@ export default function AdminPanelApp() {
                         <Route path="/kurumsal/yonetim/yeni" element={<KurumsalYonetimYeniPage />} />
                         <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
                         <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
-                        <Route path="raporlar" element={<KurumsalRaporlarPage />} />
-                        <Route path="raporlar/:id/edit" element={<EditPage />} />
+                        <Route path="/kurumsal/raporlar" element={<KurumsalRaporlarPage />} />
+                        {/* ⬇️ YENİ ROTA EKLEMESİ ⬇️ */}
+                        <Route path="raporlar/yeni" element={<KurumsalRaporlarYeniPage />} />
+                        <Route path="/kurumsal/raporlar/:id/edit" element={<EditPage />} />
                         <Route path="komisyonlar" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler/yeni" element={<KurumsalMudurluklerYeniPage />} />
@@ -104,6 +107,7 @@ export default function AdminPanelApp() {
                     <Route path="yayinlar/yeni" element={<YayinlarYeniPage />} />
                     <Route path="yayinlar/duzenle/:id" element={<EditPage />} />
                     <Route path="duyurular" element={<DuyuruPage />} />
+
 
                     {/* 404 */}
                     <Route path="*" element={<div className="p-6">Bulunamadı</div>} />

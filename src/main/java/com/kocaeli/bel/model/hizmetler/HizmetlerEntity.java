@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HizmetlerEntity {
+
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hizmetler_seq_gen")
     @SequenceGenerator(name = "hizmetler_seq_gen", sequenceName = "HIZMETLER_SEQ_GEN", allocationSize = 1)
     @Id

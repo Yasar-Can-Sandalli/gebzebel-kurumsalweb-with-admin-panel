@@ -26,9 +26,7 @@ const toDateYYYYMMDD = (d?: string | null): string | undefined => {
    Categories
 ----------------------------------------------------------- */
 
-// Kategorileri getir
-export const getAllRaporCategories = async (): Promise<RaporCategory[]> =>
-    apiGet<RaporCategory[]>("/api/raporlar/category/list");
+
 
 // Seçili kategori + raporlar
 export const getRaporCategoryById = async (id: number | string): Promise<RaporCategory> => {
@@ -99,3 +97,13 @@ export const uploadPdf = async (file: File): Promise<{ url: string }> => {
     // NOT: FormData gönderirken Content-Type'ı elle set etme.
     return apiPost<{ url: string }>("/api/files/upload", fd);
 };
+
+
+// TÜM Raporları Getir (Backend'de GET /api/raporlar/list endpoint'i olmalı)
+export const getAllRaporlar = async (): Promise<Rapor[]> =>
+    apiGet<Rapor[]>("/api/raporlar/list");
+
+
+export const getAllRaporCategories = async (): Promise<RaporCategory[]> =>
+    apiGet<RaporCategory[]>("/api/raporlar/category/list");
+

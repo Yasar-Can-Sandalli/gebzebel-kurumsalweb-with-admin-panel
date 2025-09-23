@@ -62,7 +62,7 @@ public class RaporlarCategoryServiceImpl implements IRaporlarCategoryService {
         for (RaporlarCategory r : raporlarCategoryRepository.findAll()){
 
             RaporlarCategoryResponseBasic responseCategory = new RaporlarCategoryResponseBasic();
-            responseCategory.setId(r.getCategoryId());
+            responseCategory.setCategoryId(r.getCategoryId());
             responseCategory.setCategoryName(r.getCategoryName());
             categories.add(responseCategory);
 
