@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class RaporlarCategoryResponseBasic {
-    private Integer id;
+    private Integer categoryId;;
     private String categoryName;
 }

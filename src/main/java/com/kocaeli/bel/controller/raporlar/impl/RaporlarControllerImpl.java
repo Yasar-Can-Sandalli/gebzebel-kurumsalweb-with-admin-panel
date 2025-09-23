@@ -6,6 +6,9 @@ import com.kocaeli.bel.controller.raporlar.IRaporlarController;
 import com.kocaeli.bel.service.raporlar.IRaporlarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 //YCS
 @RestController
 @RequestMapping("/api/raporlar")
@@ -35,5 +38,10 @@ public class RaporlarControllerImpl implements IRaporlarController {
         raporlarService.deleteRapor(id);
     }
 
+    // ⬇️ 404 HATASINI ÇÖZECEK YENİ ENDPOINT'İ EKLEYİN ⬇️
+    @GetMapping("/list")
+    public List<RaporlarResponse> getAllRaporlar() {
+        return raporlarService.getAllRaporlar();
+    }
 
 }

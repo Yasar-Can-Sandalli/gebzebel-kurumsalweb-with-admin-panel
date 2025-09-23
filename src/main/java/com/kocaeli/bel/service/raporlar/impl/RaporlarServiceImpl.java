@@ -10,6 +10,10 @@ import com.kocaeli.bel.service.raporlar.IRaporlarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 //YCS
 @Service
 @RequiredArgsConstructor
@@ -73,6 +77,15 @@ public class RaporlarServiceImpl implements IRaporlarService {
         Raporlar r = raporlarRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rapor bulunamadı: " + id));
         raporlarRepository.delete(r);
+    }
+
+    // ⬇️ YENİ METODU EKLEYİN ⬇️
+    @Transactional(readOnly = true)
+    @Override
+    public List<RaporlarResponse> getAllRaporlar() {
+        return raporlarRepository.findAll().stream()
+                .map(this::toResponse) // Mevcut helper metodumuzu kullanıyoruz
+                .collect(Collectors.toList());
     }
 
     // --- Helper mapper ---

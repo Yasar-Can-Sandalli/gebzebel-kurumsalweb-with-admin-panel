@@ -2,6 +2,9 @@ package com.kocaeli.bel.service.raporlar;
 
 import com.kocaeli.bel.DTO.raporlar.CreateRaporRequest;
 import com.kocaeli.bel.DTO.raporlar.RaporlarResponse;
+
+import java.util.List;
+
 //YCS
 public interface IRaporlarService {
 
@@ -12,4 +15,7 @@ public interface IRaporlarService {
     RaporlarResponse updateRapor(Integer id, CreateRaporRequest req);
 
     void deleteRapor(Integer id);
+
+    // ⬇️ YENİ METODU EKLEYİN ⬇️
+    List<RaporlarResponse> getAllRaporlar();
 }

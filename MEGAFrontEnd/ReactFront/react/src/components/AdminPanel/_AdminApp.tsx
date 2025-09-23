@@ -11,6 +11,7 @@ import KurumsalLayout from "./sayfalar/kurumsal/_LayoutKurumsal.tsx";
 import KurumsalYonetimPage from "./sayfalar/kurumsal/KurumsalYonetimPage.tsx";
 import KurumsalBVMI from "./sayfalar/kurumsal/KurumsalBVMI.tsx";
 import KurumsalRaporlarPage from "./sayfalar/kurumsal/KurumsalRaporlarPage.tsx";
+import KurumsalRaporlarYeniPage from "./sayfalar/kurumsal/KurumsalRaporlarYeniPage.tsx"; // <-- Yeni sayfayı import edin
 import KurumsalMudurluklerPage from "./sayfalar/kurumsal/KurumsalMudurluklerPage.tsx";
 import KurumsalMudurluklerYeniPage from "./sayfalar/kurumsal/KurumsalMudurluklerYeniPage.tsx";
 import KurumsalMudurluklerEditPage from "./sayfalar/kurumsal/KurumsalMudurluklerEditPage.tsx";
@@ -70,7 +71,9 @@ export default function AdminPanelApp() {
                         <Route path="/kurumsal/yonetim/:id/edit" element={<EditPage />} />
                         <Route path="/kurumsal/BMVI" element={<KurumsalBVMI />} />
                         <Route path="/kurumsal/BMVI/:id/edit" element={<EditPage />} />
-                        <Route path="raporlar" element={<KurumsalRaporlarPage />} />
+                        <Route path="/kurumsal/raporlar" element={<KurumsalRaporlarPage />} />
+                        {/* ⬇️ YENİ ROTA EKLEMESİ ⬇️ */}
+                        <Route path="raporlar/yeni" element={<KurumsalRaporlarYeniPage />} />
                         <Route path="/kurumsal/raporlar/:id/edit" element={<EditPage />} />
                         <Route path="komisyonlar" element={<KurumsalMudurluklerPage />} />
                         <Route path="/kurumsal/mudurlukler" element={<KurumsalMudurluklerPage />} />
