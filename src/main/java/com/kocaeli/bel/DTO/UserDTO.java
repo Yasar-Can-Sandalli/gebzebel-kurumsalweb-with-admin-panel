@@ -13,7 +13,6 @@ public class UserDTO {
     private String profilFoto;
 
 
-
     public UserDTO(Long id, String tcno, String isim, String password, String status, String yetkilerJson, String profilFoto) {
         this.id = id;
         this.tcno = tcno;

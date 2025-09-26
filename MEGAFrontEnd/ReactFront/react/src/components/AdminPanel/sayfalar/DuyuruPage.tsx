@@ -227,7 +227,7 @@ export default function DuyuruPage() {
 
                                             <td className="px-4 py-3 align-top">
                           <span className={"px-2 py-1 rounded text-xs " + (isTrue(e.onemli) ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600")}>
-                            {isTrue(e.onemli) ? "Önemli" : "-"}
+                            {isTrue(e.onemli) ? "Önemli" : "Normal"}
                           </span>
                                             </td>
 

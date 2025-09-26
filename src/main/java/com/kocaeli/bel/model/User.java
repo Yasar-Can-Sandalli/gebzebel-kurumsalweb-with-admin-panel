@@ -29,6 +29,7 @@ public class User {
     @Column(columnDefinition = "json")
     private String yetkilerJson;
 
+
     @Column(name = "PROFIL_FOTO")
     private String profilFoto;
 
@@ -64,4 +65,5 @@ public class User {
             this.profilFoto = user.profilFoto;
         }
     }
+
 }

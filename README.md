@@ -24,6 +24,9 @@ KocaeliBelProje/
 │
 └── README.md                    # Proje açıklaması (bu dosya)
 ```
+## Spring Eğitim Videosu
+
+- ** Enes Bayram Spring Boot Dersleri : https://www.youtube.com/playlist?list=PLURN6mxdcwL8u0hd5clQFyFmx31mhIckE
 
 ## Özellikler
 

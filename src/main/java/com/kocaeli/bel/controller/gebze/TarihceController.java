@@ -4,13 +4,15 @@ import com.kocaeli.bel.DTO.gebze.TarihceDTO;
 import com.kocaeli.bel.service.gebze.TarihceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value="/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TarihceController {
     private final TarihceService tarihceService;
@@ -45,4 +47,33 @@ public class TarihceController {
         TarihceDTO savedBugunkuGebze = tarihceService.saveTarihce(tarihceDTO);
         return new ResponseEntity<>(savedBugunkuGebze, HttpStatus.CREATED);
     }
+
+    @PutMapping("/tarihce/{id}")
+    public ResponseEntity<TarihceDTO> updateTarihce(@PathVariable Long id, @RequestBody TarihceDTO body) {
+        try {
+            TarihceDTO updated = tarihceService.update(id, body, "TARIHCE");
+            return ResponseEntity.ok(updated);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/bugunkugebze/{id}")
+    public ResponseEntity<TarihceDTO> updateBugunkuGebze(@PathVariable Long id, @RequestBody TarihceDTO body) {
+        try {
+            TarihceDTO updated = tarihceService.update(id, body, "BUGUNKU_GEBZE");
+            return ResponseEntity.ok(updated);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

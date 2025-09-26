@@ -3,11 +3,13 @@ package com.kocaeli.bel.service.gebze;
 import com.kocaeli.bel.DTO.gebze.FotograflarlaGebzeDTO;
 import com.kocaeli.bel.model.gebze.FotograflarlaGebzeEntity;
 import com.kocaeli.bel.repository.gebze.FotograflarlaGebzeRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -125,6 +127,30 @@ public class FotograflarlaGebzeService {
         FotograflarlaGebzeEntity entity = convertToEntity(dto);
         entity = fotograflarlaGebzeRepository.save(entity);
         return convertToDTO(entity);
+    }
+
+    @Transactional
+    public FotograflarlaGebzeDTO update(Long id, FotograflarlaGebzeDTO dto, String expectedType) {
+        FotograflarlaGebzeEntity entity = fotograflarlaGebzeRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Kayıt bulunamadı: " + id));
+
+        // type güvenliği: kayıt beklenen türde değilse 400 fırlatabilirsiniz
+        if (expectedType != null && entity.getType() != null && !entity.getType().equalsIgnoreCase(expectedType)) {
+            throw new IllegalArgumentException("Bu kayıt " + entity.getType() + " türünde. Beklenen: " + expectedType);
+        }
+
+        // id ve type alanlarını koruyarak kopyala
+        String originalType = entity.getType();
+        Long originalId = entity.getId();
+
+        BeanUtils.copyProperties(dto, entity, "id", "type");
+
+        // garanti olsun diye geri yaz
+        entity.setId(originalId);
+        entity.setType(originalType != null ? originalType : expectedType);
+
+        FotograflarlaGebzeEntity saved = fotograflarlaGebzeRepository.save(entity);
+        return convertToDTO(saved);
     }
 
     /**
